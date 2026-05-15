@@ -274,7 +274,8 @@
    * Accepts partial match if the answer starts with the input.
    */
   function _checkFillBlank(val, answerIdx, options) {
-    const correct = (options[answerIdx] || '').toLowerCase().trim();
+    const correctStr = (options && options[answerIdx] !== undefined) ? options[answerIdx] : String(answerIdx || '');
+    const correct = correctStr.toLowerCase().trim();
     const given   = val.toLowerCase().trim();
     return given === correct || correct.startsWith(given + ' ') || given.includes(correct);
   }
@@ -313,8 +314,15 @@
     const rightCol = document.createElement('div');
     rightCol.style.cssText = 'display:flex;flex-direction:column;gap:8px;';
 
-    const answers = Array.isArray(q.answer) ? q.answer : [q.answer];
-    const terms   = [...q.options];
+    let answers = [];
+    let terms = [];
+    if (q.pairs) {
+      terms = q.pairs.map(p => p.term);
+      answers = q.pairs.map(p => p.definition);
+    } else {
+      answers = Array.isArray(q.answer) ? q.answer : [q.answer];
+      terms   = [...(q.options || [])];
+    }
 
     // Shuffle terms for display
     const shuffled = _shuffle([...terms]);
