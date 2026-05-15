@@ -912,10 +912,83 @@
      SIMULATION REGISTRY
   ---------------------------------------------------------- */
 
+  /* ============================================================
+     SIM 8: sim-network-core
+     Network edge → access network → core routers (packet vs circuit switching)
+     Used by Chapter 1 Section 3 (Network Structure).
+     Distinct from sim-packet-flow to avoid duplicate DOM element IDs.
+     ============================================================ */
+
+  function buildNetworkCore(container) {
+    const W = 560, H = 160;
+    const { host, canvas, log } = buildShell('sim-network-core', 5);
+
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    svgLine(svg, 70, 80, 490, 80, 'rgba(255,255,255,0.06)');
+
+    const cNode  = svgNode(svg,  50, 80, 28, '🏠', 'Edge',     '#00f5ff');
+    const aNode  = svgNode(svg, 175, 80, 24, 'AP', 'Access',   '#00ff88');
+    const r1Node = svgNode(svg, 300, 80, 24, 'R1', 'Core R1',  '#ff6b35');
+    const r2Node = svgNode(svg, 420, 80, 24, 'R2', 'Core R2',  '#ff6b35');
+    const sNode  = svgNode(svg, 510, 80, 28, '🖥️', 'Server',   '#a855f7');
+
+    // Label zones
+    const edgeLbl = svgEl('text', { x: 110, y: 135, 'text-anchor': 'middle',
+      fill: '#00f5ff', 'font-size': '8', 'font-family': 'JetBrains Mono,monospace' });
+    edgeLbl.textContent = '← Network Edge →';
+    svg.appendChild(edgeLbl);
+
+    const coreLbl = svgEl('text', { x: 360, y: 135, 'text-anchor': 'middle',
+      fill: '#ff6b35', 'font-size': '8', 'font-family': 'JetBrains Mono,monospace' });
+    coreLbl.textContent = '←── Network Core ──→';
+    svg.appendChild(coreLbl);
+
+    container.appendChild(host);
+    setLog('sim-network-core', 'Press <strong>Next Step</strong> to trace a packet through the network structure.');
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog('sim-network-core', '① The <strong>Network Edge</strong> is where end systems live — your laptop, phone, or home server. Applications (web browser, email) run here, not in the core.');
+        pulseNode(cNode, '#00f5ff');
+      },
+      () => {
+        setLog('sim-network-core', '② The <strong>Access Network</strong> (last mile) connects your end system to the first router. Technologies: DSL, cable (HFC), FTTH, WiFi, 4G/5G.');
+        arrows.push(svgArrow(svg, 82, 72, 148, 72, '#00f5ff', 'last mile →'));
+        pulseNode(aNode, '#00ff88');
+      },
+      () => {
+        setLog('sim-network-core', '③ The packet enters the <strong>Network Core</strong> — a mesh of high-speed routers. Packet switching: the router stores the packet, checks its forwarding table, and sends it onward. <em>No dedicated circuit is reserved.</em>');
+        arrows.push(svgArrow(svg, 202, 72, 273, 72, '#00ff88', 'packet →'));
+        pulseNode(r1Node, '#ff6b35');
+      },
+      () => {
+        setLog('sim-network-core', '④ <strong>Core Router R1</strong> forwards the packet to <strong>R2</strong> via the best available path. Many user packets share the same high-speed fiber links — this is <em>statistical multiplexing</em>.');
+        arrows.push(svgArrow(svg, 328, 72, 393, 72, '#ff6b35', 'forward →'));
+        pulseNode(r2Node, '#ff6b35');
+      },
+      () => {
+        setLog('sim-network-core', '⑤ The packet arrives at the destination server. Key insight: <strong>packet switching</strong> is efficient for bursty internet traffic — no bandwidth is wasted reserving a circuit for idle time. ✓');
+        arrows.push(svgArrow(svg, 448, 72, 480, 72, '#ff6b35', '→ dest'));
+        pulseNode(sNode, '#a855f7');
+      }
+    ];
+
+    return makeController('sim-network-core', steps, () => {
+      clearArrows();
+      setLog('sim-network-core', 'Press <strong>Next Step</strong> to trace a packet through the network structure.');
+    });
+  }
+
   const SIM_BUILDERS = {
     'sim-client-server':   buildClientServer,
     'sim-socket':          buildSocket,
     'sim-packet-flow':     buildPacketFlow,
+    'sim-network-core':    buildNetworkCore,
     'sim-tcp-handshake':   buildTcpHandshake,
     'sim-http-request':    buildHttpRequest,
     'sim-tcp-vs-udp':      buildTcpVsUdp,

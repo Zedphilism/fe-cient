@@ -54,14 +54,18 @@
     return e;
   }
 
-  /** Cache all header elements present on the page */
+  /** Cache all header elements present on the page.
+   *  Checks both the chapter-page IDs (header-*) and any
+   *  index-page / custom IDs so syncHeader() works everywhere.
+   */
   function cacheHeaderEls() {
     _els = {
-      rankTitle:  document.getElementById('rankTitle'),
-      levelNum:   document.getElementById('levelNumber'),
-      xpValue:    document.getElementById('xpValue'),
-      xpToNext:   document.getElementById('xpToNext'),
-      xpBarFill:  document.getElementById('xpBarFill')
+      // Chapter pages (chapter1.html, chapter2.html, exam-mode.html)
+      rankTitle:  document.getElementById('header-rank-title') || document.getElementById('rankTitle'),
+      levelNum:   document.getElementById('header-level')      || document.getElementById('levelNumber'),
+      xpValue:    document.getElementById('header-xp-label')   || document.getElementById('xpValue'),
+      xpToNext:   document.getElementById('xpToNext'),          // index page only
+      xpBarFill:  document.getElementById('header-xp-fill')    || document.getElementById('xpBarFill')
     };
   }
 

@@ -367,11 +367,23 @@
 
   /** Refresh the chapter progress indicators in the chapter page header */
   function _refreshChapterProgress(chapterKey) {
-    const pct  = Progress.getChapterProgress(chapterKey);
-    const ring = document.getElementById(chapterKey + 'ProgressRing');
-    const lbl  = document.getElementById(chapterKey + 'ProgressPct');
-    if (ring) _animateRing(ring.id, pct);
+    const pct = Progress.getChapterProgress(chapterKey);
+    // HTML uses hyphenated IDs: ch1-progress-ring / ch1-ring-pct
+    const ringId = chapterKey + '-progress-ring';
+    const lblId  = chapterKey + '-ring-pct';
+    const ring   = document.getElementById(ringId);
+    const lbl    = document.getElementById(lblId);
+    if (ring) _animateRing(ringId, pct);
     if (lbl)  lbl.textContent = pct + '%';
+
+    // Also update status bar topic counter
+    const statusEl = document.getElementById('status-progress-text');
+    if (statusEl) {
+      const topics = chapterKey === 'ch1' ? Progress.CH1_TOPICS : Progress.CH2_TOPICS;
+      const state  = Progress.load();
+      const done   = topics.filter(id => state.completedTopics.includes(id)).length;
+      statusEl.textContent = done + ' / ' + topics.length + ' TOPICS';
+    }
   }
 
   /** Look up questions for a topic from the globally loaded chapter data */
@@ -497,6 +509,7 @@
 
   /** Attach backdrop-click close to all modal overlays on the page */
   function _attachModalListeners() {
+    // Dynamic modals created by _showShortcutsModal use .modal-overlay / .modal-close
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
       overlay.addEventListener('click', e => {
         if (e.target === overlay) closeModal(overlay.id);
@@ -508,6 +521,18 @@
         const overlay = btn.closest('.modal-overlay');
         if (overlay) closeModal(overlay.id);
       });
+    });
+
+    // Static modals in chapter HTML use BEM: .modal / .modal__close / [data-modal-close]
+    document.querySelectorAll('.modal__backdrop').forEach(backdrop => {
+      const modal = backdrop.closest('.modal');
+      if (modal) {
+        backdrop.addEventListener('click', () => closeModal(modal.id));
+      }
+    });
+
+    document.querySelectorAll('[data-modal-close]').forEach(btn => {
+      btn.addEventListener('click', () => closeModal(btn.dataset.modalClose));
     });
   }
 
@@ -624,7 +649,7 @@
   (function injectStyles() {
     if (document.getElementById('app-js-styles')) return;
     const s = document.createElement('style');
-    s.id = 's-js-styles';
+    s.id = 'app-js-styles';
     s.textContent = `
       kbd.shortcut-key {
         display: inline-block;
