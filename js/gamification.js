@@ -503,6 +503,7 @@
     window.addEventListener('progress:badge', function (e) {
       const { id } = e.detail;
       showBadgeToast(id);
+      syncHeader();
       // If an achievement grid is on this page, update it
       const grid = document.getElementById('achievementGrid');
       if (grid) {

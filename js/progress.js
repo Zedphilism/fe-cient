@@ -255,9 +255,15 @@
 
     // Award streak XP bonus
     if (result.streakUpdated) {
+      const prevLevel = state.level;
       state.xp    += XP_REWARDS.daily_streak;
       state.level  = calcLevel(state.xp);
       result.awarded = XP_REWARDS.daily_streak;
+      
+      emit('xp', { gained: result.awarded, total: state.xp, reason: 'daily_streak' });
+      if (state.level > prevLevel) {
+        emit('levelup', { from: prevLevel, to: state.level, rank: getRankTitle(state.level), state });
+      }
     }
 
     // Check streak badges
@@ -342,11 +348,16 @@
    */
   function recordQuizResult({ topicId, score, total, isFirstTry, isFirstQuizEver }) {
     const state    = load();
+    const prevLevel = state.level;
     const isPerfect = score === total;
     let xpGained   = isFirstTry ? XP_REWARDS.quiz_first_try : XP_REWARDS.quiz_retry;
 
     state.xp    += xpGained;
     state.level  = calcLevel(state.xp);
+    emit('xp', { gained: xpGained, total: state.xp, reason: isFirstTry ? 'quiz_first_try' : 'quiz_retry' });
+    if (state.level > prevLevel) {
+      emit('levelup', { from: prevLevel, to: state.level, rank: getRankTitle(state.level), state });
+    }
 
     // Track first quiz ever for badge
     if (isFirstQuizEver && !state.achievements.includes('first_quiz')) {
@@ -371,12 +382,9 @@
    * Returns { state, xpGained }.
    */
   function completeSimulation(simId) {
-    const state = load();
-    state.xp   += XP_REWARDS.sim_complete;
-    state.level = calcLevel(state.xp);
-    save(state);
+    const result = addXP(XP_REWARDS.sim_complete, 'sim_complete');
     emit('sim', { simId, xpGained: XP_REWARDS.sim_complete });
-    return { state, xpGained: XP_REWARDS.sim_complete };
+    return { state: result.state, xpGained: XP_REWARDS.sim_complete };
   }
 
   /* ----------------------------------------------------------
@@ -410,9 +418,14 @@
     state.weakTopics = result.weakTopicIds || [];
 
     if (passed) {
+      const prevLevel = state.level;
       state.xp    += XP_REWARDS.exam_pass;
       xpGained     = XP_REWARDS.exam_pass;
       state.level  = calcLevel(state.xp);
+      emit('xp', { gained: xpGained, total: state.xp, reason: 'exam_pass' });
+      if (state.level > prevLevel) {
+        emit('levelup', { from: prevLevel, to: state.level, rank: getRankTitle(state.level), state });
+      }
     }
 
     const newBadges = checkAndUnlockBadges(state, { examPassed: passed, examFast: fast });
@@ -486,8 +499,12 @@
     function tryUnlock(id) {
       if (!state.achievements.includes(id)) {
         state.achievements.push(id);
+        const prevLevel = state.level;
         state.xp    += XP_REWARDS.badge_unlock;
         state.level  = calcLevel(state.xp);
+        if (state.level > prevLevel) {
+          emit('levelup', { from: prevLevel, to: state.level, rank: getRankTitle(state.level), state });
+        }
         newlyUnlocked.push(id);
       }
     }
