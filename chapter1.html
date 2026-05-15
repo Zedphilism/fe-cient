@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chapter 1: Introduction to Networking — NetCore Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+
+<body data-page="chapter1">
+
+  <!-- ── Site Header ──────────────────────────────────────────────────── -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo" aria-label="NetCore Academy home">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <circle cx="14" cy="14" r="13" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <circle cx="14" cy="14" r="4" fill="var(--accent-cyan)"/>
+          <line x1="14" y1="1" x2="14" y2="7"  stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <line x1="14" y1="21" x2="14" y2="27" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <line x1="1"  y1="14" x2="7"  y2="14" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <line x1="21" y1="14" x2="27" y2="14" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+        </svg>
+        <span class="logo-text">NetCore<span class="logo-accent">Academy</span></span>
+      </a>
+
+      <nav class="header-nav" aria-label="Chapter navigation">
+        <a href="index.html" class="nav-link">Dashboard</a>
+        <a href="chapter1.html" class="nav-link nav-link--active" aria-current="page">Ch.1</a>
+        <a href="chapter2.html" class="nav-link" id="nav-ch2">Ch.2</a>
+        <a href="exam-mode.html" class="nav-link">Exam</a>
+      </nav>
+
+      <div class="header-right">
+        <div class="rank-badge" id="header-rank">
+          <span class="rank-level" id="header-level">Lv.1</span>
+          <span class="rank-title" id="header-rank-title">Network Cadet</span>
+        </div>
+        <div class="xp-bar-wrap" title="XP progress to next level">
+          <div class="xp-bar-track">
+            <div class="xp-bar-fill" id="header-xp-fill" style="width:0%"></div>
+          </div>
+          <span class="xp-label" id="header-xp-label">0 XP</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Status Bar ───────────────────────────────────────────────────── -->
+  <div class="status-bar" id="status-bar" role="status" aria-live="polite">
+    <span class="status-item">
+      <span class="status-dot status-dot--green"></span>
+      <span>CHAPTER 1</span>
+    </span>
+    <span class="status-item">
+      <span class="status-dot status-dot--cyan"></span>
+      <span id="status-progress-text">0 / 4 TOPICS</span>
+    </span>
+    <span class="status-item status-item--right">
+      <span id="status-xp-earned">0 XP EARNED THIS SESSION</span>
+    </span>
+  </div>
+
+  <!-- ── Page Content ─────────────────────────────────────────────────── -->
+  <main class="page-wrapper" id="main-content">
+
+    <!-- Chapter Hero ---------------------------------------------------- -->
+    <div class="chapter-hero glass-card anim-fade-in-up">
+      <div class="chapter-hero__meta">
+        <span class="section-label">CHAPTER 1 OF 2</span>
+        <h1 class="chapter-hero__title">Introduction to Networking</h1>
+        <p class="chapter-hero__desc">
+          Understand what the Internet is, how protocols govern communication,
+          how the network is structured, and how devices gain access.
+          Four topics — four simulations — adaptive quizzes.
+        </p>
+        <div class="chapter-hero__actions">
+          <a href="#ch1-internet" class="btn btn--primary">Start Learning</a>
+          <a href="index.html" class="btn btn--ghost">← Dashboard</a>
+        </div>
+      </div>
+      <div class="chapter-hero__ring" aria-label="Chapter 1 completion progress">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <circle class="ring-track" cx="50" cy="50" r="40" />
+          <circle class="ring-fill ring-fill--cyan" id="ch1-progress-ring"
+                  cx="50" cy="50" r="40"
+                  stroke-dasharray="251.3"
+                  stroke-dashoffset="251.3"
+                  transform="rotate(-90 50 50)" />
+        </svg>
+        <div class="ring-label">
+          <span class="ring-pct" id="ch1-ring-pct">0%</span>
+          <span class="ring-sub">complete</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================
+         SECTION 1 — What is the Internet?
+    ================================================================ -->
+    <section class="topic-section" id="ch1-internet"
+             data-section-id="ch1-internet" data-section-index="0">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 1 OF 4</span>
+          <div class="topic-badge tag tag--cyan">UNLOCKED</div>
+        </div>
+        <h2 class="topic-section__title">What is the Internet?</h2>
+        <p class="topic-section__subtitle">Nuts-and-bolts view · Service view · End systems · ISPs</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <!-- 1. EXPLAIN -->
+        <div class="learn-block glass-card glass-card--cyan">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-cyan)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            The Internet is a global network of billions of interconnected devices — computers, phones, servers, sensors — exchanging data using shared protocols. It can be viewed from two angles: the <strong>nuts-and-bolts view</strong> (physical hardware and links) and the <strong>service view</strong> (an infrastructure that delivers services to applications).
+          </p>
+          <ul class="learn-block__bullets">
+            <li>Nuts-and-bolts: end systems (hosts) connected by communication links and packet switches</li>
+            <li>Communication links: fiber optics, copper wire, radio, satellite</li>
+            <li>Packet switches (routers + link-layer switches) forward packets toward destinations</li>
+            <li>End systems connect to the Internet via Internet Service Providers (ISPs)</li>
+            <li>Service view: the Internet is a platform delivering services to distributed applications</li>
+            <li>Distributed apps run on <em>end systems</em> — NOT on packet switches in the core</li>
+            <li>Protocols define the format and order of messages between communicating entities</li>
+          </ul>
+        </div>
+
+        <!-- 2. VISUALIZE -->
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+              <line x1="8" y1="8" x2="8" y2="11" stroke="var(--accent-green)" stroke-width="1.5"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-packet-flow"
+               id="sim-mount-ch1-internet"
+               aria-label="Packet flow simulation"></div>
+        </div>
+
+        <!-- 3. MEMORY TRIGGER (analogy) -->
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            The Internet is like a <strong>postal system</strong>. Your home is an end system, roads are communication links, sorting facilities are packet switches, and the postal service is your ISP. Your letter (data) gets broken into parcels (packets) that travel independently and are reassembled at the destination.
+          </p>
+        </div>
+
+        <!-- 4. MINI QUIZ -->
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch1-internet"
+               data-chapter="chapter1"
+               id="quiz-ch1-internet"
+               aria-label="What is the Internet quiz"></div>
+        </div>
+
+      </div><!-- /.topic-section__body -->
+    </section><!-- /#ch1-internet -->
+
+
+    <!-- ================================================================
+         SECTION 2 — Protocols
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch1-protocols"
+             data-section-id="ch1-protocols" data-section-index="1">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 2 OF 4</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch1-protocols">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">Protocols</h2>
+        <p class="topic-section__subtitle">Definition · Role · TCP/IP · IETF RFCs · Examples</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 1</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--purple">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            A protocol defines the <strong>rules</strong> governing communication between entities — the format and order of messages exchanged, and the actions taken. All activity on the Internet is governed by protocols. Without agreed-upon protocols, devices from different vendors could not communicate.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>A protocol specifies: message format, message order, and actions on send/receive</li>
+            <li>Protocols exist at every layer: application, transport, network, link, physical</li>
+            <li>Key examples: HTTP (web), SMTP (email), TCP (reliable transfer), IP (routing), 802.11 (WiFi)</li>
+            <li>TCP/IP is the foundational protocol suite of the Internet</li>
+            <li>The IETF standardises Internet protocols via RFC documents</li>
+            <li>Protocols enable interoperability across different vendors and platforms</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-client-server"
+               id="sim-mount-ch1-protocols"
+               aria-label="Client-server communication simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            Protocols are like the <strong>rules of a formal meeting</strong>. Before speaking you raise your hand (SYN). The chairperson acknowledges (SYN-ACK). You confirm and begin (ACK). Everyone follows the same rules. Imagine if some people spoke French and others Morse code with no agreed translator — that's a network without protocols.
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch1-protocols"
+               data-chapter="chapter1"
+               id="quiz-ch1-protocols"
+               aria-label="Protocols quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch1-protocols -->
+
+
+    <!-- ================================================================
+         SECTION 3 — Network Structure
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch1-structure"
+             data-section-id="ch1-structure" data-section-index="2">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 3 OF 4</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch1-structure">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">Network Structure</h2>
+        <p class="topic-section__subtitle">Network edge · Access network · Network core · Packet vs circuit switching</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 2</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--green">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-green)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-green)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            The Internet's structure has three key parts: the <strong>network edge</strong> (end systems and applications), the <strong>access network</strong> (the last-mile link to the first router), and the <strong>network core</strong> (the mesh of high-speed routers forwarding packets globally).
+          </p>
+          <ul class="learn-block__bullets">
+            <li>Network edge: end systems (hosts) — clients and servers — where applications live</li>
+            <li>Servers often housed in large data centers (Google, AWS, Meta)</li>
+            <li>Access network: physical link from end system to its first (edge) router — the "last mile"</li>
+            <li>Network core: mesh of high-speed routers interconnected by high-bandwidth fiber links</li>
+            <li>Packet switching: store-and-forward; no dedicated path; used in the Internet core</li>
+            <li>Circuit switching (phone networks): reserves a dedicated path for the full call duration</li>
+            <li>Statistical multiplexing: many users share links efficiently — more efficient for bursty traffic</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-packet-flow"
+               id="sim-mount-ch1-structure"
+               aria-label="Packet flow through network core simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            Picture a city. Your home is the <strong>edge</strong>. The post office entrance is the <strong>access network</strong> — the path from your door to the network. The highway system is the <strong>core</strong>. Your letter (packet) doesn't reserve a lane on the highway — it travels whenever space is available (statistical multiplexing).
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch1-structure"
+               data-chapter="chapter1"
+               id="quiz-ch1-structure"
+               aria-label="Network structure quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch1-structure -->
+
+
+    <!-- ================================================================
+         SECTION 4 — Access Networks
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch1-access"
+             data-section-id="ch1-access" data-section-index="3">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 4 OF 4</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch1-access">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">Access Networks</h2>
+        <p class="topic-section__subtitle">DSL · Cable (HFC) · FTTH · Wireless · Enterprise Ethernet</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 3</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--orange">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-orange)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            Access networks are the <strong>last-mile technologies</strong> connecting homes, businesses, and mobile devices to the first router. They vary significantly in speed, medium, and topology. Core types: DSL, cable (HFC), fiber-to-the-home (FTTH), wireless (WiFi/cellular), and enterprise Ethernet.
+          </p>
+          <ul class="learn-block__bullets">
+            <li><strong>DSL</strong> — uses telephone copper wire; asymmetric (download faster than upload); 1–100 Mbps</li>
+            <li>DSL uses frequency division multiplexing — voice and data share the same line</li>
+            <li><strong>Cable (HFC)</strong> — shared coaxial TV medium; up to 1.2 Gbps down; all neighbours share bandwidth</li>
+            <li><strong>FTTH</strong> — fiber optic all the way to premises; gigabit speeds; lowest latency</li>
+            <li>FTTH architectures: AON (Active Optical Network) and PON (Passive Optical Network)</li>
+            <li><strong>WiFi (802.11)</strong> — shared wireless access point; typically 10–100 Mbps range</li>
+            <li><strong>4G/5G cellular</strong> — wide-area wireless; 4G ~60 Mbps, 5G potentially &gt;1 Gbps</li>
+          </ul>
+        </div>
+
+        <!-- Comparison Table: Access Technologies -->
+        <div class="comparison-grid glass-card" aria-label="Access network comparison">
+          <div class="comparison-grid__header">
+            <span class="section-label">ACCESS TECHNOLOGY COMPARISON</span>
+          </div>
+          <div class="comparison-grid__table" role="table" aria-label="Comparison of access network technologies">
+            <div class="comparison-grid__row comparison-grid__row--head" role="row">
+              <span role="columnheader">Technology</span>
+              <span role="columnheader">Medium</span>
+              <span role="columnheader">Shared?</span>
+              <span role="columnheader">Max Speed</span>
+            </div>
+            <div class="comparison-grid__row" role="row">
+              <span role="cell"><strong>DSL</strong></span>
+              <span role="cell">Copper (telephone)</span>
+              <span role="cell"><span class="tag tag--green">Dedicated</span></span>
+              <span role="cell">~100 Mbps</span>
+            </div>
+            <div class="comparison-grid__row" role="row">
+              <span role="cell"><strong>Cable HFC</strong></span>
+              <span role="cell">Coaxial + fiber</span>
+              <span role="cell"><span class="tag tag--red">Shared</span></span>
+              <span role="cell">1.2 Gbps↓</span>
+            </div>
+            <div class="comparison-grid__row" role="row">
+              <span role="cell"><strong>FTTH</strong></span>
+              <span role="cell">Fiber optic</span>
+              <span role="cell"><span class="tag tag--green">Dedicated</span></span>
+              <span role="cell">&gt;1 Gbps</span>
+            </div>
+            <div class="comparison-grid__row" role="row">
+              <span role="cell"><strong>WiFi 802.11</strong></span>
+              <span role="cell">Radio (2.4/5 GHz)</span>
+              <span role="cell"><span class="tag tag--red">Shared</span></span>
+              <span role="cell">~9.6 Gbps*</span>
+            </div>
+            <div class="comparison-grid__row" role="row">
+              <span role="cell"><strong>5G Cellular</strong></span>
+              <span role="cell">Radio (mmWave)</span>
+              <span role="cell"><span class="tag tag--red">Shared</span></span>
+              <span role="cell">&gt;1 Gbps</span>
+            </div>
+          </div>
+          <p class="comparison-grid__footnote">* WiFi 6 (802.11ax) theoretical max; real-world speeds are lower</p>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-client-server"
+               id="sim-mount-ch1-access"
+               aria-label="Access network simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            Access networks are different roads to the same highway. <strong>DSL</strong> is a narrow country road repurposed from telephone lines. <strong>Cable</strong> is a shared suburban lane — faster, but you share with neighbours. <strong>Fiber</strong> is a private express lane with no congestion. <strong>Cellular</strong> is a helicopter — wireless and flexible, but subject to interference.
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch1-access"
+               data-chapter="chapter1"
+               id="quiz-ch1-access"
+               aria-label="Access networks quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch1-access -->
+
+
+    <!-- ── Chapter Complete CTA ──────────────────────────────────────── -->
+    <div class="chapter-complete-cta glass-card" id="ch1-complete-cta" aria-hidden="true">
+      <div class="chapter-complete-cta__inner">
+        <div class="chapter-complete-cta__icon" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="22" stroke="var(--accent-green)" stroke-width="2"/>
+            <polyline points="14,25 21,32 34,18" stroke="var(--accent-green)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h2 class="chapter-complete-cta__title">Chapter 1 Complete!</h2>
+        <p class="chapter-complete-cta__text">
+          You've covered all four Chapter 1 topics. Ready to tackle the Application Layer?
+        </p>
+        <div class="chapter-complete-cta__actions">
+          <a href="chapter2.html" class="btn btn--primary btn--lg">
+            Chapter 2: Application Layer →
+          </a>
+          <a href="exam-mode.html" class="btn btn--ghost">
+            Jump to Exam Mode
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main><!-- /#main-content -->
+
+  <!-- ── XP Toast (injected by gamification.js) ──────────────────────── -->
+  <div id="xp-toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- ── Level-Up Overlay (injected by gamification.js) ─────────────── -->
+  <div id="level-up-overlay" class="level-up-overlay" aria-hidden="true" role="dialog" aria-label="Level up notification"></div>
+
+  <!-- ── Keyboard Shortcut Modal ─────────────────────────────────────── -->
+  <div id="modal-shortcuts" class="modal" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts" aria-hidden="true">
+    <div class="modal__backdrop"></div>
+    <div class="modal__sheet">
+      <div class="modal__drag-handle" aria-hidden="true"></div>
+      <div class="modal__header">
+        <h3 class="modal__title">Keyboard Shortcuts</h3>
+        <button class="modal__close" data-modal-close="modal-shortcuts" aria-label="Close shortcuts">✕</button>
+      </div>
+      <div class="modal__body">
+        <div class="step-sequence">
+          <div class="step-item"><kbd>?</kbd><span>Show this help</span></div>
+          <div class="step-item"><kbd>H</kbd><span>Go to Dashboard</span></div>
+          <div class="step-item"><kbd>1</kbd><span>Chapter 1 (this page)</span></div>
+          <div class="step-item"><kbd>2</kbd><span>Chapter 2</span></div>
+          <div class="step-item"><kbd>E</kbd><span>Exam Mode</span></div>
+          <div class="step-item"><kbd>ESC</kbd><span>Close modal / dialog</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Offline Banner (injected by app.js) ─────────────────────────── -->
+  <div id="offline-banner" class="alert-banner alert-banner--warn" role="alert" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <polygon points="8,2 15,14 1,14" stroke="var(--accent-orange)" stroke-width="1.5" fill="none"/>
+      <line x1="8" y1="7" x2="8" y2="10" stroke="var(--accent-orange)" stroke-width="1.5"/>
+      <circle cx="8" cy="12" r="0.8" fill="var(--accent-orange)"/>
+    </svg>
+    You are offline. Progress is saved locally and will sync when reconnected.
+  </div>
+
+  <!-- ── Scripts ──────────────────────────────────────────────────────── -->
+  <!-- Data must load before engine modules that consume it -->
+  <script src="data/chapter1-data.js"></script>
+  <!-- JS modules — order matters (progress → gamification → quiz → animations → app) -->
+  <script src="js/progress.js"></script>
+  <script src="js/gamification.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- One-time page init: wire quiz containers to chapter1Data -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Mount quizzes for each section from chapter1Data
+      if (window.chapter1Data && window.Quiz) {
+        chapter1Data.sections.forEach(function (section) {
+          var container = document.querySelector(
+            '.quiz-mount-point[data-quiz-topic="' + section.id + '"]'
+          );
+          if (!container) return;
+          Quiz.mount(container, section.quiz, {
+            topicId: section.id,
+            chapter: 'ch1',
+            onComplete: function (result) {
+              if (window.App) App.onTopicQuizComplete(section.id, result);
+            }
+          });
+        });
+      }
+      // Bootstrap app
+      if (window.App) App.init();
+    });
+  </script>
+
+</body>
+</html>

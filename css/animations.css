@@ -1,0 +1,605 @@
+/* ============================================================
+   animations.css — Keyframes, Transition Classes, Motion Utils
+   NetCore Academy | Shared across all pages
+   ============================================================ */
+
+/* ============================================================
+   1. KEYFRAMES — AMBIENT / UI
+   ============================================================ */
+
+/* Scan line that drifts down the viewport */
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* Pulsing glow opacity — logos, status dots, etc. */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.65; }
+  50%       { opacity: 1;    }
+}
+
+/* Terminal cursor blink */
+@keyframes blink {
+  0%,  49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* Soft float — idle decorative elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0);    }
+  50%       { transform: translateY(-6px); }
+}
+
+/* Rotation — spinners, loading rings */
+@keyframes spin {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
+}
+
+/* Counter-spin — dual-ring loader */
+@keyframes spin-reverse {
+  from { transform: rotate(0deg);    }
+  to   { transform: rotate(-360deg); }
+}
+
+/* Shimmer — skeleton loading bars */
+@keyframes shimmer {
+  0%   { background-position: -400px 0;    }
+  100% { background-position:  400px 0;    }
+}
+
+/* ============================================================
+   2. KEYFRAMES — ENTRANCE
+   ============================================================ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-18px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-18px); }
+  to   { opacity: 1; transform: translateX(0);     }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(18px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
+/* ============================================================
+   3. KEYFRAMES — FEEDBACK / STATE
+   ============================================================ */
+
+/* XP gain flash — whole card briefly glows green */
+@keyframes xp-flash {
+  0%   { box-shadow: none; }
+  40%  { box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.45), 0 0 32px rgba(0, 255, 136, 0.2); }
+  100% { box-shadow: none; }
+}
+
+/* Correct answer — green pulse */
+@keyframes correct-pulse {
+  0%   { box-shadow: none; }
+  40%  { box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.5), 0 0 20px rgba(0, 255, 136, 0.25); }
+  100% { box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2); }
+}
+
+/* Wrong answer — red shake */
+@keyframes wrong-shake {
+  0%,  100% { transform: translateX(0);   }
+  20%        { transform: translateX(-7px); }
+  40%        { transform: translateX(7px);  }
+  60%        { transform: translateX(-4px); }
+  80%        { transform: translateX(4px);  }
+}
+
+/* Level up — dramatic scale + glow burst */
+@keyframes level-up {
+  0%   { transform: scale(1);    box-shadow: none; }
+  30%  { transform: scale(1.25); box-shadow: 0 0 0 6px rgba(168, 85, 247, 0.5), 0 0 48px rgba(168, 85, 247, 0.4); }
+  60%  { transform: scale(0.95); }
+  100% { transform: scale(1);    box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.25); }
+}
+
+/* Badge unlock — bounce in */
+@keyframes badge-unlock {
+  0%   { transform: scale(0) rotate(-12deg); opacity: 0; }
+  55%  { transform: scale(1.18) rotate(3deg); opacity: 1; }
+  75%  { transform: scale(0.92) rotate(-1deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Toast slide-up */
+@keyframes toast-in {
+  from { transform: translateY(70px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes toast-out {
+  from { transform: translateY(0);    opacity: 1; }
+  to   { transform: translateY(70px); opacity: 0; }
+}
+
+/* Progress bar fill (used when animating with JS) */
+@keyframes bar-fill {
+  from { width: 0%; }
+}
+
+/* XP counter tick (combined with JS counter) */
+@keyframes count-up-glow {
+  0%   { color: var(--accent-cyan); text-shadow: 0 0 16px rgba(0, 245, 255, 0.8); }
+  100% { color: var(--accent-cyan); text-shadow: 0 0 8px  rgba(0, 245, 255, 0.25); }
+}
+
+/* ============================================================
+   4. KEYFRAMES — SIMULATION ACTORS
+   Used by js/animations.js for in-page simulations
+   ============================================================ */
+
+/* Packet moving right along a path */
+@keyframes packet-move-right {
+  0%   { transform: translateX(0)    scale(1);    opacity: 1; }
+  45%  { transform: translateX(180px) scale(1);   opacity: 1; }
+  50%  { transform: translateX(180px) scale(1.3); opacity: 0.8; }
+  55%  { transform: translateX(180px) scale(1);   opacity: 1; }
+  100% { transform: translateX(360px) scale(1);   opacity: 1; }
+}
+
+/* Packet hop — rises slightly mid-jump */
+@keyframes packet-hop {
+  0%   { transform: translateX(0)   translateY(0);     }
+  50%  { transform: translateX(50%) translateY(-12px); }
+  100% { transform: translateX(100%) translateY(0);    }
+}
+
+/* Signal ripple — radiates from a node */
+@keyframes ripple {
+  0%   { transform: scale(0);   opacity: 0.8; }
+  100% { transform: scale(2.8); opacity: 0;   }
+}
+
+/* Node ping — quick scale pop */
+@keyframes node-ping {
+  0%, 100% { transform: scale(1);    box-shadow: none; }
+  50%       { transform: scale(1.18); box-shadow: 0 0 12px rgba(0, 245, 255, 0.55); }
+}
+
+/* Data flow dots moving along a line */
+@keyframes data-flow {
+  0%   { stroke-dashoffset: 100; opacity: 0;   }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { stroke-dashoffset: 0;   opacity: 0;   }
+}
+
+/* Handshake arrow draw */
+@keyframes draw-arrow {
+  from { stroke-dashoffset: 200; opacity: 0; }
+  to   { stroke-dashoffset: 0;   opacity: 1; }
+}
+
+/* Typing text effect — used in terminal blocks */
+@keyframes type-in {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+/* ============================================================
+   5. KEYFRAMES — DECORATIVE
+   ============================================================ */
+
+/* Neon border trace — traces around a card */
+@keyframes border-trace {
+  0%   { clip-path: inset(0 100% 100% 0); }
+  25%  { clip-path: inset(0 0 100% 0);    }
+  50%  { clip-path: inset(0 0 0 0);       }
+  75%  { clip-path: inset(0 0 0 100%);    }
+  100% { clip-path: inset(0 100% 0 100%); }
+}
+
+/* Glitch flicker — chapter headings, drama moments */
+@keyframes glitch {
+  0%,  95%, 100% {
+    transform: translate(0);
+    text-shadow: none;
+  }
+  96% {
+    transform: translate(-3px, 1px);
+    text-shadow: 3px 0 var(--accent-red), -3px 0 var(--accent-cyan);
+  }
+  98% {
+    transform: translate(2px, -1px);
+    text-shadow: -2px 0 var(--accent-purple), 2px 0 var(--accent-green);
+  }
+}
+
+/* Horizontal noise lines — background texture */
+@keyframes noise {
+  0%   { background-position: 0 0;   }
+  10%  { background-position: 5% 10%; }
+  20%  { background-position: -5% 20%; }
+  30%  { background-position: 10% 30%; }
+  40%  { background-position: -8% 40%; }
+  50%  { background-position: 3% 50%; }
+  60%  { background-position: -3% 60%; }
+  70%  { background-position: 7% 70%; }
+  80%  { background-position: -7% 80%; }
+  90%  { background-position: 5% 90%; }
+  100% { background-position: 0 100%; }
+}
+
+/* ============================================================
+   6. ENTRANCE UTILITY CLASSES
+   Apply to any element for consistent entrance animations
+   ============================================================ */
+
+.anim-fade-in       { animation: fadeIn      0.4s ease both; }
+.anim-fade-in-up    { animation: fadeInUp    0.5s ease both; }
+.anim-fade-in-down  { animation: fadeInDown  0.5s ease both; }
+.anim-fade-in-left  { animation: fadeInLeft  0.5s ease both; }
+.anim-fade-in-right { animation: fadeInRight 0.5s ease both; }
+.anim-scale-in      { animation: scaleIn     0.4s ease both; }
+.anim-slide-up      { animation: slideUp     0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+/* Stagger helpers — add to parent, children pick up delay */
+.stagger > *:nth-child(1)  { animation-delay: 0.05s; }
+.stagger > *:nth-child(2)  { animation-delay: 0.10s; }
+.stagger > *:nth-child(3)  { animation-delay: 0.15s; }
+.stagger > *:nth-child(4)  { animation-delay: 0.20s; }
+.stagger > *:nth-child(5)  { animation-delay: 0.25s; }
+.stagger > *:nth-child(6)  { animation-delay: 0.30s; }
+.stagger > *:nth-child(7)  { animation-delay: 0.35s; }
+.stagger > *:nth-child(8)  { animation-delay: 0.40s; }
+.stagger > *:nth-child(9)  { animation-delay: 0.45s; }
+.stagger > *:nth-child(10) { animation-delay: 0.50s; }
+.stagger > *:nth-child(11) { animation-delay: 0.55s; }
+.stagger > *:nth-child(12) { animation-delay: 0.60s; }
+
+/* Duration modifiers */
+.anim-fast   { animation-duration: 0.2s !important; }
+.anim-normal { animation-duration: 0.5s !important; }
+.anim-slow   { animation-duration: 0.9s !important; }
+
+/* Delay helpers */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+.delay-6 { animation-delay: 0.6s; }
+.delay-7 { animation-delay: 0.7s; }
+.delay-8 { animation-delay: 0.8s; }
+
+/* Fill mode helper */
+.anim-fill-both    { animation-fill-mode: both; }
+.anim-fill-forward { animation-fill-mode: forwards; }
+
+/* ============================================================
+   7. FEEDBACK UTILITY CLASSES
+   Applied by JS after quiz/Xp events
+   ============================================================ */
+
+/* Trigger on a card when XP is awarded */
+.anim-xp-flash {
+  animation: xp-flash 0.7s ease forwards;
+}
+
+/* Trigger on a quiz option when answered correctly */
+.anim-correct {
+  animation: correct-pulse 0.6s ease forwards;
+}
+
+/* Trigger on a quiz option when answered wrong */
+.anim-wrong {
+  animation: wrong-shake 0.45s ease forwards;
+}
+
+/* Trigger on the level badge on level-up */
+.anim-level-up {
+  animation: level-up 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Trigger on a badge icon when unlocked */
+.anim-badge-unlock {
+  animation: badge-unlock 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ============================================================
+   8. AMBIENT UTILITY CLASSES
+   Ongoing passive animations
+   ============================================================ */
+
+.anim-pulse      { animation: pulse-glow 3s ease-in-out infinite; }
+.anim-pulse-fast { animation: pulse-glow 1.5s ease-in-out infinite; }
+.anim-float      { animation: float     4s ease-in-out infinite; }
+.anim-spin       { animation: spin      1s linear infinite; }
+.anim-blink      { animation: blink     1s step-end infinite; }
+.anim-glitch     { animation: glitch    6s ease-in-out infinite; }
+
+/* ============================================================
+   9. SKELETON LOADER
+   ============================================================ */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-glass)    0%,
+    rgba(255,255,255,0.08) 50%,
+    var(--bg-glass)   100%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-text {
+  height: 14px;
+  border-radius: var(--radius-xs);
+}
+
+.skeleton-text.wide  { width: 80%; }
+.skeleton-text.mid   { width: 55%; }
+.skeleton-text.short { width: 35%; }
+
+.skeleton-block {
+  height: 120px;
+  border-radius: var(--radius-md);
+}
+
+/* ============================================================
+   10. LOADING SPINNER
+   ============================================================ */
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.spinner::before,
+.spinner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.spinner::before {
+  border-top-color: var(--accent-cyan);
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner::after {
+  border-bottom-color: rgba(0, 245, 255, 0.25);
+  animation: spin-reverse 1.2s linear infinite;
+}
+
+/* ============================================================
+   11. PROGRESS BAR (animated)
+   ============================================================ */
+
+.progress-bar {
+  height: 6px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0%;
+}
+
+.progress-bar-fill.cyan   {
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
+  box-shadow: 0 0 8px rgba(0, 245, 255, 0.45);
+}
+.progress-bar-fill.purple {
+  background: linear-gradient(90deg, var(--accent-purple), var(--accent-orange));
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.45);
+}
+.progress-bar-fill.green  {
+  background: var(--accent-green);
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.45);
+}
+.progress-bar-fill.red    {
+  background: var(--accent-red);
+  box-shadow: 0 0 8px rgba(255, 51, 102, 0.45);
+}
+
+/* Striped / indeterminate bar */
+.progress-bar-fill.indeterminate {
+  width: 40% !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--accent-cyan) 50%,
+    transparent 100%
+  );
+  animation: bar-indeterminate 1.4s ease-in-out infinite;
+}
+
+@keyframes bar-indeterminate {
+  0%   { margin-left: -40%; }
+  100% { margin-left: 100%; }
+}
+
+/* ============================================================
+   12. SIMULATION NODE CLASSES
+   Used by js/animations.js to drive SVG/canvas sims
+   ============================================================ */
+
+/* Base node dot in simulations */
+.sim-node {
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.sim-node.active {
+  filter: drop-shadow(0 0 6px var(--accent-cyan));
+  animation: node-ping 0.6s ease;
+}
+
+/* Packet actor */
+.sim-packet {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 8px var(--accent-cyan);
+  pointer-events: none;
+  transition: left 0.4s ease, top 0.3s ease;
+}
+
+.sim-packet.data  { background: var(--accent-cyan);   box-shadow: 0 0 8px var(--accent-cyan);   }
+.sim-packet.ack   { background: var(--accent-green);  box-shadow: 0 0 8px var(--accent-green);  }
+.sim-packet.syn   { background: var(--accent-purple); box-shadow: 0 0 8px var(--accent-purple); }
+.sim-packet.error { background: var(--accent-red);    box-shadow: 0 0 8px var(--accent-red);    }
+
+/* Ripple ring that expands from a node */
+.sim-ripple {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent-cyan);
+  opacity: 0;
+  pointer-events: none;
+  animation: ripple 0.8s ease-out forwards;
+}
+
+/* Connection line between nodes */
+.sim-line {
+  stroke: var(--border-glass);
+  stroke-width: 1.5;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease;
+}
+
+.sim-line.active {
+  stroke: rgba(0, 245, 255, 0.5);
+  stroke-width: 2;
+}
+
+/* ============================================================
+   13. TERMINAL / TYPEWRITER BLOCK
+   ============================================================ */
+
+.terminal-block {
+  background: #060910;
+  border: 1px solid rgba(0, 245, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--accent-green);
+  line-height: 1.9;
+  overflow: hidden;
+  position: relative;
+}
+
+.terminal-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 28px;
+  background: rgba(0, 245, 255, 0.04);
+  border-bottom: 1px solid rgba(0, 245, 255, 0.1);
+}
+
+.terminal-dots {
+  position: absolute;
+  top: 8px;
+  left: 14px;
+  display: flex;
+  gap: 6px;
+}
+
+.terminal-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.terminal-dots span:nth-child(1) { background: #ff5f57; }
+.terminal-dots span:nth-child(2) { background: #febc2e; }
+.terminal-dots span:nth-child(3) { background: #28c840; }
+
+.terminal-body {
+  margin-top: 20px;
+}
+
+.terminal-line {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+}
+
+.terminal-line.visible {
+  opacity: 1;
+  animation: type-in 0.6s steps(40, end) forwards;
+}
+
+.terminal-line .prompt {
+  color: var(--accent-cyan);
+  margin-right: 8px;
+}
+
+.terminal-line .comment {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ============================================================
+   14. TRANSITION HELPER CLASSES
+   ============================================================ */
+
+/* Applied by JS to temporarily suppress transitions on page load */
+.no-transition,
+.no-transition * {
+  transition: none !important;
+  animation: none  !important;
+}
+
+/* Reduced motion — respect user preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration:   0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration:  0.01ms !important;
+  }
+
+  body::after { display: none; } /* hide scanline */
+}

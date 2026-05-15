@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exam Mode — NetCore Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/components.css" />
+
+  <!--
+    Exam-mode-specific styles for elements not covered by components.css:
+    answer options, text input, match widget, breakdown bars.
+    Kept minimal — only what cannot be derived from existing CSS variables.
+  -->
+  <style>
+    /* ── Exam question panel ─────────────────────────────────── */
+    .exam-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-glass);
+      position: sticky;
+      top: 56px; /* clears site-header */
+      z-index: 90;
+    }
+    .exam-header-bar__left  { display: flex; align-items: center; gap: 1rem; }
+    .exam-header-bar__right { display: flex; align-items: center; gap: 1rem; }
+
+    #exam-mode-label {
+      font: 700 0.7rem/1 var(--font-display);
+      letter-spacing: .12em;
+      color: var(--accent-purple);
+    }
+    #exam-q-counter {
+      font: 500 0.85rem/1 var(--font-display);
+      color: var(--text-muted);
+    }
+    #exam-q-topic {
+      font: 500 0.75rem/1 var(--font-display);
+      color: var(--accent-cyan);
+      background: rgba(0,245,255,.08);
+      border: 1px solid rgba(0,245,255,.2);
+      border-radius: var(--radius-sm);
+      padding: .2rem .55rem;
+    }
+
+    /* Timer */
+    #exam-timer {
+      font: 700 1.4rem/1 var(--font-display);
+      color: var(--accent-cyan);
+      letter-spacing: .06em;
+      transition: color .3s;
+    }
+    #exam-timer[data-state="warn"]     { color: var(--accent-orange); animation: pulse-glow 1s ease-in-out infinite; }
+    #exam-timer[data-state="critical"] { color: var(--accent-red);    animation: pulse-glow .5s ease-in-out infinite; }
+
+    /* Timer alert banner */
+    #exam-timer-alert {
+      text-align: center;
+      padding: .5rem 1rem;
+      font: 600 .8rem/1 var(--font-display);
+      letter-spacing: .1em;
+    }
+    #exam-timer-alert[data-type="warn"]     { background: rgba(255,107,53,.12); color: var(--accent-orange); border-bottom: 1px solid rgba(255,107,53,.25); }
+    #exam-timer-alert[data-type="critical"] { background: rgba(255,51,102,.12); color: var(--accent-red);    border-bottom: 1px solid rgba(255,51,102,.25); }
+
+    /* Dot strip */
+    #exam-dot-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+      padding: .75rem 1.25rem;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-glass);
+    }
+
+    /* Question card */
+    .exam-question-card {
+      max-width: 780px;
+      margin: 2rem auto;
+      padding: 2rem;
+    }
+    #exam-q-text {
+      font: 600 1.1rem/1.6 var(--font-body);
+      color: var(--text-primary);
+      margin: 1rem 0 1.5rem;
+    }
+
+    /* Answer options */
+    .exam-option {
+      display: flex;
+      align-items: flex-start;
+      gap: .85rem;
+      padding: .9rem 1.1rem;
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+      margin-bottom: .6rem;
+    }
+    .exam-option:hover { border-color: var(--accent-cyan); background: rgba(0,245,255,.04); }
+    .exam-option input[type="radio"] { width: 1.1rem; height: 1.1rem; margin-top: .15rem; accent-color: var(--accent-cyan); flex-shrink: 0; }
+    .exam-option__text { font: 400 .95rem/1.5 var(--font-body); color: var(--text-primary); }
+    .exam-option input:checked ~ .exam-option__text { color: var(--accent-cyan); }
+    .exam-option:has(input:checked) { border-color: var(--accent-cyan); background: rgba(0,245,255,.06); }
+
+    /* Fill-blank input */
+    .exam-text-input {
+      width: 100%;
+      padding: .85rem 1rem;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      font: 400 1rem/1 var(--font-body);
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color .15s;
+    }
+    .exam-text-input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 0 3px rgba(0,245,255,.12); }
+
+    /* Match widget */
+    .exam-match-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem 1.25rem; }
+    .exam-match-col  { display: flex; flex-direction: column; gap: .6rem; }
+    .exam-match-term {
+      padding: .7rem 1rem;
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      font: 500 .85rem/1.4 var(--font-display);
+      color: var(--accent-cyan);
+      background: rgba(0,245,255,.04);
+    }
+    .exam-match-select {
+      width: 100%;
+      padding: .7rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      font: 400 .85rem/1 var(--font-body);
+      color: var(--text-primary);
+      outline: none;
+      cursor: pointer;
+      transition: border-color .15s;
+    }
+    .exam-match-select:focus { border-color: var(--accent-purple); }
+    @media (max-width: 560px) { .exam-match-wrap { grid-template-columns: 1fr; } }
+
+    /* Exam nav buttons */
+    .exam-nav { display: flex; gap: .75rem; justify-content: flex-end; margin-top: 1.5rem; }
+    .hidden   { display: none !important; }
+
+    /* ── Score screen ─────────────────────────────────────────── */
+    .score-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1rem;
+      padding: 2.5rem 1.5rem 1.5rem;
+    }
+    #score-verdict {
+      font: 700 1rem/1 var(--font-display);
+      letter-spacing: .15em;
+      padding: .4rem 1rem;
+      border-radius: var(--radius-sm);
+    }
+    #score-verdict[data-state="pass"] { color: var(--accent-green); border: 1px solid rgba(0,255,136,.3); background: rgba(0,255,136,.06); }
+    #score-verdict[data-state="fail"] { color: var(--accent-red);   border: 1px solid rgba(255,51,102,.3); background: rgba(255,51,102,.06); }
+
+    #score-ring-wrap { line-height: 0; }
+
+    .score-stats-row {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: .75rem;
+      max-width: 560px;
+      margin: 0 auto 2rem;
+      padding: 0 1rem;
+    }
+    .score-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .3rem;
+      padding: .9rem .5rem;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+    }
+    .score-stat__value { font: 700 1.3rem/1 var(--font-display); color: var(--accent-cyan); }
+    .score-stat__label { font: 400 .7rem/1 var(--font-display); color: var(--text-muted); letter-spacing: .08em; }
+    @media (max-width: 480px) { .score-stats-row { grid-template-columns: repeat(3,1fr); gap: .4rem; } }
+
+    /* Breakdown sections */
+    .breakdown-section { max-width: 780px; margin: 0 auto 2rem; padding: 0 1rem; }
+    .breakdown-section h3 {
+      font: 600 .75rem/1 var(--font-display);
+      letter-spacing: .1em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .topic-breakdown-row { margin-bottom: .75rem; }
+    .topic-breakdown-row--weak .topic-breakdown-label { color: var(--accent-orange); }
+    .topic-breakdown-label { display: flex; justify-content: space-between; margin-bottom: .3rem; }
+    .topic-breakdown-name  { font: 500 .85rem/1 var(--font-body); color: var(--text-primary); }
+    .topic-breakdown-score { font: 600 .8rem/1 var(--font-display); color: var(--text-muted); }
+    .topic-breakdown-track { height: 6px; background: var(--border-glass); border-radius: 3px; overflow: hidden; }
+    .topic-breakdown-fill  { height: 100%; border-radius: 3px; transition: width 1s cubic-bezier(.4,0,.2,1); }
+    .topic-breakdown-fill.bar--green { background: var(--accent-green); }
+    .topic-breakdown-fill.bar--warn  { background: var(--accent-orange); }
+    .topic-breakdown-fill.bar--red   { background: var(--accent-red); }
+
+    .chapter-breakdown-row { margin-bottom: 1rem; }
+    .chapter-breakdown-label { display: flex; justify-content: space-between; margin-bottom: .35rem; font: 500 .9rem/1 var(--font-body); color: var(--text-primary); }
+    .chapter-breakdown-track { height: 8px; background: var(--border-glass); border-radius: 4px; overflow: hidden; }
+    .chapter-breakdown-fill  { height: 100%; background: var(--bar-color, var(--accent-cyan)); border-radius: 4px; transition: width 1.1s cubic-bezier(.4,0,.2,1); }
+
+    /* Weak topics list */
+    .weak-topics-list { list-style: none; padding: 0; }
+    .weak-topic-item {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .6rem .75rem;
+      border: 1px solid rgba(255,107,53,.2);
+      border-radius: var(--radius-sm);
+      background: rgba(255,107,53,.05);
+      color: var(--accent-orange);
+      font: 500 .85rem/1 var(--font-body);
+      margin-bottom: .45rem;
+    }
+    .weak-topic-item::before { content: '⚠'; font-size: .75rem; }
+
+    /* Score CTA buttons */
+    .score-cta { display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center; padding: 1.5rem 1rem 3rem; }
+
+    /* ── Landing screen ───────────────────────────────────────── */
+    .exam-landing {
+      max-width: 720px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .exam-landing-hero {
+      text-align: center;
+      padding: 2.5rem 1.5rem 2rem;
+    }
+    .exam-landing-hero__icon { margin-bottom: 1.25rem; }
+    .exam-landing-hero__title {
+      font: 700 2rem/1.2 var(--font-display);
+      color: var(--text-primary);
+      margin-bottom: .5rem;
+    }
+    .exam-landing-hero__sub {
+      font: 400 1rem/1.6 var(--font-body);
+      color: var(--text-muted);
+      max-width: 480px;
+      margin: 0 auto 2rem;
+    }
+    .exam-landing-stats {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: .75rem;
+      margin-bottom: 2rem;
+    }
+    .exam-landing-stat {
+      padding: 1rem .75rem;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      text-align: center;
+    }
+    .exam-landing-stat__value { font: 700 1.4rem/1 var(--font-display); color: var(--accent-cyan); }
+    .exam-landing-stat__label { font: 400 .7rem/1 var(--font-display); color: var(--text-muted); letter-spacing: .08em; margin-top: .35rem; }
+    .exam-landing-actions { display: flex; flex-direction: column; gap: .75rem; }
+    .exam-rule-list {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+      margin: 0 0 1.5rem;
+    }
+    .exam-rule-list li {
+      padding: .4rem 0 .4rem 1.5rem;
+      position: relative;
+      font: 400 .9rem/1.5 var(--font-body);
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-glass);
+    }
+    .exam-rule-list li:last-child { border-bottom: none; }
+    .exam-rule-list li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body data-page="exam">
+
+  <!-- ── Site Header ──────────────────────────────────────────────────── -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo" aria-label="NetCore Academy home">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <circle cx="14" cy="14" r="13" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <circle cx="14" cy="14" r="4" fill="var(--accent-cyan)"/>
+          <line x1="14" y1="1"  x2="14" y2="7"  stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <line x1="14" y1="21" x2="14" y2="27" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <line x1="1"  y1="14" x2="7"  y2="14" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <line x1="21" y1="14" x2="27" y2="14" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+        </svg>
+        <span class="logo-text">NetCore<span class="logo-accent">Academy</span></span>
+      </a>
+
+      <nav class="header-nav" aria-label="Site navigation">
+        <a href="index.html"     class="nav-link">Dashboard</a>
+        <a href="chapter1.html"  class="nav-link">Ch.1</a>
+        <a href="chapter2.html"  class="nav-link">Ch.2</a>
+        <a href="exam-mode.html" class="nav-link nav-link--active" aria-current="page">Exam</a>
+      </nav>
+
+      <div class="header-right">
+        <div class="rank-badge" id="header-rank">
+          <span class="rank-level"  id="header-level">Lv.1</span>
+          <span class="rank-title"  id="header-rank-title">Network Cadet</span>
+        </div>
+        <div class="xp-bar-wrap" title="XP progress to next level">
+          <div class="xp-bar-track">
+            <div class="xp-bar-fill" id="header-xp-fill" style="width:0%"></div>
+          </div>
+          <span class="xp-label" id="header-xp-label">0 XP</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Status Bar ───────────────────────────────────────────────────── -->
+  <div class="status-bar" id="status-bar" role="status" aria-live="polite">
+    <span class="status-item">
+      <span class="status-dot status-dot--red"></span>
+      <span>EXAM MODE</span>
+    </span>
+    <span class="status-item">
+      <span class="status-dot status-dot--cyan"></span>
+      <span>20 QUESTIONS · 30 MIN · PASS = 80%</span>
+    </span>
+    <span class="status-item status-item--right" id="status-xp-earned">
+      +50 XP ON PASS
+    </span>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       SECTION A — Landing Screen
+  ═════════════════════════════════════════════════════════════════════ -->
+  <section id="exam-landing-section" aria-label="Exam mode landing">
+    <div class="exam-landing">
+
+      <div class="exam-landing-hero glass-card anim-fade-in-up">
+        <div class="exam-landing-hero__icon" aria-hidden="true">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="30" stroke="var(--accent-red)" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <circle cx="32" cy="32" r="20" stroke="var(--accent-red)" stroke-width="1" opacity=".4"/>
+            <circle cx="32" cy="32" r="6"  fill="var(--accent-red)" opacity=".8"/>
+            <line x1="32" y1="2"  x2="32" y2="14" stroke="var(--accent-red)" stroke-width="1.5"/>
+            <line x1="32" y1="50" x2="32" y2="62" stroke="var(--accent-red)" stroke-width="1.5"/>
+            <line x1="2"  y1="32" x2="14" y2="32" stroke="var(--accent-red)" stroke-width="1.5"/>
+            <line x1="50" y1="32" x2="62" y2="32" stroke="var(--accent-red)" stroke-width="1.5"/>
+          </svg>
+        </div>
+
+        <h1 class="exam-landing-hero__title">Exam Mode</h1>
+        <p class="exam-landing-hero__sub">
+          Prove your mastery. 20 random questions drawn from all topics.
+          30 minutes. No going back. Score ≥ 80% to pass.
+        </p>
+
+        <!-- Live stats -->
+        <div class="exam-landing-stats">
+          <div class="exam-landing-stat">
+            <div class="exam-landing-stat__value" id="landing-recent-score">—</div>
+            <div class="exam-landing-stat__label">BEST SCORE</div>
+          </div>
+          <div class="exam-landing-stat">
+            <div class="exam-landing-stat__value">20</div>
+            <div class="exam-landing-stat__label">QUESTIONS</div>
+          </div>
+          <div class="exam-landing-stat">
+            <div class="exam-landing-stat__value" id="landing-weak-count">None</div>
+            <div class="exam-landing-stat__label">WEAK TOPICS</div>
+          </div>
+        </div>
+
+        <!-- Rules -->
+        <ul class="exam-rule-list" aria-label="Exam rules">
+          <li>Questions are randomly sampled from both Chapter 1 and Chapter 2</li>
+          <li>Answer one question at a time — you cannot go back</li>
+          <li>Timer counts down from 30:00 — auto-submits when it hits 0:00</li>
+          <li>Score breakdown is shown immediately on completion</li>
+          <li>Failed topics are saved as Weak Topics for targeted retry</li>
+          <li>Pass with ≥ 80% to earn the <strong>Exam Ready</strong> badge (+50 XP)</li>
+        </ul>
+
+        <!-- Action buttons -->
+        <div class="exam-landing-actions">
+          <button id="btn-start-exam"  class="btn btn--primary btn--lg btn--block">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="flex-shrink:0">
+              <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/>
+              <polygon points="7,5.5 13,9 7,12.5" fill="currentColor"/>
+            </svg>
+            Start Full Exam
+          </button>
+          <button id="btn-start-retry" class="btn btn--ghost btn--lg btn--block" disabled title="Run a full exam first to identify weak topics">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="flex-shrink:0">
+              <path d="M14 9A5 5 0 1 1 9 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <polyline points="14,4 14,9 9,9" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+            Retry Weak Topics
+          </button>
+          <a href="index.html" class="btn btn--ghost btn--block">← Back to Dashboard</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       SECTION B — Active Exam (Question by Question)
+  ═════════════════════════════════════════════════════════════════════ -->
+  <section id="exam-question-section" hidden aria-label="Active exam">
+
+    <!-- Sticky exam header bar -->
+    <div class="exam-header-bar" role="banner" aria-label="Exam status">
+      <div class="exam-header-bar__left">
+        <span id="exam-mode-label">FULL EXAM</span>
+        <span id="exam-q-counter">Q 1 / 20</span>
+        <span id="exam-q-topic"></span>
+      </div>
+      <div class="exam-header-bar__right">
+        <time id="exam-timer" aria-label="Time remaining" aria-live="off">30:00</time>
+        <button class="btn btn--ghost" style="font-size:.75rem;padding:.3rem .7rem"
+                onclick="if(confirm('Abort exam? Your progress will be lost.')) ExamMode.abort()"
+                aria-label="Abort exam">Abort</button>
+      </div>
+    </div>
+
+    <!-- Timer alert (hidden until triggered) -->
+    <div id="exam-timer-alert" hidden role="alert" aria-live="assertive"></div>
+
+    <!-- Question progress dots -->
+    <div id="exam-dot-strip" role="navigation" aria-label="Question progress"></div>
+
+    <!-- Question card -->
+    <div class="exam-question-card glass-card" id="exam-question-panel">
+      <p id="exam-q-text" aria-live="polite"></p>
+      <div id="exam-answer-area" role="group" aria-label="Answer choices"></div>
+      <div class="exam-nav">
+        <button id="btn-exam-next"   class="btn btn--primary">Next →</button>
+        <button id="btn-exam-submit" class="btn btn--primary hidden">Submit Exam</button>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════════════════════════
+       SECTION C — Score Screen
+  ═════════════════════════════════════════════════════════════════════ -->
+  <section id="exam-score-section" hidden aria-label="Exam results">
+
+    <!-- Verdict + Ring -->
+    <div class="score-hero glass-card" style="max-width:780px;margin:2rem auto 0;border-radius:var(--radius-lg)">
+      <div id="score-verdict" data-state="pass">SYSTEMS OPERATIONAL</div>
+      <div id="score-ring-wrap" aria-label="Score percentage ring"></div>
+      <p style="font:400 .9rem/1.5 var(--font-body);color:var(--text-muted);max-width:380px;text-align:center">
+        Your exam results are saved locally. Weak topics have been flagged for retry.
+      </p>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="score-stats-row">
+      <div class="score-stat">
+        <div class="score-stat__value" id="score-stat-correct">0 / 20</div>
+        <div class="score-stat__label">CORRECT</div>
+      </div>
+      <div class="score-stat">
+        <div class="score-stat__value" id="score-stat-answered">0 / 20</div>
+        <div class="score-stat__label">ANSWERED</div>
+      </div>
+      <div class="score-stat">
+        <div class="score-stat__value" id="score-stat-time">00:00</div>
+        <div class="score-stat__label">TIME TAKEN</div>
+      </div>
+    </div>
+
+    <!-- Per-Chapter Breakdown -->
+    <div class="breakdown-section glass-card" style="padding:1.5rem">
+      <h3>SCORE BY CHAPTER</h3>
+      <div id="score-chapter-breakdown" aria-label="Chapter score breakdown"></div>
+    </div>
+
+    <!-- Per-Topic Breakdown -->
+    <div class="breakdown-section glass-card" style="padding:1.5rem">
+      <h3>SCORE BY TOPIC</h3>
+      <div id="score-topic-breakdown" aria-label="Topic score breakdown"></div>
+    </div>
+
+    <!-- Weak Topics -->
+    <div id="score-weak-section" class="breakdown-section glass-card" style="padding:1.5rem" hidden>
+      <h3>WEAK TOPICS — FLAGGED FOR RETRY</h3>
+      <p style="font:400 .85rem/1.5 var(--font-body);color:var(--text-muted);margin-bottom:1rem">
+        These topics scored below 80%. Use <strong>Retry Weak Topics</strong> to drill them specifically.
+      </p>
+      <ul id="score-weak-list" class="weak-topics-list" aria-label="List of weak topics"></ul>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div class="score-cta">
+      <button id="btn-retry-weak" class="btn btn--primary" hidden>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M12.5 8A4.5 4.5 0 1 1 8 3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <polyline points="12.5,3.5 12.5,8 8,8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        </svg>
+        Retry Weak Topics
+      </button>
+      <button id="btn-try-again" class="btn btn--ghost">
+        Try Again (Full Exam)
+      </button>
+      <a href="index.html" class="btn btn--ghost">← Dashboard</a>
+    </div>
+
+  </section>
+
+
+  <!-- ── XP Toast ──────────────────────────────────────────────────────── -->
+  <div id="xp-toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- ── Level-Up Overlay ──────────────────────────────────────────────── -->
+  <div id="level-up-overlay" class="level-up-overlay" aria-hidden="true"
+       role="dialog" aria-label="Level up notification"></div>
+
+  <!-- ── Keyboard Shortcuts Modal ──────────────────────────────────────── -->
+  <div id="modal-shortcuts" class="modal" role="dialog" aria-modal="true"
+       aria-label="Keyboard shortcuts" aria-hidden="true">
+    <div class="modal__backdrop"></div>
+    <div class="modal__sheet">
+      <div class="modal__drag-handle" aria-hidden="true"></div>
+      <div class="modal__header">
+        <h3 class="modal__title">Keyboard Shortcuts</h3>
+        <button class="modal__close" data-modal-close="modal-shortcuts" aria-label="Close shortcuts">✕</button>
+      </div>
+      <div class="modal__body">
+        <div class="step-sequence">
+          <div class="step-item"><kbd>?</kbd><span>Show this help</span></div>
+          <div class="step-item"><kbd>H</kbd><span>Go to Dashboard</span></div>
+          <div class="step-item"><kbd>1</kbd><span>Chapter 1</span></div>
+          <div class="step-item"><kbd>2</kbd><span>Chapter 2</span></div>
+          <div class="step-item"><kbd>E</kbd><span>Exam Mode (this page)</span></div>
+          <div class="step-item"><kbd>ESC</kbd><span>Close modal / dialog</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Offline Banner ────────────────────────────────────────────────── -->
+  <div id="offline-banner" class="alert-banner alert-banner--warn"
+       role="alert" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <polygon points="8,2 15,14 1,14" stroke="var(--accent-orange)" stroke-width="1.5" fill="none"/>
+      <line x1="8" y1="7" x2="8" y2="10" stroke="var(--accent-orange)" stroke-width="1.5"/>
+      <circle cx="8" cy="12" r="0.8" fill="var(--accent-orange)"/>
+    </svg>
+    You are offline. Progress is saved locally and will sync when reconnected.
+  </div>
+
+  <!-- ── Scripts — load order matters ─────────────────────────────────── -->
+  <script src="data/chapter1-data.js"></script>
+  <script src="data/chapter2-data.js"></script>
+  <script src="data/quiz-data.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/gamification.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/exam-mode.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      ExamMode.init();
+    });
+  </script>
+
+</body>
+</html>

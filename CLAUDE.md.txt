@@ -1,0 +1,378 @@
+# CLAUDE.md — Interactive Networking Study System
+
+## Project Identity
+
+**Name:** FE-cient
+**Type:** Multi-file, modular, gamified study platform
+**Stack:** Vanilla HTML + CSS + JavaScript only. No React, no Vue, no external frameworks.
+**Target:** Computer Networking Test 1 (Chapter 1 + Chapter 2 up to Email)
+
+---
+
+## Core Objective
+
+Build a modular, interactive, gamified study system. This is NOT a static notes site.
+
+**The system must produce:**
+- Memory retention via active recall
+- Engagement via gamification
+- Visual understanding via simulations
+- Exam readiness via timed, adaptive quizzes
+
+**The system should feel like:**
+- A futuristic cyber-network terminal / training academy
+- Duolingo for networking
+- A professional interactive learning platform
+
+---
+
+## STRICT GENERATION RULES
+
+> These rules apply for every session. Do not break them under any circumstance.
+
+1. **Generate ONE file per session.** Stop after each file and wait for the user to say "next" or give a specific instruction.
+2. **Never auto-continue** to the next file unless explicitly told to.
+3. **Never generate placeholder stubs.** Every file must be complete and functional on its own.
+4. **Always reference this CLAUDE.md** before generating any file to stay consistent with structure, naming, and data schemas.
+5. **Never inline styles or scripts** into HTML files beyond what is absolutely necessary for that page's one-time setup.
+6. **All shared logic goes in /js modules.** No logic duplication across files.
+
+---
+
+## Project File Structure
+
+```
+/network-study-system
+│
+├── index.html              # Landing page / dashboard / navigation hub
+├── chapter1.html           # Chapter 1 study module
+├── chapter2.html           # Chapter 2 study module
+├── exam-mode.html          # Full exam simulator
+│
+├── /css
+│   ├── style.css           # Base styles, CSS variables, typography, layout
+│   ├── animations.css      # All keyframe animations and transition classes
+│   └── components.css      # Reusable UI components (cards, badges, modals, etc.)
+│
+├── /js
+│   ├── app.js              # App init, routing logic, global event listeners
+│   ├── progress.js         # XP system, level, streak, localStorage read/write
+│   ├── quiz.js             # Quiz engine: render questions, evaluate answers, score
+│   ├── animations.js       # JS-driven animation triggers and simulation controllers
+│   ├── gamification.js     # Badge unlock logic, rank titles, achievement checks
+│   └── exam-mode.js        # Exam timer, randomization, weak-topic tracker, analytics
+│
+├── /data
+│   ├── chapter1-data.js    # Topic content + quiz questions for Chapter 1
+│   ├── chapter2-data.js    # Topic content + quiz questions for Chapter 2
+│   └── quiz-data.js        # Shared pool of randomized exam-mode questions
+│
+└── /assets
+    ├── icons/              # SVG icons only (no PNG/JPG)
+    ├── sounds/             # Optional: subtle UI feedback sounds
+    └── images/             # Network diagrams if needed
+```
+
+---
+
+## Generation Sequence
+
+Follow this exact order. One file per session.
+
+| Session | File to Generate |
+|---------|-----------------|
+| 1 | `index.html` |
+| 2 | `css/style.css` |
+| 3 | `css/animations.css` |
+| 4 | `css/components.css` |
+| 5 | `js/progress.js` |
+| 6 | `js/gamification.js` |
+| 7 | `js/quiz.js` |
+| 8 | `js/animations.js` |
+| 9 | `js/app.js` |
+| 10 | `data/chapter1-data.js` |
+| 11 | `data/chapter2-data.js` |
+| 12 | `data/quiz-data.js` |
+| 13 | `chapter1.html` |
+| 14 | `chapter2.html` |
+| 15 | `js/exam-mode.js` |
+| 16 | `exam-mode.html` |
+
+---
+
+## Design System
+
+### Aesthetic Direction
+
+- **Theme:** Cyberpunk terminal meets network operations center (NOC)
+- **Mode:** Dark only
+- **Feel:** Immersive, high-density, but readable
+
+### CSS Variables (defined in style.css, used everywhere)
+
+```css
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #0f1526;
+  --bg-glass: rgba(255, 255, 255, 0.04);
+
+  --accent-cyan: #00f5ff;
+  --accent-green: #00ff88;
+  --accent-purple: #a855f7;
+  --accent-orange: #ff6b35;
+  --accent-red: #ff3366;
+
+  --text-primary: #e2e8f0;
+  --text-muted: #64748b;
+  --text-dim: #334155;
+
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(0, 245, 255, 0.3);
+
+  --font-display: 'JetBrains Mono', monospace;   /* headers, labels */
+  --font-body: 'Inter', sans-serif;               /* readable body text */
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  --shadow-glow-cyan: 0 0 20px rgba(0, 245, 255, 0.15);
+  --shadow-glow-green: 0 0 20px rgba(0, 255, 136, 0.15);
+}
+```
+
+### UI Patterns
+
+- **Cards:** Glassmorphism — `backdrop-filter: blur(12px)` with `--bg-glass` background and `--border-glass` border
+- **Buttons:** Neon border + glow on hover, no filled backgrounds unless for primary CTAs
+- **Progress bars:** Thin, neon-colored, animated fill
+- **Modals:** Slide-up from bottom with backdrop blur
+- **Terminals:** Monospace font, green-on-dark, blinking cursor effect
+- **Tooltips:** Minimal, appear on hover with fade-in
+
+---
+
+## State Management
+
+All persistent state lives in `localStorage`. The `progress.js` module owns all read/write operations.
+
+### localStorage Schema
+
+```js
+// Key: "netcore_state"
+{
+  xp: 0,                        // total XP earned
+  level: 1,                     // current level (derived from XP)
+  streak: 0,                    // days in a row studied
+  lastStudied: null,            // ISO date string
+  unlockedSections: ["ch1-intro"],  // array of section IDs
+  completedTopics: [],          // array of completed topic IDs
+  achievements: [],             // array of earned badge IDs
+  weakTopics: [],               // array of topic IDs flagged by exam mode
+  examHistory: []               // array of { date, score, weakTopics }
+}
+```
+
+### XP Thresholds (level-up table)
+
+```
+Level 1:    0 XP
+Level 2:  100 XP
+Level 3:  250 XP
+Level 4:  500 XP
+Level 5:  900 XP
+Level 6: 1400 XP
+Level 7: 2000 XP
+Level 8: 2750 XP
+Level 9: 3750 XP
+Level 10: 5000 XP
+```
+
+### XP Rewards
+
+```
+Complete a topic explanation:     +10 XP
+Pass a mini quiz (first try):     +25 XP
+Pass a mini quiz (retry):         +10 XP
+Complete a simulation:            +15 XP
+Complete exam mode (pass):        +50 XP
+Daily streak bonus:               +20 XP
+Unlock an achievement badge:      +30 XP
+```
+
+---
+
+## Gamification Spec
+
+### Rank Titles (shown on dashboard, tied to level)
+
+| Level | Rank |
+|-------|------|
+| 1 | Network Cadet |
+| 2 | Packet Scout |
+| 3 | Protocol Initiate |
+| 4 | Socket Engineer |
+| 5 | Routing Specialist |
+| 6 | TCP Veteran |
+| 7 | HTTP Architect |
+| 8 | Network Operator |
+| 9 | Infrastructure Lead |
+| 10 | NetCore Master |
+
+### Achievement Badges
+
+| ID | Name | Trigger |
+|----|------|---------|
+| `first_quiz` | First Signal | Complete first quiz |
+| `streak_3` | Consistent Node | 3-day streak |
+| `streak_7` | Uptime Champion | 7-day streak |
+| `ch1_complete` | Layer 1 Cleared | Finish all Chapter 1 topics |
+| `ch2_complete` | App Layer Expert | Finish all Chapter 2 topics |
+| `exam_pass` | Exam Ready | Pass exam mode with ≥80% |
+| `perfect_score` | Zero Loss Packet | Score 100% on any quiz |
+| `speed_run` | Low Latency | Complete exam mode in under 5 minutes |
+| `weak_cleared` | Self-Correcting | Clear all weak topics in retry mode |
+
+---
+
+## Data Schema
+
+All chapter data files (`chapter1-data.js`, `chapter2-data.js`) must export using this exact schema.
+
+```js
+// Export as window.chapter1Data = { ... } (no ES modules, use window globals)
+
+window.chapter1Data = {
+  id: "chapter1",
+  title: "Chapter 1: Introduction to Networking",
+  sections: [
+    {
+      id: "ch1-internet",          // unique section ID
+      title: "What is the Internet?",
+      xpReward: 10,
+      content: {
+        summary: "",               // 2-3 sentence plain explanation
+        bullets: [],               // key facts as short strings
+        analogy: "",               // real-world comparison for memory
+        visual: "packet-flow"      // ID of the animation/simulation to trigger
+      },
+      quiz: [
+        {
+          id: "q-ch1-001",
+          type: "mcq",             // "mcq" | "truefalse" | "fillblank" | "match"
+          question: "",
+          options: ["", "", "", ""],
+          answer: 0,               // index of correct option
+          explanation: "",         // shown after answering
+          xpReward: 25
+        }
+      ]
+    }
+  ]
+};
+```
+
+Quiz data file (`quiz-data.js`) exports `window.quizData` as a flat array of question objects using the same question schema above, drawn from both chapters, with an added `chapter` field (`"ch1"` or `"ch2"`).
+
+---
+
+## Topic Coverage
+
+### Chapter 1
+
+| Section ID | Topic |
+|------------|-------|
+| `ch1-internet` | What is the Internet (nuts and bolts + service view) |
+| `ch1-protocols` | Protocols — definition, role, examples |
+| `ch1-structure` | Network Structure — edge, core, access |
+| `ch1-access` | Access Networks — DSL, cable, fiber, wireless, enterprise |
+
+### Chapter 2
+
+| Section ID | Topic |
+|------------|-------|
+| `ch2-client-server` | Client-Server Architecture |
+| `ch2-p2p` | Peer-to-Peer Architecture |
+| `ch2-processes` | Processes and Sockets |
+| `ch2-addressing` | Addressing Processes (IP + port) |
+| `ch2-app-protocols` | Application Layer Protocols |
+| `ch2-transport-req` | Transport Service Requirements |
+| `ch2-tcp-udp` | TCP vs UDP (comparison table + sim) |
+| `ch2-http-intro` | Web and HTTP — basics |
+| `ch2-http-char` | HTTP Characteristics (stateless, persistent, etc.) |
+| `ch2-http-persistent` | Persistent vs Non-Persistent HTTP |
+| `ch2-http-flow` | HTTP Request-Response Flow (interactive sim) |
+| `ch2-email` | Email Introduction (SMTP, IMAP, POP3) |
+
+---
+
+## Required Simulations
+
+These are JS-driven visual simulations, not just diagrams. Each must be interactive (user clicks or triggers steps).
+
+| Sim ID | Description |
+|--------|-------------|
+| `sim-packet-flow` | Animated packet moving from client to server through routers |
+| `sim-http-request` | Step-by-step HTTP GET request and 200 OK response |
+| `sim-tcp-handshake` | 3-way handshake animation (SYN, SYN-ACK, ACK) |
+| `sim-tcp-vs-udp` | Side-by-side: reliable delivery vs fire-and-forget |
+| `sim-persistent-http` | Persistent vs non-persistent: connection count visual |
+| `sim-client-server` | Client pings server, server responds, roles labeled |
+| `sim-socket` | Process A → socket → network → socket → Process B |
+
+All simulations live in `js/animations.js`. Each sim is triggered by calling `runSimulation('sim-id')`.
+
+---
+
+## Learning Flow Per Topic
+
+Every section in a chapter page must follow this exact sequence:
+
+1. **Explain** — Summary text + key bullets (no walls of text)
+2. **Visualize** — Trigger the associated simulation
+3. **Challenge** — User interaction (drag-and-drop, click-to-label, or sequence ordering)
+4. **Memory Trigger** — Analogy card ("Think of it like...")
+5. **Mini Quiz** — 1-3 MCQ questions
+6. **XP Award** — Animate XP gain, update progress bar
+
+---
+
+## Exam Mode Spec
+
+File: `js/exam-mode.js` + `exam-mode.html`
+
+**Features:**
+- Pull 20 random questions from `quiz-data.js`
+- 30-minute countdown timer
+- Show one question at a time, no going back
+- On submit: score screen with breakdown per topic
+- Flag questions answered incorrectly as `weakTopics` in localStorage
+- Retry mode: show only weak-topic questions
+- Final analytics: bar chart of score per chapter/topic
+
+---
+
+## index.html Spec
+
+The landing page is the **mission control dashboard**. It must include:
+
+- **Header:** "NetCore Academy" logo + rank title + XP bar + level badge
+- **Stats row:** XP total, current streak, topics completed, badges earned
+- **Chapter cards:** Chapter 1 and Chapter 2 as large clickable cards with progress rings
+- **Recent Achievements:** Last 3 unlocked badges
+- **Quick Action buttons:** "Continue Studying", "Enter Exam Mode", "View Weak Topics"
+- **Streak tracker:** 7-day grid (like GitHub contribution graph), highlight today
+
+Do not add a nav sidebar on this page. Use the card-based layout only.
+
+---
+
+## Code Quality Rules
+
+- Use `const` and `let`, never `var`
+- All DOM queries cached at module init, not inside loops
+- Event listeners attached once via delegation where possible
+- No inline `style=""` attributes in HTML — use CSS classes only
+- All user-facing text strings stored as constants at the top of each JS file
+- `progress.js` is the single source of truth for state — all other modules call it, never write to localStorage directly
+- Comment every function with a one-line description of what it does
