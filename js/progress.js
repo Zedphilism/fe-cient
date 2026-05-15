@@ -78,7 +78,7 @@
     level:            1,
     streak:           0,
     lastStudied:      null,
-    unlockedSections: ['ch1-intro'],
+    unlockedSections: ['ch1-internet', 'ch2-client-server'],
     completedTopics:  [],
     achievements:     [],
     weakTopics:       [],
@@ -133,7 +133,17 @@
   function load() {
     try {
       const raw = localStorage.getItem(STATE_KEY);
-      return raw ? mergeWithDefaults(JSON.parse(raw)) : clone(DEFAULT_STATE);
+      const state = raw ? mergeWithDefaults(JSON.parse(raw)) : clone(DEFAULT_STATE);
+      
+      // Ensure starting topics are always unlocked, even in old saves
+      if (!state.unlockedSections.includes('ch1-internet')) {
+        state.unlockedSections.push('ch1-internet');
+      }
+      if (!state.unlockedSections.includes('ch2-client-server')) {
+        state.unlockedSections.push('ch2-client-server');
+      }
+      
+      return state;
     } catch {
       return clone(DEFAULT_STATE);
     }

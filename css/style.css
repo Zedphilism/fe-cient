@@ -712,6 +712,11 @@ kbd {
 }
 .lock-message strong { color: var(--accent-cyan); }
 
+/* Hide overlay once the parent section is no longer locked */
+.topic-section:not(.topic-section--locked) .section-lock-overlay {
+  display: none;
+}
+
 /* ============================================================
    14. LEARN BLOCKS
    ============================================================ */
