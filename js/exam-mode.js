@@ -354,7 +354,7 @@
     } else if (q.type === 'fillblank') {
       var correct = String(q.answer).toLowerCase().trim();
       var given   = String(userAnswer).toLowerCase().trim();
-      return given.length > 0 && correct.includes(given);
+      return given === correct || correct.startsWith(given + ' ') || given.includes(correct);
 
     } else if (q.type === 'match') {
       if (!Array.isArray(userAnswer) || !Array.isArray(q.answer)) return false;

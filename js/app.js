@@ -257,7 +257,18 @@
     document.querySelectorAll('.topic-section[data-section-id]').forEach(sec => {
       const id       = sec.dataset.sectionId;
       const unlocked = Progress.isSectionUnlocked(id);
-      sec.classList.toggle('locked', !unlocked);
+      sec.classList.toggle('topic-section--locked', !unlocked);
+      
+      const badge = sec.querySelector('.topic-badge');
+      if (badge) {
+        if (unlocked) {
+          badge.textContent = 'UNLOCKED';
+          badge.className = 'topic-badge tag tag--cyan';
+        } else {
+          badge.textContent = 'LOCKED';
+          badge.className = 'topic-badge tag tag--muted';
+        }
+      }
     });
   }
 
@@ -333,7 +344,12 @@
 
     const nextSec = document.querySelector(`[data-section-id="${next}"]`);
     if (nextSec) {
-      nextSec.classList.remove('locked');
+      nextSec.classList.remove('topic-section--locked');
+      const badge = nextSec.querySelector('.topic-badge');
+      if (badge) {
+        badge.textContent = 'UNLOCKED';
+        badge.className = 'topic-badge tag tag--cyan';
+      }
       nextSec.classList.add('anim-fade-in-up');
       nextSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }

@@ -353,7 +353,7 @@
       // badge check below will handle it
     }
 
-    const newBadges = checkAndUnlockBadges(state, { isPerfect });
+    const newBadges = checkAndUnlockBadges(state, { isPerfect, isFirstQuizEver });
     save(state);
 
     emit('quiz', { topicId, score, total, isPerfect, xpGained });
