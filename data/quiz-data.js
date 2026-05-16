@@ -6,6 +6,9 @@
  * LOAD ORDER REQUIREMENT:
  *   <script src="data/chapter1-data.js"></script>
  *   <script src="data/chapter2-data.js"></script>
+ *   <script src="data/chapter3-data.js"></script>
+ *   <script src="data/chapter4-data.js"></script>
+ *   <script src="data/chapter5-data.js"></script>
  *   <script src="data/quiz-data.js"></script>   ← this file last
  *
  * Each question object mirrors the chapter data schema with two additional
@@ -22,7 +25,10 @@ window.quizData = (function buildExamPool() {
   // ── Source map: [chapterDataGlobal, chapterKey] ──────────────────────────
   const SOURCES = [
     [window.chapter1Data, "ch1"],
-    [window.chapter2Data, "ch2"]
+    [window.chapter2Data, "ch2"],
+    [window.chapter3Data, "ch3"],
+    [window.chapter4Data, "ch4"],
+    [window.chapter5Data, "ch5"]
   ];
 
   const pool = [];
@@ -76,7 +82,34 @@ window.quizTopicMeta = {
   "ch2-http-char":       { label: "HTTP Characteristics",           chapter: "ch2" },
   "ch2-http-persistent": { label: "Persistent vs Non-Persistent HTTP", chapter: "ch2" },
   "ch2-http-flow":       { label: "HTTP Request-Response Flow",     chapter: "ch2" },
-  "ch2-email":           { label: "Electronic Mail (SMTP/IMAP/POP3)", chapter: "ch2" }
+  "ch2-email":           { label: "Electronic Mail (SMTP/IMAP/POP3)", chapter: "ch2" },
+
+  // Chapter 3
+  "ch3-transport-fundamentals": { label: "Transport Layer Fundamentals",    chapter: "ch3" },
+  "ch3-mux-demux":              { label: "Multiplexing & Demultiplexing",    chapter: "ch3" },
+  "ch3-udp":                    { label: "UDP: Connectionless Transport",    chapter: "ch3" },
+  "ch3-checksum":               { label: "Internet Checksum",                chapter: "ch3" },
+  "ch3-rdt":                    { label: "Reliable Data Transfer",           chapter: "ch3" },
+  "ch3-sliding-window":         { label: "Go-Back-N & Selective Repeat",     chapter: "ch3" },
+  "ch3-tcp-segment":            { label: "TCP Segment Structure",            chapter: "ch3" },
+  "ch3-tcp-rtt":                { label: "TCP RTT & Timeout",                chapter: "ch3" },
+  "ch3-tcp-flow":               { label: "TCP Flow Control & Handshake",     chapter: "ch3" },
+  "ch3-congestion":             { label: "TCP Congestion Control",           chapter: "ch3" },
+
+  // Chapter 4
+  "ch4-planes":       { label: "Data Plane vs Control Plane",    chapter: "ch4" },
+  "ch4-ip-format":    { label: "IP Datagram Format",             chapter: "ch4" },
+  "ch4-fragmentation":{ label: "IP Fragmentation & Reassembly",  chapter: "ch4" },
+  "ch4-addressing":   { label: "IPv4 Addressing & CIDR",         chapter: "ch4" },
+  "ch4-dhcp-nat":     { label: "DHCP & NAT",                     chapter: "ch4" },
+  "ch4-ipv6":         { label: "IPv6",                           chapter: "ch4" },
+
+  // Chapter 5
+  "ch5-link-state":       { label: "Link-State Routing & Dijkstra",  chapter: "ch5" },
+  "ch5-distance-vector":  { label: "Distance-Vector & Bellman-Ford",  chapter: "ch5" },
+  "ch5-ospf-bgp":         { label: "OSPF & BGP",                      chapter: "ch5" },
+  "ch5-sdn":              { label: "SDN Control Plane",               chapter: "ch5" },
+  "ch5-icmp":             { label: "ICMP",                            chapter: "ch5" }
 };
 
 /**
@@ -84,6 +117,9 @@ window.quizTopicMeta = {
  * score breakdown bars on the results screen.
  */
 window.quizChapterMeta = {
-  ch1: { label: "Chapter 1: Introduction to Networking", color: "var(--accent-cyan)" },
-  ch2: { label: "Chapter 2: Application Layer",          color: "var(--accent-purple)" }
+  ch1: { label: "Chapter 1: Introduction to Networking",              color: "var(--accent-cyan)"   },
+  ch2: { label: "Chapter 2: Application Layer",                       color: "var(--accent-purple)" },
+  ch3: { label: "Chapter 3: Transport Layer",                         color: "var(--accent-green)"  },
+  ch4: { label: "Chapter 4: Network Layer — Data Plane",              color: "var(--accent-orange)" },
+  ch5: { label: "Chapter 5: Network Layer — Control Plane",           color: "var(--accent-purple)" }
 };

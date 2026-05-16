@@ -434,6 +434,9 @@
 
     .chapter-card:nth-child(1) { animation-delay: 0.5s; }
     .chapter-card:nth-child(2) { animation-delay: 0.6s; }
+    .chapter-card:nth-child(3) { animation-delay: 0.7s; }
+    .chapter-card:nth-child(4) { animation-delay: 0.8s; }
+    .chapter-card:nth-child(5) { animation-delay: 0.9s; }
 
     /* Top accent line */
     .chapter-card::before {
@@ -447,11 +450,17 @@
 
     .chapter-card.ch1::before { background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green)); }
     .chapter-card.ch2::before { background: linear-gradient(90deg, var(--accent-purple), var(--accent-orange)); }
+    .chapter-card.ch3::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); }
+    .chapter-card.ch4::before { background: linear-gradient(90deg, var(--accent-orange), var(--accent-red)); }
+    .chapter-card.ch5::before { background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)); }
 
     .chapter-card:hover { transform: translateY(-5px); }
     .chapter-card:hover::before { opacity: 1; }
     .chapter-card.ch1:hover { border-color: rgba(0, 245, 255, 0.25); box-shadow: 0 16px 48px rgba(0, 245, 255, 0.1); }
     .chapter-card.ch2:hover { border-color: rgba(168, 85, 247, 0.25); box-shadow: 0 16px 48px rgba(168, 85, 247, 0.1); }
+    .chapter-card.ch3:hover { border-color: rgba(0,255,136,0.25); box-shadow: 0 16px 48px rgba(0,255,136,0.1); }
+    .chapter-card.ch4:hover { border-color: rgba(255,107,53,0.25); box-shadow: 0 16px 48px rgba(255,107,53,0.1); }
+    .chapter-card.ch5:hover { border-color: rgba(168,85,247,0.25); box-shadow: 0 16px 48px rgba(168,85,247,0.1); }
 
     .chapter-card-top {
       display: flex;
@@ -472,6 +481,9 @@
 
     .ch1 .chapter-tag { color: var(--accent-cyan); }
     .ch2 .chapter-tag { color: var(--accent-purple); }
+    .ch3 .chapter-tag { color: var(--accent-green); }
+    .ch4 .chapter-tag { color: var(--accent-orange); }
+    .ch5 .chapter-tag { color: var(--accent-purple); }
 
     .chapter-title {
       font-family: var(--font-display);
@@ -515,6 +527,9 @@
 
     .ch1 .ring-fill { stroke: var(--accent-cyan);   filter: drop-shadow(0 0 4px rgba(0, 245, 255, 0.55));   }
     .ch2 .ring-fill { stroke: var(--accent-purple); filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.55)); }
+    .ch3 .ring-fill { stroke: var(--accent-green);  filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.55));  }
+    .ch4 .ring-fill { stroke: var(--accent-orange); filter: drop-shadow(0 0 4px rgba(255, 107, 53, 0.55)); }
+    .ch5 .ring-fill { stroke: var(--accent-purple); filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.55)); }
 
     .ring-label {
       position: absolute;
@@ -534,6 +549,9 @@
 
     .ch1 .ring-pct { color: var(--accent-cyan);   }
     .ch2 .ring-pct { color: var(--accent-purple); }
+    .ch3 .ring-pct { color: var(--accent-green);  }
+    .ch4 .ring-pct { color: var(--accent-orange); }
+    .ch5 .ring-pct { color: var(--accent-purple); }
 
     .ring-done-label {
       font-size: 0.5rem;
@@ -893,7 +911,7 @@
     </div>
     <div class="status-item">
       <span class="status-dot"></span>
-      <span id="statusTopics">0/16 TOPICS LOADED</span>
+      <span id="statusTopics">0/37 TOPICS LOADED</span>
     </div>
     <div class="status-item">
       <span class="status-dot dim" id="weakDot"></span>
@@ -926,7 +944,7 @@
     <div class="stat-card">
       <span class="stat-label">Topics Done</span>
       <span class="stat-value green"  id="statTopics">0</span>
-      <span class="stat-sub">of 16 total topics</span>
+      <span class="stat-sub">of 37 total topics</span>
     </div>
     <div class="stat-card">
       <span class="stat-label">Badges Earned</span>
@@ -1007,6 +1025,102 @@
         <span class="topic-pill" data-id="ch2-http-persistent">Persistent HTTP</span>
         <span class="topic-pill" data-id="ch2-http-flow">HTTP Flow</span>
         <span class="topic-pill" data-id="ch2-email">Email</span>
+      </div>
+    </a>
+
+    <!-- Chapter 3 -->
+    <a href="chapter3.html" class="chapter-card ch3">
+      <div class="chapter-card-top">
+        <div class="chapter-info">
+          <div class="chapter-tag" style="color:var(--accent-green);">CH.3 — TRANSPORT</div>
+          <div class="chapter-title">Transport Layer</div>
+          <div class="chapter-desc">
+            UDP, TCP, checksums, reliable data transfer, flow control, and congestion control.
+          </div>
+        </div>
+        <div class="progress-ring-wrap">
+          <svg width="88" height="88" viewBox="0 0 88 88">
+            <circle class="ring-track" cx="44" cy="44" r="40"/>
+            <circle class="ring-fill" id="ch3Ring" cx="44" cy="44" r="40"/>
+          </svg>
+          <div class="ring-label">
+            <span class="ring-pct" id="ch3Pct">0%</span>
+            <span class="ring-done-label">Done</span>
+          </div>
+        </div>
+      </div>
+      <div class="chapter-topics" id="ch3Topics">
+        <span class="topic-pill" data-id="ch3-transport-fundamentals">Transport Basics</span>
+        <span class="topic-pill" data-id="ch3-mux-demux">Mux/Demux</span>
+        <span class="topic-pill" data-id="ch3-udp">UDP</span>
+        <span class="topic-pill" data-id="ch3-checksum">Checksum</span>
+        <span class="topic-pill" data-id="ch3-rdt">Reliable Transfer</span>
+        <span class="topic-pill" data-id="ch3-sliding-window">Go-Back-N / SR</span>
+        <span class="topic-pill" data-id="ch3-tcp-segment">TCP Segment</span>
+        <span class="topic-pill" data-id="ch3-tcp-rtt">TCP RTT</span>
+        <span class="topic-pill" data-id="ch3-tcp-flow">Flow Control</span>
+        <span class="topic-pill" data-id="ch3-congestion">Congestion Ctrl</span>
+      </div>
+    </a>
+
+    <!-- Chapter 4 -->
+    <a href="chapter4.html" class="chapter-card ch4">
+      <div class="chapter-card-top">
+        <div class="chapter-info">
+          <div class="chapter-tag" style="color:var(--accent-orange);">CH.4 — NETWORK</div>
+          <div class="chapter-title">Network Layer:<br>Data Plane</div>
+          <div class="chapter-desc">
+            IP datagram format, fragmentation, IPv4 addressing, CIDR, DHCP, NAT, and IPv6.
+          </div>
+        </div>
+        <div class="progress-ring-wrap">
+          <svg width="88" height="88" viewBox="0 0 88 88">
+            <circle class="ring-track" cx="44" cy="44" r="40"/>
+            <circle class="ring-fill" id="ch4Ring" cx="44" cy="44" r="40"/>
+          </svg>
+          <div class="ring-label">
+            <span class="ring-pct" id="ch4Pct">0%</span>
+            <span class="ring-done-label">Done</span>
+          </div>
+        </div>
+      </div>
+      <div class="chapter-topics" id="ch4Topics">
+        <span class="topic-pill" data-id="ch4-planes">Data vs Control Plane</span>
+        <span class="topic-pill" data-id="ch4-ip-format">IP Format</span>
+        <span class="topic-pill" data-id="ch4-fragmentation">Fragmentation</span>
+        <span class="topic-pill" data-id="ch4-addressing">IPv4 &amp; CIDR</span>
+        <span class="topic-pill" data-id="ch4-dhcp-nat">DHCP &amp; NAT</span>
+        <span class="topic-pill" data-id="ch4-ipv6">IPv6</span>
+      </div>
+    </a>
+
+    <!-- Chapter 5 -->
+    <a href="chapter5.html" class="chapter-card ch5">
+      <div class="chapter-card-top">
+        <div class="chapter-info">
+          <div class="chapter-tag" style="color:var(--accent-purple);">CH.5 — ROUTING</div>
+          <div class="chapter-title">Network Layer:<br>Control Plane</div>
+          <div class="chapter-desc">
+            Dijkstra, Bellman-Ford, OSPF, BGP inter-AS routing, SDN, and ICMP.
+          </div>
+        </div>
+        <div class="progress-ring-wrap">
+          <svg width="88" height="88" viewBox="0 0 88 88">
+            <circle class="ring-track" cx="44" cy="44" r="40"/>
+            <circle class="ring-fill" id="ch5Ring" cx="44" cy="44" r="40"/>
+          </svg>
+          <div class="ring-label">
+            <span class="ring-pct" id="ch5Pct">0%</span>
+            <span class="ring-done-label">Done</span>
+          </div>
+        </div>
+      </div>
+      <div class="chapter-topics" id="ch5Topics">
+        <span class="topic-pill" data-id="ch5-link-state">Link-State / Dijkstra</span>
+        <span class="topic-pill" data-id="ch5-distance-vector">Distance-Vector</span>
+        <span class="topic-pill" data-id="ch5-ospf-bgp">OSPF &amp; BGP</span>
+        <span class="topic-pill" data-id="ch5-sdn">SDN</span>
+        <span class="topic-pill" data-id="ch5-icmp">ICMP</span>
       </div>
     </a>
 
@@ -1143,7 +1257,19 @@
     'ch2-http-intro', 'ch2-http-char', 'ch2-http-persistent',
     'ch2-http-flow', 'ch2-email'
   ];
-  const TOTAL_TOPICS = CH1_TOPICS.length + CH2_TOPICS.length;
+  const CH3_TOPICS = [
+    'ch3-transport-fundamentals', 'ch3-mux-demux', 'ch3-udp', 'ch3-checksum',
+    'ch3-rdt', 'ch3-sliding-window', 'ch3-tcp-segment', 'ch3-tcp-rtt',
+    'ch3-tcp-flow', 'ch3-congestion'
+  ];
+  const CH4_TOPICS = [
+    'ch4-planes', 'ch4-ip-format', 'ch4-fragmentation',
+    'ch4-addressing', 'ch4-dhcp-nat', 'ch4-ipv6'
+  ];
+  const CH5_TOPICS = [
+    'ch5-link-state', 'ch5-distance-vector', 'ch5-ospf-bgp', 'ch5-sdn', 'ch5-icmp'
+  ];
+  const TOTAL_TOPICS = CH1_TOPICS.length + CH2_TOPICS.length + CH3_TOPICS.length + CH4_TOPICS.length + CH5_TOPICS.length;
 
   const DAY_LABELS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
@@ -1258,24 +1384,26 @@
 
   /* --- Render: chapter progress rings and topic pills --- */
   function renderChapterCards(state) {
-    const ch1Done = CH1_TOPICS.filter(id => state.completedTopics.includes(id)).length;
-    const ch2Done = CH2_TOPICS.filter(id => state.completedTopics.includes(id)).length;
-    const ch1Pct  = Math.round((ch1Done / CH1_TOPICS.length) * 100);
-    const ch2Pct  = Math.round((ch2Done / CH2_TOPICS.length) * 100);
+    const chDefs = [
+      { topics: CH1_TOPICS, pctId: 'ch1Pct', ringId: 'ch1Ring', topicsId: 'ch1Topics' },
+      { topics: CH2_TOPICS, pctId: 'ch2Pct', ringId: 'ch2Ring', topicsId: 'ch2Topics' },
+      { topics: CH3_TOPICS, pctId: 'ch3Pct', ringId: 'ch3Ring', topicsId: 'ch3Topics' },
+      { topics: CH4_TOPICS, pctId: 'ch4Pct', ringId: 'ch4Ring', topicsId: 'ch4Topics' },
+      { topics: CH5_TOPICS, pctId: 'ch5Pct', ringId: 'ch5Ring', topicsId: 'ch5Topics' }
+    ];
 
-    document.getElementById('ch1Pct').textContent = `${ch1Pct}%`;
-    document.getElementById('ch2Pct').textContent = `${ch2Pct}%`;
-
-    // Animate rings (deferred for transition)
-    setTimeout(() => {
-      document.getElementById('ch1Ring').style.strokeDashoffset = ringOffset(ch1Pct);
-      document.getElementById('ch2Ring').style.strokeDashoffset = ringOffset(ch2Pct);
-    }, 350);
-
-    // Highlight completed topic pills
-    document.querySelectorAll('#ch1Topics .topic-pill, #ch2Topics .topic-pill').forEach(pill => {
-      if (state.completedTopics.includes(pill.dataset.id)) {
-        pill.classList.add('done');
+    chDefs.forEach(function (ch) {
+      const done = ch.topics.filter(id => state.completedTopics.includes(id)).length;
+      const pct  = Math.round((done / ch.topics.length) * 100);
+      const pctEl  = document.getElementById(ch.pctId);
+      const ringEl = document.getElementById(ch.ringId);
+      if (pctEl) pctEl.textContent = `${pct}%`;
+      if (ringEl) setTimeout(() => { ringEl.style.strokeDashoffset = ringOffset(pct); }, 350);
+      const container = document.getElementById(ch.topicsId);
+      if (container) {
+        container.querySelectorAll('.topic-pill').forEach(pill => {
+          if (state.completedTopics.includes(pill.dataset.id)) pill.classList.add('done');
+        });
       }
     });
   }
@@ -1308,7 +1436,15 @@
 
     // "Continue Studying" — go to first chapter that isn't fully complete
     const ch1AllDone = CH1_TOPICS.every(id => state.completedTopics.includes(id));
-    document.getElementById('btnContinue').href = ch1AllDone ? 'chapter2.html' : 'chapter1.html';
+    const ch2AllDone = CH2_TOPICS.every(id => state.completedTopics.includes(id));
+    const ch3AllDone = CH3_TOPICS.every(id => state.completedTopics.includes(id));
+    const ch4AllDone = CH4_TOPICS.every(id => state.completedTopics.includes(id));
+    let continueHref = 'chapter1.html';
+    if (ch1AllDone) continueHref = 'chapter2.html';
+    if (ch1AllDone && ch2AllDone) continueHref = 'chapter3.html';
+    if (ch1AllDone && ch2AllDone && ch3AllDone) continueHref = 'chapter4.html';
+    if (ch1AllDone && ch2AllDone && ch3AllDone && ch4AllDone) continueHref = 'chapter5.html';
+    document.getElementById('btnContinue').href = continueHref;
 
     // "Weak Topics" button
     document.getElementById('weakTopicsLabel').textContent =

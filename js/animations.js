@@ -29,6 +29,32 @@
      sim-http-methods     GET/POST/HEAD/PUT request methods
      sim-http-pipeline    DNS→TCP→GET→Response→Render pipeline
      sim-email-delivery   SMTP/IMAP email delivery chain
+
+   Chapter 3 — Transport Layer:
+     sim-transport-layer  Process-to-process delivery vs host-to-host
+     sim-mux-demux        Multiplexing and demultiplexing by port number
+     sim-udp              UDP 8-byte header and fire-and-forget delivery
+     sim-checksum         Internet checksum calculation and verification
+     sim-rdt              rdt 3.0 reliable data transfer with ACK/NAK
+     sim-go-back-n        Go-Back-N sliding window protocol
+     sim-tcp-segment      TCP segment structure, seq# and ACK# fields
+     sim-tcp-rtt          TCP RTT estimation and timeout calculation
+     sim-tcp-congestion   TCP congestion control: slow start, AIMD, fast recovery
+
+   Chapter 4 — Network Layer (Data Plane):
+     sim-router-arch      Router input/forwarding table/fabric/output pipeline
+     sim-ip-datagram      IP header fields, TTL decrement, protocol field
+     sim-fragmentation    IP fragmentation and reassembly at destination
+     sim-cidr             CIDR prefix matching and longest-prefix match
+     sim-dhcp             DHCP DORA sequence (Discover/Offer/Request/ACK)
+     sim-ipv6             IPv6 addressing, fixed header, tunneling transition
+
+   Chapter 5 — Network Layer (Control Plane):
+     sim-dijkstra         Link-state routing with Dijkstra's algorithm
+     sim-bellman-ford     Distance-vector routing with Bellman-Ford
+     sim-bgp              BGP inter-AS path-vector advertisement
+     sim-sdn              SDN controller installing flow rules via OpenFlow
+     sim-icmp             ICMP Echo, Time Exceeded, Dest Unreachable, traceroute
    ============================================================ */
 
 (function () {
@@ -1633,11 +1659,1046 @@
     });
   }
 
+  /* ============================================================
+     CH3 SIMS
+  ============================================================ */
+
+  /* sim-transport-layer */
+  function buildTransportLayer(containerEl, instanceId) {
+    const simId = 'sim-transport-layer';
+    const W = 520, H = 150;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    svgLine(svg, 60, 75, 460, 75, 'rgba(255,255,255,0.06)');
+    const appA  = svgNode(svg,  50, 75, 28, 'APP', 'Src Process', '#00f5ff');
+    const tpA   = svgNode(svg, 175, 75, 28, 'TL',  'Transport',   '#00ff88');
+    const net   = svgNode(svg, 300, 75, 28, 'NET', 'Network',     '#ff6b35');
+    const appB  = svgNode(svg, 460, 75, 28, 'APP', 'Dst Process', '#a855f7');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to trace process-to-process delivery.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① <strong>Application process</strong> at the source passes data down to the Transport Layer via a socket.', instanceId);
+        pulseNode(appA, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '② <strong>Transport layer</strong> adds a header (port numbers, seq#) — this is process-to-process delivery, not host-to-host.', instanceId);
+        arrows.push(svgArrow(svg, 82, 67, 148, 67, '#00ff88', 'segment →'));
+        pulseNode(tpA, '#00ff88');
+      },
+      () => {
+        setLog(simId, '③ The segment is handed to the <strong>Network layer</strong>, which handles host-to-host routing across the internet.', instanceId);
+        arrows.push(svgArrow(svg, 207, 67, 272, 67, '#ff6b35', 'datagram →'));
+        pulseNode(net, '#ff6b35');
+      },
+      () => {
+        setLog(simId, '④ At the destination, Transport layer <strong>strips the header</strong> and delivers data to the correct process by port number. ✓', instanceId);
+        arrows.push(svgArrow(svg, 332, 83, 428, 83, '#a855f7', '→ dst port'));
+        pulseNode(appB, '#a855f7');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to trace process-to-process delivery.', instanceId);
+    });
+  }
+
+  /* sim-mux-demux */
+  function buildMuxDemux(containerEl, instanceId) {
+    const simId = 'sim-mux-demux';
+    const W = 540, H = 160;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    const sA  = svgNode(svg,  50,  50, 22, 'S1', 'Socket :8080', '#00f5ff');
+    const sB  = svgNode(svg,  50, 110, 22, 'S2', 'Socket :9090', '#00ff88');
+    const mux = svgNode(svg, 190,  80, 30, 'MUX', 'Transport',   '#ff6b35');
+    const net = svgNode(svg, 330,  80, 28, 'NET', 'Network',     '#64748b');
+    const dem = svgNode(svg, 470,  80, 30, 'DEM', 'Dst Transport','#a855f7');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to see multiplexing and demultiplexing.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① Two sockets (port 8080 and 9090) each have data to send.', instanceId);
+        pulseNode(sA, '#00f5ff');
+        pulseNode(sB, '#00ff88');
+      },
+      () => {
+        setLog(simId, '② <strong>Multiplexing</strong>: Transport gathers segments from both sockets, tags each with src/dst port, and feeds one stream to the Network layer.', instanceId);
+        arrows.push(svgArrow(svg, 75, 55, 158, 72, '#00f5ff', ':8080'));
+        arrows.push(svgArrow(svg, 75, 105, 158, 88, '#00ff88', ':9090'));
+        pulseNode(mux, '#ff6b35');
+      },
+      () => {
+        setLog(simId, '③ Segments travel through the network as a single stream of datagrams.', instanceId);
+        arrows.push(svgArrow(svg, 222, 80, 300, 80, '#ff6b35', 'stream →'));
+        pulseNode(net, '#64748b');
+      },
+      () => {
+        setLog(simId, '④ <strong>Demultiplexing</strong>: Destination Transport reads the <em>dst port</em> field in each segment header and delivers data to the correct socket. ✓', instanceId);
+        arrows.push(svgArrow(svg, 360, 72, 438, 72, '#a855f7', '→ :8080'));
+        arrows.push(svgArrow(svg, 360, 88, 438, 88, '#a855f7', '→ :9090'));
+        pulseNode(dem, '#a855f7');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to see multiplexing and demultiplexing.', instanceId);
+    });
+  }
+
+  /* sim-udp */
+  function buildUDP(containerEl, instanceId) {
+    const simId = 'sim-udp';
+    const W = 500, H = 150;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    svgLine(svg, 80, 75, 420, 75, 'rgba(255,255,255,0.06)');
+    const app  = svgNode(svg,  55, 75, 28, 'APP', 'Application', '#00f5ff');
+    const udp  = svgNode(svg, 190, 75, 28, 'UDP', '8-byte hdr',  '#00ff88');
+    const net  = svgNode(svg, 325, 75, 28, 'NET', 'Network',     '#ff6b35');
+    const dst  = svgNode(svg, 460, 75, 28, 'DST', 'Destination', '#a855f7');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to trace a UDP datagram.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① <strong>Application</strong> passes data to UDP. No connection setup — UDP is <em>connectionless</em>.', instanceId);
+        pulseNode(app, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '② <strong>UDP adds an 8-byte header</strong>: src port (2B) | dst port (2B) | length (2B) | checksum (2B). That\'s all.', instanceId);
+        arrows.push(svgArrow(svg, 86, 67, 158, 67, '#00ff88', 'data →'));
+        pulseNode(udp, '#00ff88');
+      },
+      () => {
+        setLog(simId, '③ UDP <strong>sends immediately</strong> — no handshake, no ACK, no retransmission. Packet may be lost silently.', instanceId);
+        arrows.push(svgArrow(svg, 220, 67, 295, 67, '#ff6b35', 'fire-and-forget →'));
+        pulseNode(net, '#ff6b35');
+      },
+      () => {
+        setLog(simId, '④ Datagram <strong>arrives (or is dropped)</strong>. If it arrives, UDP strips the header and delivers to the dst port. No ordering guarantee. ✓', instanceId);
+        arrows.push(svgArrow(svg, 355, 83, 428, 83, '#a855f7', '→ or ✗'));
+        pulseNode(dst, '#a855f7');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to trace a UDP datagram.', instanceId);
+    });
+  }
+
+  /* sim-checksum */
+  function buildChecksum(containerEl, instanceId) {
+    const simId = 'sim-checksum';
+    const W = 500, H = 140;
+    const { host, canvas } = buildShell(simId, 5, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    const snd = svgNode(svg,  70, 70, 30, 'SND', 'Sender',   '#00f5ff');
+    const rcv = svgNode(svg, 430, 70, 30, 'RCV', 'Receiver', '#a855f7');
+    svgLine(svg, 105, 70, 395, 70, 'rgba(255,255,255,0.06)');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to compute an Internet Checksum.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① Sender has two 16-bit words: <code>0110011001100110</code> and <code>0101010101010101</code>.', instanceId);
+        pulseNode(snd, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '② Add the two words in binary: <code>0110011001100110 + 0101010101010101 = 1011101110111011</code>.', instanceId);
+      },
+      () => {
+        setLog(simId, '③ <strong>End-around carry</strong>: if the sum overflows 16 bits, add the carry bit back to the result.', instanceId);
+      },
+      () => {
+        setLog(simId, '④ Take the <strong>1\'s complement</strong> (flip all bits) → checksum = <code>0100010001000100</code>. Appended to segment header.', instanceId);
+        arrows.push(svgArrow(svg, 105, 63, 395, 63, '#00ff88', 'segment + checksum →'));
+      },
+      () => {
+        setLog(simId, '⑤ <strong>Receiver</strong> sums all words including checksum. If result = <code>1111111111111111</code> (0xFFFF), no error detected. ✓', instanceId);
+        pulseNode(rcv, '#a855f7');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to compute an Internet Checksum.', instanceId);
+    });
+  }
+
+  /* sim-rdt */
+  function buildRDT(containerEl, instanceId) {
+    const simId = 'sim-rdt';
+    const W = 500, H = 140;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    svgLine(svg, 100, 70, 400, 70, 'rgba(255,255,255,0.06)');
+    const snd = svgNode(svg,  70, 70, 30, 'SND', 'Sender',   '#00f5ff');
+    const rcv = svgNode(svg, 430, 70, 30, 'RCV', 'Receiver', '#a855f7');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to see rdt 3.0 reliable transfer.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① <strong>Sender</strong> transmits a packet with sequence number and starts a timer.', instanceId);
+        pulseNode(snd, '#00f5ff');
+        arrows.push(svgArrow(svg, 105, 62, 395, 62, '#00f5ff', 'pkt(seq=0) →'));
+      },
+      () => {
+        setLog(simId, '② The packet may be <strong>lost or corrupted</strong> in transit. Bit errors are detected via checksum.', instanceId);
+        const warn = svgEl('text', { x: 250, y: 50, 'text-anchor': 'middle', fill: '#ff3366', 'font-size': '12', 'font-family': 'JetBrains Mono, monospace' });
+        warn.textContent = '✗ LOST';
+        svg.appendChild(warn);
+        arrows.push({ remove: () => warn.remove() });
+      },
+      () => {
+        setLog(simId, '③ Receiver sends <strong>NAK</strong> (corrupted) or no reply (lost). Sender <em>timeout</em> fires → retransmit.', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 395, 78, 105, 78, '#ff3366', '← NAK / timeout'));
+      },
+      () => {
+        setLog(simId, '④ Sender <strong>retransmits</strong>. Receiver sends ACK. Sender advances to next packet. ✓', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 105, 62, 395, 62, '#00f5ff', 'pkt(seq=0) →'));
+        arrows.push(svgArrow(svg, 395, 78, 105, 78, '#00ff88', '← ACK'));
+        pulseNode(rcv, '#00ff88');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to see rdt 3.0 reliable transfer.', instanceId);
+    });
+  }
+
+  /* sim-go-back-n */
+  function buildGoBackN(containerEl, instanceId) {
+    const simId = 'sim-go-back-n';
+    const W = 540, H = 150;
+    const { host, canvas } = buildShell(simId, 5, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    svgLine(svg, 60, 75, 480, 75, 'rgba(255,255,255,0.06)');
+    const snd = svgNode(svg,  40, 75, 28, 'SND', 'Sender',   '#00f5ff');
+    const rcv = svgNode(svg, 500, 75, 28, 'RCV', 'Receiver', '#a855f7');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to see Go-Back-N (window N=4).', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① Sender window N=4. Sends packets <strong>0, 1, 2, 3</strong> without waiting for ACK.', instanceId);
+        pulseNode(snd, '#00f5ff');
+        [0,1,2,3].forEach((n, i) => {
+          arrows.push(svgArrow(svg, 72, 60 + i*4, 468, 60 + i*4, '#00f5ff', `pkt${n}→`));
+        });
+      },
+      () => {
+        setLog(simId, '② <strong>Packet 2 is lost</strong>. Packets 3 and beyond arrive at receiver but are discarded (GBN discards out-of-order).', instanceId);
+        clearArrows();
+        const x = svgEl('text', { x: 270, y: 45, 'text-anchor': 'middle', fill: '#ff3366', 'font-size': '11', 'font-family': 'JetBrains Mono, monospace' });
+        x.textContent = '✗ pkt2 lost';
+        svg.appendChild(x);
+        arrows.push({ remove: () => x.remove() });
+      },
+      () => {
+        setLog(simId, '③ Receiver sends <strong>ACK1</strong> (cumulative — last in-order received). ACK for 2,3 not sent.', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 468, 83, 72, 83, '#a855f7', '← ACK1'));
+      },
+      () => {
+        setLog(simId, '④ <strong>Timeout</strong> at sender for pkt2. Sender <em>goes back</em> and retransmits pkt2, pkt3, pkt4...', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 72, 63, 468, 63, '#ff6b35', 'pkt2 →'));
+        arrows.push(svgArrow(svg, 72, 72, 468, 72, '#ff6b35', 'pkt3 →'));
+      },
+      () => {
+        setLog(simId, '⑤ Receiver accepts retransmitted packets in order, sends cumulative ACKs. Window slides forward. ✓', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 468, 83, 72, 83, '#00ff88', '← ACK3'));
+        pulseNode(rcv, '#a855f7');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to see Go-Back-N (window N=4).', instanceId);
+    });
+  }
+
+  /* sim-tcp-segment */
+  function buildTcpSegment(containerEl, instanceId) {
+    const simId = 'sim-tcp-segment';
+    const W = 500, H = 140;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    svgLine(svg, 90, 70, 410, 70, 'rgba(255,255,255,0.06)');
+    const snd = svgNode(svg,  65, 70, 28, 'SND', 'Sender',   '#00f5ff');
+    const rcv = svgNode(svg, 435, 70, 28, 'RCV', 'Receiver', '#a855f7');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to explore the TCP segment structure.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① TCP header key fields: <code>src port</code> | <code>dst port</code> | <strong>Seq#</strong> | <strong>ACK#</strong> | flags (SYN/ACK/FIN) | <code>recv window</code>.', instanceId);
+        pulseNode(snd, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '② <strong>Sequence number</strong> = byte offset of the first data byte in this segment (TCP numbers every byte in the stream).', instanceId);
+        arrows.push(svgArrow(svg, 97, 63, 403, 63, '#00f5ff', 'seq=1000 →'));
+      },
+      () => {
+        setLog(simId, '③ <strong>ACK number</strong> = next byte the receiver expects. It is cumulative — ACK 1460 means "I have everything up to byte 1459."', instanceId);
+        arrows.push(svgArrow(svg, 403, 78, 97, 78, '#a855f7', '← ACK=1460'));
+        pulseNode(rcv, '#a855f7');
+      },
+      () => {
+        setLog(simId, '④ TCP is <strong>full-duplex</strong>: both sides send data and ACKs simultaneously. Each direction has its own seq# space. ✓', instanceId);
+        pulseNode(snd, '#00ff88');
+        pulseNode(rcv, '#00ff88');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to explore the TCP segment structure.', instanceId);
+    });
+  }
+
+  /* sim-tcp-rtt */
+  function buildTcpRTT(containerEl, instanceId) {
+    const simId = 'sim-tcp-rtt';
+    const W = 500, H = 140;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    svgLine(svg, 90, 70, 410, 70, 'rgba(255,255,255,0.06)');
+    const snd = svgNode(svg,  65, 70, 28, 'SND', 'Sender',   '#00f5ff');
+    const rcv = svgNode(svg, 435, 70, 28, 'RCV', 'Receiver', '#00ff88');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to see how TCP sets the retransmission timeout.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① Sender records send time, receives ACK. <strong>SampleRTT</strong> = time between segment sent and ACK received (varies each measurement).', instanceId);
+        arrows.push(svgArrow(svg, 97, 63, 403, 63, '#00f5ff', 'seg →'));
+        arrows.push(svgArrow(svg, 403, 78, 97, 78, '#00ff88', '← ACK'));
+        pulseNode(snd, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '② <strong>EstimatedRTT</strong> smooths SampleRTT using EWMA: <code>EstRTT = 0.875·EstRTT + 0.125·SampleRTT</code>.', instanceId);
+        clearArrows();
+      },
+      () => {
+        setLog(simId, '③ <strong>DevRTT</strong> measures variability: <code>DevRTT = 0.75·DevRTT + 0.25·|SampleRTT − EstRTT|</code>.', instanceId);
+      },
+      () => {
+        setLog(simId, '④ <strong>TimeoutInterval = EstimatedRTT + 4·DevRTT</strong>. Safety margin prevents spurious retransmissions while staying responsive. ✓', instanceId);
+        pulseNode(snd, '#00ff88');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to see how TCP sets the retransmission timeout.', instanceId);
+    });
+  }
+
+  /* sim-tcp-congestion */
+  function buildTcpCongestion(containerEl, instanceId) {
+    const simId = 'sim-tcp-congestion';
+    const W = 520, H = 150;
+    const { host, canvas } = buildShell(simId, 5, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    const snd = svgNode(svg,  55, 75, 28, 'SND', 'Sender',  '#00f5ff');
+    const net = svgNode(svg, 270, 75, 28, 'NET', 'Network', '#ff6b35');
+    const rcv = svgNode(svg, 465, 75, 28, 'RCV', 'Receiver','#a855f7');
+    svgLine(svg, 85, 75, 240, 75, 'rgba(255,255,255,0.06)');
+    svgLine(svg, 300, 75, 435, 75, 'rgba(255,255,255,0.06)');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to step through TCP congestion control.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① <strong>Slow Start</strong>: cwnd starts at 1 MSS, <em>doubles</em> every RTT. Grows exponentially until ssthresh.', instanceId);
+        pulseNode(snd, '#00f5ff');
+        arrows.push(svgArrow(svg, 86, 67, 240, 67, '#00f5ff', 'cwnd=1→2→4→8…'));
+      },
+      () => {
+        setLog(simId, '② cwnd reaches <strong>ssthresh</strong>. Switch to <em>Congestion Avoidance</em>: cwnd grows by 1 MSS per RTT (linear / AIMD).', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 86, 67, 240, 67, '#00ff88', 'cwnd+1 per RTT'));
+        pulseNode(net, '#ff6b35');
+      },
+      () => {
+        setLog(simId, '③ <strong>3 duplicate ACKs</strong> detected — indicates a single lost packet, not severe congestion.', instanceId);
+        clearArrows();
+        const warn = svgEl('text', { x: 270, y: 50, 'text-anchor': 'middle', fill: '#ff3366', 'font-size': '11', 'font-family': 'JetBrains Mono, monospace' });
+        warn.textContent = '3 dup ACKs';
+        svg.appendChild(warn);
+        arrows.push({ remove: () => warn.remove() });
+      },
+      () => {
+        setLog(simId, '④ <strong>Fast Recovery</strong> (TCP Reno): ssthresh = cwnd/2, cwnd = ssthresh. Skip slow start — stay in congestion avoidance.', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 86, 67, 240, 67, '#ff6b35', 'cwnd halved'));
+      },
+      () => {
+        setLog(simId, '⑤ This creates the <strong>sawtooth pattern</strong>: slow growth, sharp drop on loss. AIMD is fair and efficient across competing flows. ✓', instanceId);
+        clearArrows();
+        pulseNode(snd, '#00ff88');
+        pulseNode(rcv, '#a855f7');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to step through TCP congestion control.', instanceId);
+    });
+  }
+
+  /* ============================================================
+     CH4 SIMS
+  ============================================================ */
+
+  /* sim-router-arch */
+  function buildRouterArch(containerEl, instanceId) {
+    const simId = 'sim-router-arch';
+    const W = 540, H = 150;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    const inp  = svgNode(svg,  55, 75, 28, 'IN',  'Input Port',   '#00f5ff');
+    const fwd  = svgNode(svg, 190, 75, 28, 'FWD', 'Fwd Table',    '#00ff88');
+    const fab  = svgNode(svg, 320, 75, 28, 'FAB', 'Switching Fab','#ff6b35');
+    const out  = svgNode(svg, 460, 75, 28, 'OUT', 'Output Port',  '#a855f7');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to trace a packet through router architecture.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① Packet arrives at the <strong>input port</strong>. Line-speed processing: check headers, lookup destination IP.', instanceId);
+        pulseNode(inp, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '② <strong>Forwarding table lookup</strong>: match dst IP using longest-prefix match → find output port. This is the <em>data plane</em>.', instanceId);
+        arrows.push(svgArrow(svg, 86, 67, 158, 67, '#00ff88', 'dst IP →'));
+        pulseNode(fwd, '#00ff88');
+      },
+      () => {
+        setLog(simId, '③ Packet crosses the <strong>switching fabric</strong> (memory / bus / crossbar) to the correct output port.', instanceId);
+        arrows.push(svgArrow(svg, 220, 75, 290, 75, '#ff6b35', '→ fabric'));
+        pulseNode(fab, '#ff6b35');
+      },
+      () => {
+        setLog(simId, '④ <strong>Output port</strong> queues and schedules the packet for transmission. The <em>control plane</em> (SDN/OSPF) populated the forwarding table. ✓', instanceId);
+        arrows.push(svgArrow(svg, 350, 75, 428, 75, '#a855f7', '→ queue'));
+        pulseNode(out, '#a855f7');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to trace a packet through router architecture.', instanceId);
+    });
+  }
+
+  /* sim-ip-datagram */
+  function buildIpDatagram(containerEl, instanceId) {
+    const simId = 'sim-ip-datagram';
+    const W = 520, H = 150;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    svgLine(svg, 70, 75, 450, 75, 'rgba(255,255,255,0.06)');
+    const src = svgNode(svg,  50, 75, 28, 'SRC', 'Source',   '#00f5ff');
+    const r1  = svgNode(svg, 190, 75, 28, 'R1',  'Router 1', '#00ff88');
+    const r2  = svgNode(svg, 330, 75, 28, 'R2',  'Router 2', '#ff6b35');
+    const dst = svgNode(svg, 470, 75, 28, 'DST', 'Dest Host','#a855f7');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to trace an IP datagram across routers.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① IP header: <code>ver=4</code> | <code>IHL</code> | <code>TTL</code> | <code>protocol</code> | <code>src IP</code> | <code>dst IP</code>. Total header ≥ 20 bytes.', instanceId);
+        pulseNode(src, '#00f5ff');
+        arrows.push(svgArrow(svg, 82, 67, 158, 67, '#00f5ff', 'TTL=64 →'));
+      },
+      () => {
+        setLog(simId, '② At <strong>Router 1</strong>: TTL is <em>decremented</em> by 1 (TTL=63). Header checksum is recomputed. If TTL=0, packet is dropped and ICMP Time Exceeded is sent.', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 222, 67, 298, 67, '#00ff88', 'TTL=63 →'));
+        pulseNode(r1, '#00ff88');
+      },
+      () => {
+        setLog(simId, '③ <strong>Protocol field</strong> tells the destination host which upper-layer receives the payload: 6=TCP, 17=UDP, 1=ICMP.', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 362, 67, 438, 67, '#ff6b35', 'TTL=62 →'));
+        pulseNode(r2, '#ff6b35');
+      },
+      () => {
+        setLog(simId, '④ Destination host verifies <strong>header checksum</strong>. Protocol field directs payload to TCP/UDP. ✓', instanceId);
+        clearArrows();
+        pulseNode(dst, '#a855f7');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to trace an IP datagram across routers.', instanceId);
+    });
+  }
+
+  /* sim-fragmentation */
+  function buildFragmentation(containerEl, instanceId) {
+    const simId = 'sim-fragmentation';
+    const W = 540, H = 150;
+    const { host, canvas } = buildShell(simId, 5, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    svgLine(svg, 60, 75, 480, 75, 'rgba(255,255,255,0.06)');
+    const src = svgNode(svg,  40, 75, 28, 'SRC', 'Source',  '#00f5ff');
+    const rtr = svgNode(svg, 210, 75, 28, 'RTR', 'Router',  '#ff6b35');
+    const dst = svgNode(svg, 500, 75, 28, 'DST', 'Dest',    '#a855f7');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to see IP fragmentation.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① Source sends a <strong>4000-byte datagram</strong>. It arrives at a router whose outgoing link has MTU = 1500 bytes.', instanceId);
+        arrows.push(svgArrow(svg, 72, 67, 180, 67, '#00f5ff', '4000B →'));
+        pulseNode(src, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '② Router checks: 4000B &gt; MTU(1500). Must <strong>fragment</strong>. Each fragment gets the same <em>Identification</em> field.', instanceId);
+        pulseNode(rtr, '#ff6b35');
+      },
+      () => {
+        setLog(simId, '③ Three fragments: <code>offset=0, MF=1</code> (1480B data) | <code>offset=185, MF=1</code> (1480B) | <code>offset=370, MF=0</code> (1040B).', instanceId);
+        arrows.push(svgArrow(svg, 242, 60, 468, 60, '#ff6b35', 'frag1(off=0,MF=1)→'));
+        arrows.push(svgArrow(svg, 242, 75, 468, 75, '#ff6b35', 'frag2(off=185)→'));
+        arrows.push(svgArrow(svg, 242, 90, 468, 90, '#ff6b35', 'frag3(off=370,MF=0)→'));
+      },
+      () => {
+        setLog(simId, '④ Fragments may travel <strong>different paths</strong> and arrive out of order. Only the <em>destination</em> host reassembles.', instanceId);
+        clearArrows();
+      },
+      () => {
+        setLog(simId, '⑤ Destination uses <strong>ID + offsets + MF flag</strong> to reassemble the original 4000B datagram. ✓', instanceId);
+        clearArrows();
+        pulseNode(dst, '#a855f7');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to see IP fragmentation.', instanceId);
+    });
+  }
+
+  /* sim-cidr */
+  function buildCIDR(containerEl, instanceId) {
+    const simId = 'sim-cidr';
+    const W = 500, H = 140;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    const host_ = svgNode(svg,  65, 70, 28, 'HST', '192.168.1.42', '#00f5ff');
+    const rtr   = svgNode(svg, 260, 70, 28, 'RTR', 'Router',       '#ff6b35');
+    const net   = svgNode(svg, 435, 70, 28, 'NET', 'Network',      '#00ff88');
+    svgLine(svg, 96, 70, 230, 70, 'rgba(255,255,255,0.06)');
+    svgLine(svg, 292, 70, 405, 70, 'rgba(255,255,255,0.06)');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to understand CIDR prefix matching.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① Address: <code>192.168.1.42/26</code>. The <code>/26</code> means the first <strong>26 bits</strong> identify the network.', instanceId);
+        pulseNode(host_, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '② Binary: <code>11000000.10101000.00000001.00<u>101010</u></code>. Network prefix = first 26 bits. Host = last 6 bits (64 addresses).', instanceId);
+      },
+      () => {
+        setLog(simId, '③ Network range: <code>192.168.1.0</code> – <code>192.168.1.63</code>. Subnet mask = <code>255.255.255.192</code>.', instanceId);
+        arrows.push(svgArrow(svg, 96, 63, 228, 63, '#00f5ff', 'lookup /26 →'));
+        pulseNode(rtr, '#ff6b35');
+      },
+      () => {
+        setLog(simId, '④ Router uses <strong>longest-prefix match</strong>: the most specific matching entry wins. CIDR allows route aggregation (supernetting). ✓', instanceId);
+        arrows.push(svgArrow(svg, 292, 63, 403, 63, '#00ff88', '→ output port'));
+        pulseNode(net, '#00ff88');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to understand CIDR prefix matching.', instanceId);
+    });
+  }
+
+  /* sim-dhcp */
+  function buildDHCP(containerEl, instanceId) {
+    const simId = 'sim-dhcp';
+    const W = 500, H = 140;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    svgLine(svg, 90, 70, 410, 70, 'rgba(255,255,255,0.06)');
+    const cli  = svgNode(svg,  65, 70, 28, 'CLI', 'Client',       '#00f5ff');
+    const srv  = svgNode(svg, 435, 70, 28, 'SRV', 'DHCP Server',  '#00ff88');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to step through the DORA sequence.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① <strong>DISCOVER</strong>: Client has no IP. Broadcasts <code>255.255.255.255</code> on UDP port 67: "Is there a DHCP server?"', instanceId);
+        arrows.push(svgArrow(svg, 97, 63, 403, 63, '#00f5ff', 'DISCOVER (bcast) →'));
+        pulseNode(cli, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '② <strong>OFFER</strong>: Server responds with a proposed IP address, subnet mask, default gateway, DNS, and lease duration.', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 403, 78, 97, 78, '#00ff88', '← OFFER (192.168.1.5)'));
+        pulseNode(srv, '#00ff88');
+      },
+      () => {
+        setLog(simId, '③ <strong>REQUEST</strong>: Client broadcasts its acceptance of the offered IP (other servers see the client chose this server).', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 97, 63, 403, 63, '#00f5ff', 'REQUEST (bcast) →'));
+      },
+      () => {
+        setLog(simId, '④ <strong>ACK</strong>: Server confirms the lease. Client now has IP, mask, gateway, DNS. DORA complete. ✓', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 403, 78, 97, 78, '#00ff88', '← ACK (lease confirmed)'));
+        pulseNode(cli, '#00ff88');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to step through the DORA sequence.', instanceId);
+    });
+  }
+
+  /* sim-ipv6 */
+  function buildIPv6(containerEl, instanceId) {
+    const simId = 'sim-ipv6';
+    const W = 500, H = 140;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    svgLine(svg, 90, 70, 410, 70, 'rgba(255,255,255,0.06)');
+    const v6  = svgNode(svg,  65, 70, 28, 'v6', 'IPv6 Host',   '#00f5ff');
+    const rtr = svgNode(svg, 260, 70, 28, 'RTR','Dual-Stack R','#ff6b35');
+    const v4  = svgNode(svg, 435, 70, 28, 'v4', 'IPv4 Host',   '#a855f7');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to explore IPv6 and transition.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① IPv6 uses <strong>128-bit addresses</strong>. Written as 8 groups of 4 hex digits: <code>2001:0db8:85a3::8a2e:0370:7334</code>. <code>::</code> compresses consecutive zero groups.', instanceId);
+        pulseNode(v6, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '② IPv6 header is a <strong>fixed 40 bytes</strong>. No fragmentation in routers (done at source), no header checksum (left to transport). Simpler and faster.', instanceId);
+        arrows.push(svgArrow(svg, 97, 67, 230, 67, '#00f5ff', 'IPv6 pkt →'));
+      },
+      () => {
+        setLog(simId, '③ <strong>Dual-stack router</strong>: supports both IPv4 and IPv6. Can <em>tunnel</em> IPv6 datagrams inside IPv4 packets to cross IPv4-only infrastructure.', instanceId);
+        clearArrows();
+        pulseNode(rtr, '#ff6b35');
+        arrows.push(svgArrow(svg, 292, 67, 403, 67, '#ff6b35', '[IPv4[IPv6]] →'));
+      },
+      () => {
+        setLog(simId, '④ Transition mechanisms: <strong>dual-stack</strong> (run both), <strong>tunneling</strong> (encapsulate v6 in v4), <strong>NAT64</strong> (translate). IPv6 deployment is ongoing. ✓', instanceId);
+        clearArrows();
+        pulseNode(v4, '#a855f7');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to explore IPv6 and transition.', instanceId);
+    });
+  }
+
+  /* ============================================================
+     CH5 SIMS
+  ============================================================ */
+
+  /* sim-dijkstra */
+  function buildDijkstra(containerEl, instanceId) {
+    const simId = 'sim-dijkstra';
+    const W = 520, H = 150;
+    const { host, canvas } = buildShell(simId, 5, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    // 5-node graph: u, v, w, x, y
+    const u = svgNode(svg,  55, 75, 24, 'u', 'src', '#00f5ff');
+    const v = svgNode(svg, 175, 35, 24, 'v', '',    '#64748b');
+    const w = svgNode(svg, 175,115, 24, 'w', '',    '#64748b');
+    const x = svgNode(svg, 320, 75, 24, 'x', '',    '#64748b');
+    const y = svgNode(svg, 465, 75, 24, 'y', 'dst', '#a855f7');
+
+    svgLine(svg,  80, 68, 152, 42, 'rgba(255,255,255,0.07)', true); // u-v cost 2
+    svgLine(svg,  80, 82, 152, 108,'rgba(255,255,255,0.07)', true); // u-w cost 5
+    svgLine(svg, 200, 40, 296, 68, 'rgba(255,255,255,0.07)', true); // v-x cost 3
+    svgLine(svg, 200, 112,296, 82, 'rgba(255,255,255,0.07)', true); // w-x cost 1
+    svgLine(svg, 344, 75, 440, 75, 'rgba(255,255,255,0.07)', true); // x-y cost 4
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to run Dijkstra\'s link-state algorithm.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① <strong>Initialize</strong>: D(u)=0 (source settled), D(v)=∞, D(w)=∞, D(x)=∞, D(y)=∞. All nodes unsettled.', instanceId);
+        pulseNode(u, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '② <strong>Settle u</strong> (cost 0). Update neighbors: D(v)=2, D(w)=5.', instanceId);
+        pulseNode(v, '#00ff88');
+        pulseNode(w, '#ff6b35');
+      },
+      () => {
+        setLog(simId, '③ <strong>Settle v</strong> (cheapest unsettled, cost 2). Update: D(x) = min(∞, 2+3) = 5.', instanceId);
+        arrows.push(svgArrow(svg, 152, 42, 296, 68, '#00ff88', 'cost 5'));
+        pulseNode(x, '#00ff88');
+      },
+      () => {
+        setLog(simId, '④ <strong>Settle w</strong> (cost 5 tie). Update: D(x) = min(5, 5+1) = 5 (no improvement). Settle x cost 5.', instanceId);
+        clearArrows();
+        pulseNode(x, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '⑤ <strong>Settle y</strong>: D(y) = 5+4 = 9. Shortest path u→v→x→y cost 9. ✓ Algorithm complete.', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 80, 68, 152, 42, '#00f5ff', ''));
+        arrows.push(svgArrow(svg, 200, 40, 296, 68, '#00f5ff', ''));
+        arrows.push(svgArrow(svg, 344, 75, 440, 75, '#00f5ff', 'cost 9'));
+        pulseNode(y, '#a855f7');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to run Dijkstra\'s link-state algorithm.', instanceId);
+    });
+  }
+
+  /* sim-bellman-ford */
+  function buildBellmanFord(containerEl, instanceId) {
+    const simId = 'sim-bellman-ford';
+    const W = 500, H = 140;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    svgLine(svg, 90, 70, 410, 70, 'rgba(255,255,255,0.06)');
+    const x = svgNode(svg,  65, 70, 28, 'x', 'Node x',  '#00f5ff');
+    const v = svgNode(svg, 190, 40, 22, 'v', 'Nbr v',   '#00ff88');
+    const w = svgNode(svg, 190,100, 22, 'w', 'Nbr w',   '#ff6b35');
+    const y = svgNode(svg, 435, 70, 28, 'y', 'Dest y',  '#a855f7');
+    svgLine(svg, 90, 60, 167, 45, 'rgba(255,255,255,0.07)', true);
+    svgLine(svg, 90, 80, 167, 95, 'rgba(255,255,255,0.07)', true);
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to trace the Bellman-Ford / distance-vector algorithm.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① Each node maintains a <strong>distance vector</strong>: estimated cost to every other node. Initially knows only its direct link costs.', instanceId);
+        pulseNode(x, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '② Nodes <strong>share distance vectors</strong> with neighbors. Node x receives DV from v and w.', instanceId);
+        arrows.push(svgArrow(svg, 170, 45, 90, 62, '#00ff88', '← DV from v'));
+        arrows.push(svgArrow(svg, 170, 95, 90, 78, '#ff6b35', '← DV from w'));
+        pulseNode(v, '#00ff88');
+        pulseNode(w, '#ff6b35');
+      },
+      () => {
+        setLog(simId, '③ Node x applies <strong>Bellman-Ford</strong>: <code>d_x(y) = min_v { c(x,v) + d_v(y) }</code>. Update its own DV if a cheaper path is found.', instanceId);
+        clearArrows();
+        pulseNode(x, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '④ Updated DVs are <strong>broadcast to neighbors</strong>. Process repeats until no more updates — <em>convergence</em>. ✓ (Beware count-to-infinity on link failure!)', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 97, 63, 403, 63, '#00f5ff', 'updated DV →'));
+        pulseNode(y, '#a855f7');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to trace the Bellman-Ford / distance-vector algorithm.', instanceId);
+    });
+  }
+
+  /* sim-bgp */
+  function buildBGP(containerEl, instanceId) {
+    const simId = 'sim-bgp';
+    const W = 540, H = 150;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    svgLine(svg, 60, 75, 480, 75, 'rgba(255,255,255,0.06)');
+    const as1 = svgNode(svg,  45, 75, 28, 'AS1', 'Origin AS',  '#00f5ff');
+    const as2 = svgNode(svg, 210, 75, 28, 'AS2', 'Transit AS', '#00ff88');
+    const as3 = svgNode(svg, 380, 75, 28, 'AS3', 'Transit AS', '#ff6b35');
+    const as4 = svgNode(svg, 510, 75, 22, 'AS4', 'Dest AS',    '#a855f7');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to trace BGP path-vector advertisement.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① <strong>AS1</strong> originates a prefix (e.g., <code>192.0.2.0/24</code>). It advertises via <em>eBGP</em> to its neighbor AS2.', instanceId);
+        arrows.push(svgArrow(svg, 76, 67, 180, 67, '#00f5ff', 'prefix | AS-PATH=[AS1] →'));
+        pulseNode(as1, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '② AS2 receives the route. It <strong>propagates internally</strong> via <em>iBGP</em> to all its border routers, then re-advertises to AS3 with AS-PATH prepended.', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 242, 67, 348, 67, '#00ff88', 'AS-PATH=[AS2,AS1] →'));
+        pulseNode(as2, '#00ff88');
+      },
+      () => {
+        setLog(simId, '③ AS3 does the same: <strong>AS-PATH grows</strong> to [AS3,AS2,AS1]. The path vector prevents routing loops — if a router sees its own AS in the path, it rejects the route.', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 412, 67, 487, 67, '#ff6b35', 'AS-PATH=[AS3,AS2,AS1]→'));
+        pulseNode(as3, '#ff6b35');
+      },
+      () => {
+        setLog(simId, '④ <strong>AS4</strong> selects the best route using BGP policy (prefer shorter AS-PATH, local pref, MED). Route installed in forwarding table. ✓', instanceId);
+        clearArrows();
+        pulseNode(as4, '#a855f7');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to trace BGP path-vector advertisement.', instanceId);
+    });
+  }
+
+  /* sim-sdn */
+  function buildSDN(containerEl, instanceId) {
+    const simId = 'sim-sdn';
+    const W = 520, H = 150;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    const ctrl = svgNode(svg, 260,  35, 28, 'CTRL', 'SDN Controller', '#a855f7');
+    const sw1  = svgNode(svg,  80, 115, 24, 'SW1',  'Switch 1',       '#00f5ff');
+    const sw2  = svgNode(svg, 260, 115, 24, 'SW2',  'Switch 2',       '#00ff88');
+    const sw3  = svgNode(svg, 440, 115, 24, 'SW3',  'Switch 3',       '#ff6b35');
+
+    svgLine(svg, 237, 62, 104, 90, 'rgba(255,255,255,0.07)', true);
+    svgLine(svg, 260, 63, 260, 90, 'rgba(255,255,255,0.07)', true);
+    svgLine(svg, 283, 62, 416, 90, 'rgba(255,255,255,0.07)', true);
+    svgLine(svg, 104, 115, 236, 115,'rgba(255,255,255,0.07)', true);
+    svgLine(svg, 284, 115, 416, 115,'rgba(255,255,255,0.07)', true);
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to explore SDN control plane.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① <strong>SDN Controller</strong> has a global view of the network topology via southbound API (e.g., OpenFlow). <em>Control plane</em> is logically centralized.', instanceId);
+        pulseNode(ctrl, '#a855f7');
+      },
+      () => {
+        setLog(simId, '② Controller computes <strong>flow rules</strong> (match header fields → action: forward / drop / modify) using its global topology knowledge.', instanceId);
+        arrows.push(svgArrow(svg, 237, 55, 104, 90, '#a855f7', 'flow rule →'));
+        arrows.push(svgArrow(svg, 260, 63, 260, 90, '#a855f7', 'flow rule →'));
+        arrows.push(svgArrow(svg, 283, 55, 416, 90, '#a855f7', 'flow rule →'));
+      },
+      () => {
+        setLog(simId, '③ Switches are "dumb" <strong>data-plane devices</strong>. They match incoming packets against their flow table and apply the installed action.', instanceId);
+        clearArrows();
+        pulseNode(sw1, '#00f5ff');
+        pulseNode(sw2, '#00ff88');
+        pulseNode(sw3, '#ff6b35');
+      },
+      () => {
+        setLog(simId, '④ Packet arrives at SW1, matches a rule: <strong>forward to SW2 on port 3</strong>. No routing protocol needed at switch level. ✓', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 104, 115, 236, 115, '#00f5ff', 'fwd port 3 →'));
+        arrows.push(svgArrow(svg, 284, 115, 416, 115, '#00ff88', '→ dst'));
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to explore SDN control plane.', instanceId);
+    });
+  }
+
+  /* sim-icmp */
+  function buildICMP(containerEl, instanceId) {
+    const simId = 'sim-icmp';
+    const W = 520, H = 150;
+    const { host, canvas } = buildShell(simId, 4, instanceId);
+    const svg = makeSVG(W, H);
+    canvas.appendChild(svg);
+
+    svgLine(svg, 70, 75, 450, 75, 'rgba(255,255,255,0.06)');
+    const src = svgNode(svg,  48, 75, 28, 'SRC', 'Source',     '#00f5ff');
+    const r1  = svgNode(svg, 195, 75, 24, 'R1',  'Router(TTL)','#ff3366');
+    const r2  = svgNode(svg, 325, 75, 24, 'R2',  'Router',     '#ff6b35');
+    const dst = svgNode(svg, 472, 75, 28, 'DST', 'Destination','#a855f7');
+
+    containerEl.appendChild(host);
+    setLog(simId, 'Press <strong>Next Step</strong> to explore ICMP message types.', instanceId);
+
+    let arrows = [];
+    function clearArrows() { arrows.forEach(a => a.remove()); arrows = []; }
+
+    const steps = [
+      () => {
+        setLog(simId, '① <strong>ping</strong> sends ICMP <em>Echo Request</em> (Type 8, Code 0). Destination replies with <em>Echo Reply</em> (Type 0). Measures round-trip time.', instanceId);
+        arrows.push(svgArrow(svg, 80, 67, 440, 67, '#00f5ff', 'Echo Req (T8) →'));
+        arrows.push(svgArrow(svg, 440, 83, 80, 83, '#00ff88', '← Echo Reply (T0)'));
+        pulseNode(src, '#00f5ff');
+      },
+      () => {
+        setLog(simId, '② A router receives a packet with <strong>TTL = 0</strong>. It drops the packet and sends <em>Time Exceeded</em> (Type 11) back to the source.', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 80, 67, 170, 67, '#ff3366', 'TTL=0 →'));
+        arrows.push(svgArrow(svg, 170, 83, 80, 83, '#ff3366', '← Time Exceeded (T11)'));
+        pulseNode(r1, '#ff3366');
+      },
+      () => {
+        setLog(simId, '③ If a datagram arrives at a router with no route to destination: <em>Destination Unreachable</em> (Type 3) is returned to the source.', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 300, 83, 80, 83, '#ff6b35', '← Dest Unreachable (T3)'));
+        pulseNode(r2, '#ff6b35');
+      },
+      () => {
+        setLog(simId, '④ <strong>traceroute</strong> exploits TTL: sends UDP/ICMP with TTL=1,2,3,… Each router returns T11 revealing its IP. Maps the full path hop-by-hop. ✓', instanceId);
+        clearArrows();
+        arrows.push(svgArrow(svg, 80, 63, 170, 63, '#00f5ff', 'TTL=1→'));
+        arrows.push(svgArrow(svg, 80, 68, 300, 68, '#00f5ff', 'TTL=2→'));
+        arrows.push(svgArrow(svg, 80, 73, 440, 73, '#00f5ff', 'TTL=3→'));
+        pulseNode(src, '#00ff88');
+      }
+    ];
+
+    return makeController(instanceId, simId, steps, () => {
+      clearArrows();
+      setLog(simId, 'Press <strong>Next Step</strong> to explore ICMP message types.', instanceId);
+    });
+  }
+
   /* ----------------------------------------------------------
      SIMULATION REGISTRY
   ---------------------------------------------------------- */
 
   const SIM_BUILDERS = {
+    // Chapter 1 & 2 (original)
     'sim-client-server':   buildClientServer,
     'sim-socket':          buildSocket,
     'sim-packet-flow':     buildPacketFlow,
@@ -1653,7 +2714,33 @@
     'sim-app-layer':       buildAppLayer,
     'sim-http-methods':    buildHttpMethods,
     'sim-http-pipeline':   buildHttpPipeline,
-    'sim-email-delivery':  buildEmailDelivery
+    'sim-email-delivery':  buildEmailDelivery,
+
+    // Chapter 3: Transport Layer
+    'sim-transport-layer': buildTransportLayer,
+    'sim-mux-demux':       buildMuxDemux,
+    'sim-udp':             buildUDP,
+    'sim-checksum':        buildChecksum,
+    'sim-rdt':             buildRDT,
+    'sim-go-back-n':       buildGoBackN,
+    'sim-tcp-segment':     buildTcpSegment,
+    'sim-tcp-rtt':         buildTcpRTT,
+    'sim-tcp-congestion':  buildTcpCongestion,
+
+    // Chapter 4: Network Layer — Data Plane
+    'sim-router-arch':     buildRouterArch,
+    'sim-ip-datagram':     buildIpDatagram,
+    'sim-fragmentation':   buildFragmentation,
+    'sim-cidr':            buildCIDR,
+    'sim-dhcp':            buildDHCP,
+    'sim-ipv6':            buildIPv6,
+
+    // Chapter 5: Network Layer — Control Plane
+    'sim-dijkstra':        buildDijkstra,
+    'sim-bellman-ford':    buildBellmanFord,
+    'sim-bgp':             buildBGP,
+    'sim-sdn':             buildSDN,
+    'sim-icmp':            buildICMP
   };
 
   /* ----------------------------------------------------------
