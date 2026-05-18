@@ -67,6 +67,22 @@
     'ch2-http-flow', 'ch2-email'
   ];
 
+  const CH3_TOPICS = [
+    'ch3-transport-fundamentals', 'ch3-mux-demux', 'ch3-udp', 'ch3-checksum',
+    'ch3-rdt', 'ch3-sliding-window', 'ch3-tcp-segment', 'ch3-tcp-rtt',
+    'ch3-tcp-flow', 'ch3-congestion'
+  ];
+
+  const CH4_TOPICS = [
+    'ch4-planes', 'ch4-ip-format', 'ch4-fragmentation', 'ch4-addressing',
+    'ch4-dhcp-nat', 'ch4-ipv6'
+  ];
+
+  const CH5_TOPICS = [
+    'ch5-link-state', 'ch5-distance-vector', 'ch5-ospf-bgp',
+    'ch5-sdn', 'ch5-icmp'
+  ];
+
   const MS_PER_DAY = 86400000;
 
   /* ----------------------------------------------------------
@@ -78,7 +94,7 @@
     level:            1,
     streak:           0,
     lastStudied:      null,
-    unlockedSections: ['ch1-internet', 'ch2-client-server'],
+    unlockedSections: ['ch1-internet', 'ch2-client-server', 'ch3-transport-fundamentals', 'ch4-planes', 'ch5-link-state'],
     completedTopics:  [],
     achievements:     [],
     weakTopics:       [],
@@ -538,6 +554,9 @@
       tryUnlock('ch2_complete');
     }
 
+    // ch3/ch4/ch5 completion (no dedicated badge yet, handled silently)
+    // Future: add badge definitions for ch3_complete, ch4_complete, ch5_complete
+
     // exam_pass — passed with ≥80%
     if (context.examPassed) tryUnlock('exam_pass');
 
@@ -557,9 +576,10 @@
      DERIVED GETTERS (no state write)
   ---------------------------------------------------------- */
 
-  /** Return progress % (0–100) for a given chapter ('ch1' | 'ch2') */
+  /** Return progress % (0–100) for a given chapter */
   function getChapterProgress(chapter) {
-    const topics = chapter === 'ch1' ? CH1_TOPICS : CH2_TOPICS;
+    const map = { ch1: CH1_TOPICS, ch2: CH2_TOPICS, ch3: CH3_TOPICS, ch4: CH4_TOPICS, ch5: CH5_TOPICS };
+    const topics = map[chapter] || CH1_TOPICS;
     const state  = load();
     const done   = topics.filter(id => state.completedTopics.includes(id)).length;
     return Math.round((done / topics.length) * 100);
@@ -608,7 +628,10 @@
       badgeCount:   state.achievements.length,
       weakCount:    state.weakTopics.length,
       ch1Pct:       getChapterProgress('ch1'),
-      ch2Pct:       getChapterProgress('ch2')
+      ch2Pct:       getChapterProgress('ch2'),
+      ch3Pct:       getChapterProgress('ch3'),
+      ch4Pct:       getChapterProgress('ch4'),
+      ch5Pct:       getChapterProgress('ch5')
     };
   }
 
@@ -629,6 +652,9 @@
     BADGE_DEFS,
     CH1_TOPICS,
     CH2_TOPICS,
+    CH3_TOPICS,
+    CH4_TOPICS,
+    CH5_TOPICS,
 
     // XP
     addXP,

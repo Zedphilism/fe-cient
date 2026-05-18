@@ -260,6 +260,41 @@
         if (e.key === 'Enter') { e.preventDefault(); _submitAnswer(); }
       });
 
+    } else if (q.type === 'calc') {
+      // Optional setup / given box
+      if (q.setup) {
+        var setupBox = document.createElement('div');
+        setupBox.className = 'calc-setup';
+        setupBox.innerHTML = q.setup.replace(/\n/g, '<br>');
+        answerArea.appendChild(setupBox);
+      }
+      // Optional hint line
+      if (q.hint) {
+        var hintEl = document.createElement('p');
+        hintEl.className = 'calc-hint';
+        hintEl.innerHTML = '<span class="calc-hint-label">Hint:</span> ' + q.hint;
+        answerArea.appendChild(hintEl);
+      }
+      // Input row with optional unit label
+      var calcRow = document.createElement('div');
+      calcRow.className = 'calc-input-row';
+      var calcInp = document.createElement('input');
+      calcInp.type = 'text';
+      calcInp.className = 'exam-text-input quiz-fill-input calc-input';
+      calcInp.placeholder = q.unit ? 'Answer in ' + q.unit + '\u2026' : 'Enter your answer\u2026';
+      calcInp.setAttribute('autocomplete', 'off');
+      calcRow.appendChild(calcInp);
+      if (q.unit) {
+        var unitSpan = document.createElement('span');
+        unitSpan.className = 'calc-unit';
+        unitSpan.textContent = q.unit;
+        calcRow.appendChild(unitSpan);
+      }
+      answerArea.appendChild(calcRow);
+      calcInp.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); _submitAnswer(); }
+      });
+
     } else if (q.type === 'match') {
       var pairs  = q.pairs || [];
       var terms  = pairs.map(function (p) { return p.term; });
@@ -331,6 +366,10 @@
       var inp = _q('.exam-text-input');
       return inp ? inp.value.trim() : null;
 
+    } else if (q.type === 'calc') {
+      var calcInp = _q('.exam-text-input.calc-input');
+      return calcInp ? calcInp.value.trim() : null;
+
     } else if (q.type === 'match') {
       var selects = document.querySelectorAll('.exam-match-select');
       var result  = [];
@@ -344,6 +383,35 @@
     return null;
   }
 
+  /**
+   * Evaluate a calc-type answer using the same logic as quiz.js _checkCalc.
+   * q.calcType: "numeric" (default) | "binary" | "exact"
+   */
+  function _checkCalcAnswer(val, q) {
+    var calcType  = q.calcType || 'numeric';
+    var tolerance = (calcType === 'binary' || calcType === 'exact') ? 0
+                  : (q.tolerance != null ? q.tolerance : 0.05);
+
+    if (calcType === 'binary') {
+      var normalize = function (s) { return s.replace(/\s+/g, '').toLowerCase(); };
+      var given   = normalize(val);
+      var correct = normalize(String(q.answer));
+      var alts    = (q.acceptedAnswers || []).map(normalize);
+      return given === correct || alts.indexOf(given) !== -1;
+    }
+
+    if (calcType === 'exact') {
+      var normExact = function (s) { return s.trim().toLowerCase().replace(/\s+/g, ' '); };
+      return normExact(val) === normExact(String(q.answer));
+    }
+
+    // numeric: parse float, check within tolerance
+    var parsed = parseFloat(val.replace(/[^0-9.\-]/g, ''));
+    var target = parseFloat(String(q.answer));
+    if (isNaN(parsed) || isNaN(target)) return false;
+    return Math.abs(parsed - target) <= tolerance;
+  }
+
   /** Evaluate answer against correct answer. Returns boolean. */
   function _evaluateAnswer(q, userAnswer) {
     if (userAnswer === null || userAnswer === undefined) return false;
@@ -355,6 +423,9 @@
       var correct = String(q.answer).toLowerCase().trim();
       var given   = String(userAnswer).toLowerCase().trim();
       return given === correct || correct.startsWith(given + ' ') || given.includes(correct);
+
+    } else if (q.type === 'calc') {
+      return _checkCalcAnswer(String(userAnswer), q);
 
     } else if (q.type === 'match') {
       if (!Array.isArray(userAnswer) || !Array.isArray(q.answer)) return false;

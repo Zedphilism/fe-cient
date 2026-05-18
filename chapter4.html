@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chapter 4: Network Layer — Data Plane — NetCore Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+
+<body data-page="chapter4">
+
+  <!-- ── Site Header ──────────────────────────────────────────────────── -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo" aria-label="NetCore Academy home">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <circle cx="14" cy="14" r="13" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <circle cx="14" cy="14" r="4" fill="var(--accent-cyan)"/>
+          <line x1="14" y1="1" x2="14" y2="7"  stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <line x1="14" y1="21" x2="14" y2="27" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <line x1="1"  y1="14" x2="7"  y2="14" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <line x1="21" y1="14" x2="27" y2="14" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+        </svg>
+        <span class="logo-text">NetCore<span class="logo-accent">Academy</span></span>
+      </a>
+
+      <nav class="header-nav" aria-label="Chapter navigation">
+        <a href="index.html" class="nav-link">Dashboard</a>
+        <a href="chapter1.html" class="nav-link">Ch.1</a>
+        <a href="chapter2.html" class="nav-link">Ch.2</a>
+        <a href="chapter3.html" class="nav-link">Ch.3</a>
+        <a href="chapter4.html" class="nav-link nav-link--active" aria-current="page">Ch.4</a>
+        <a href="chapter5.html" class="nav-link">Ch.5</a>
+        <a href="exam-mode.html" class="nav-link">Exam</a>
+      </nav>
+
+      <div class="header-right">
+        <div class="rank-badge" id="header-rank">
+          <span class="rank-level" id="header-level">Lv.1</span>
+          <span class="rank-title" id="header-rank-title">Network Cadet</span>
+        </div>
+        <div class="xp-bar-wrap" title="XP progress to next level">
+          <div class="xp-bar-track">
+            <div class="xp-bar-fill" id="header-xp-fill" style="width:0%"></div>
+          </div>
+          <span class="xp-label" id="header-xp-label">0 XP</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Status Bar ───────────────────────────────────────────────────── -->
+  <div class="status-bar" id="status-bar" role="status" aria-live="polite">
+    <span class="status-item">
+      <span class="status-dot status-dot--green"></span>
+      <span>CHAPTER 4</span>
+    </span>
+    <span class="status-item">
+      <span class="status-dot status-dot--cyan"></span>
+      <span id="status-progress-text">0 / 6 TOPICS</span>
+    </span>
+    <span class="status-item status-item--right">
+      <span id="status-xp-earned">0 XP EARNED THIS SESSION</span>
+    </span>
+  </div>
+
+  <!-- ── Page Content ─────────────────────────────────────────────────── -->
+  <main class="page-wrapper" id="main-content">
+
+    <!-- Chapter Hero ---------------------------------------------------- -->
+    <div class="chapter-hero glass-card anim-fade-in-up">
+      <div class="chapter-hero__meta">
+        <span class="section-label">CHAPTER 4</span>
+        <h1 class="chapter-hero__title">Network Layer — Data Plane</h1>
+        <p class="chapter-hero__desc">
+          How routers forward packets. IP datagram format, fragmentation, IPv4 addressing and CIDR, DHCP, NAT, and IPv6.
+        </p>
+        <div class="chapter-hero__actions">
+          <a href="chapter3.html" class="btn btn--ghost">← Chapter 3</a>
+        </div>
+      </div>
+      <div class="chapter-hero__ring" aria-label="Chapter 4 completion progress">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <circle class="ring-track" cx="50" cy="50" r="40" />
+          <circle class="ring-fill ring-fill--green" id="ch4-progress-ring"
+                  cx="50" cy="50" r="40"
+                  stroke-dasharray="251.3"
+                  stroke-dashoffset="251.3"
+                  transform="rotate(-90 50 50)" />
+        </svg>
+        <div class="ring-label">
+          <span class="ring-pct" id="ch4-ring-pct">0%</span>
+          <span class="ring-sub">complete</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ================================================================
+         SECTION 1 — Data Plane vs Control Plane
+    ================================================================ -->
+    <section class="topic-section" id="ch4-planes"
+             data-section-id="ch4-planes" data-section-index="0">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 1 OF 6</span>
+          <div class="topic-badge tag tag--cyan">UNLOCKED</div>
+        </div>
+        <h2 class="topic-section__title">Data Plane vs Control Plane</h2>
+        <p class="topic-section__subtitle">Network layer goal · Forwarding vs routing · Router architecture · HOL blocking</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <!-- 1. EXPLAIN -->
+        <div class="learn-block glass-card glass-card--cyan">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-cyan)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            The network layer is responsible for moving packets from a sending host to a receiving host across the Internet. It is split into two distinct functions: the <strong>data plane</strong>, which handles per-router forwarding of each arriving packet, and the <strong>control plane</strong>, which determines the network-wide routes that forwarding tables are built from.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>Network layer goal: host-to-host delivery of packets across one or more routers</li>
+            <li><strong>DATA PLANE:</strong> local, per-router function — determines how a packet arriving on an input port is forwarded to an output port using the forwarding table</li>
+            <li><strong>CONTROL PLANE:</strong> network-wide logic — determines how forwarding tables are computed across all routers</li>
+            <li>Traditional control plane: routing algorithms run inside each router; routers exchange routing messages (OSPF, BGP)</li>
+            <li>SDN control plane: a logically centralised remote controller computes and installs forwarding tables in each router</li>
+            <li>Forwarding: moving a packet from an input link to an output link (data plane, microseconds)</li>
+            <li>Routing: computing the end-to-end path a packet should take (control plane, milliseconds to seconds)</li>
+            <li>Router architecture: input ports → switching fabric → output ports, plus a routing processor</li>
+            <li>Input port processing: line termination → link-layer decapsulation → forwarding-table lookup → queuing</li>
+            <li>Output port processing: queuing → link-layer encapsulation → line termination</li>
+            <li>Head-of-line (HOL) blocking: a packet at the front of an input queue that cannot be forwarded prevents packets behind it from advancing, even if their output ports are free</li>
+          </ul>
+        </div>
+
+        <!-- 2. VISUALIZE -->
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+              <line x1="8" y1="8" x2="8" y2="11" stroke="var(--accent-green)" stroke-width="1.5"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-router-arch"
+               id="sim-mount-ch4-planes"
+               aria-label="Router architecture simulation"></div>
+        </div>
+
+        <!-- 3. MEMORY TRIGGER (analogy) -->
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            Think of a <strong>highway interchange</strong>. The data plane is the physical road: cars (packets) arrive at an on-ramp (input port) and the interchange signs (forwarding table) direct each car to the correct exit (output port) in microseconds. The control plane is the traffic-management centre that studies road usage and decides which signs to put up — a slower, network-wide planning function.
+          </p>
+        </div>
+
+        <!-- 4. MINI QUIZ -->
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch4-planes"
+               data-chapter="chapter4"
+               id="quiz-ch4-planes"
+               aria-label="Data Plane vs Control Plane quiz"></div>
+        </div>
+
+      </div><!-- /.topic-section__body -->
+    </section><!-- /#ch4-planes -->
+
+
+    <!-- ================================================================
+         SECTION 2 — IP Datagram Format
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch4-ip-format"
+             data-section-id="ch4-ip-format" data-section-index="1">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 2 OF 6</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch4-ip-format">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">IP Datagram Format</h2>
+        <p class="topic-section__subtitle">Header fields · TTL · Protocol field · Checksum · Fragmentation fields</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 1</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--green">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-green)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-green)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            An IPv4 datagram consists of a <strong>20-byte header</strong> (with no options) followed by the payload data. The header contains all the information routers and end systems need to deliver, fragment, and reassemble the datagram. Understanding each field is essential for diagnosing network behaviour and understanding higher-layer protocols.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>Minimum IP header size: 20 bytes (no options); maximum: 60 bytes (with options)</li>
+            <li>Version (4 bits): IP version number; 4 = IPv4</li>
+            <li>Header Length / IHL (4 bits): header size in 32-bit words; typical value 5 = 20 bytes</li>
+            <li>Type of Service / DSCP (8 bits): quality-of-service marking for differentiated services</li>
+            <li>Total Length (16 bits): total datagram size in bytes (header + data); max 65,535 bytes</li>
+            <li>Identification (16 bits): same value in all fragments of the same original datagram</li>
+            <li>Flags (3 bits): bit 1 = DF (Don't Fragment); bit 2 = MF (More Fragments follow)</li>
+            <li>Fragment Offset (13 bits): position of this fragment's data within the original datagram, in units of 8 bytes</li>
+            <li>TTL (8 bits): decremented by 1 at each router; when it reaches 0 the datagram is dropped and an ICMP Time Exceeded message is sent back</li>
+            <li>Protocol (8 bits): identifies the upper-layer protocol — 6 = TCP, 17 = UDP, 1 = ICMP</li>
+            <li>Header Checksum (16 bits): covers the IP header only (not the data payload); recomputed at every hop because TTL changes</li>
+            <li>Source and Destination IP addresses (32 bits each): identify the sending and receiving interfaces</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+              <line x1="8" y1="8" x2="8" y2="11" stroke="var(--accent-green)" stroke-width="1.5"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-ip-datagram"
+               id="sim-mount-ch4-ip-format"
+               aria-label="IP datagram format simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            An IP header is like the <strong>label on a postal parcel</strong>. It carries the sender's and recipient's addresses (source/destination IP), a sequence number for multi-parcel shipments (Identification/Fragment Offset), a maximum number of post offices the parcel can pass through before being discarded (TTL), and information about what's inside (Protocol). Post offices (routers) read only the label, not the contents.
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch4-ip-format"
+               data-chapter="chapter4"
+               id="quiz-ch4-ip-format"
+               aria-label="IP Datagram Format quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch4-ip-format -->
+
+
+    <!-- ================================================================
+         SECTION 3 — IP Fragmentation & Reassembly
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch4-fragmentation"
+             data-section-id="ch4-fragmentation" data-section-index="2">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 3 OF 6</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch4-fragmentation">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">IP Fragmentation &amp; Reassembly</h2>
+        <p class="topic-section__subtitle">MTU · Fragment fields · MF flag · Offset calculation · IPv6 no-fragment rule</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 2</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--purple">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            Different link-layer technologies impose different <strong>Maximum Transmission Unit (MTU)</strong> limits on datagram size. When an IP datagram is larger than the MTU of an outgoing link, the router must fragment it into smaller datagrams. Fragments are reassembled only at the final destination host, not at intermediate routers.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>MTU (Maximum Transmission Unit): largest datagram a link can carry; Ethernet MTU = 1500 bytes</li>
+            <li>If a datagram exceeds the outgoing link's MTU, the router fragments it (unless DF bit is set — then it drops and sends ICMP Fragmentation Needed)</li>
+            <li>Max data per fragment = MTU − 20 bytes (for the 20-byte IP header added to each fragment)</li>
+            <li>All fragments share the same Identification field so the destination can group them</li>
+            <li>MF (More Fragments) flag: 1 = more fragments follow; 0 = this is the last (or only) fragment</li>
+            <li>Fragment Offset: byte position of this fragment's first data byte within the original datagram, divided by 8</li>
+            <li>All fragment data sizes (except the last) must be a multiple of 8 bytes to keep offsets integer</li>
+            <li>Reassembly is performed ONLY at the destination host, never at intermediate routers</li>
+            <li>IPv6 does NOT support router fragmentation; senders use Path MTU Discovery (PMTUD) to find the minimum MTU along a path</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+              <line x1="8" y1="8" x2="8" y2="11" stroke="var(--accent-green)" stroke-width="1.5"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-fragmentation"
+               id="sim-mount-ch4-fragmentation"
+               aria-label="IP fragmentation and reassembly simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            Fragmentation is like <strong>shipping furniture that is too large for the delivery van</strong>. The warehouse (router) disassembles the wardrobe (datagram) into pieces (fragments) that fit. Each piece is labelled with the same order number (Identification), a position tag (Fragment Offset), and a 'more pieces coming' sticker (MF flag). Only at your home (destination host) are the pieces reassembled — the delivery depots along the way just pass them through.
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch4-fragmentation"
+               data-chapter="chapter4"
+               id="quiz-ch4-fragmentation"
+               aria-label="IP Fragmentation and Reassembly quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch4-fragmentation -->
+
+
+    <!-- ================================================================
+         SECTION 4 — IPv4 Addressing & CIDR
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch4-addressing"
+             data-section-id="ch4-addressing" data-section-index="3">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 4 OF 6</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch4-addressing">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">IPv4 Addressing &amp; CIDR</h2>
+        <p class="topic-section__subtitle">Interface addressing · Subnets · CIDR notation · Longest-prefix match · Route aggregation</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 3</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--orange">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-orange)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            An IPv4 address is a <strong>32-bit number</strong> that identifies an interface (not a device). Classless Inter-Domain Routing (CIDR) replaced the old classful system and lets any prefix length be used, enabling efficient address allocation and route aggregation. Routers use <strong>longest-prefix matching</strong> to select the best forwarding-table entry.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>IP address: 32-bit value written in dotted-decimal notation (e.g. 192.168.1.1), identifies an INTERFACE</li>
+            <li>A device with multiple interfaces (e.g. a router) has one IP address per interface</li>
+            <li>Subnet: a group of interfaces sharing the same IP prefix; they can communicate without a router</li>
+            <li>CIDR notation: a.b.c.d/x — the first x bits form the network prefix; the remaining 32−x bits are the host part</li>
+            <li>Usable host addresses in a /x subnet: 2^(32−x) − 2 (subtract network address and broadcast address)</li>
+            <li>Classful addressing (deprecated): Class A = /8 (~16 M hosts), Class B = /16 (~65 K), Class C = /24 (254 hosts)</li>
+            <li>CIDR benefits: precise address block allocation; route aggregation (one /x entry covers many prefixes)</li>
+            <li>Longest-prefix match: when multiple forwarding entries match a destination, the most specific (longest prefix) wins</li>
+            <li>Subnetting: borrow bits from the host portion to create more subnets with fewer hosts each</li>
+            <li>Special addresses: 0.0.0.0/0 = default route; 127.0.0.1 = loopback; 255.255.255.255 = limited broadcast</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+              <line x1="8" y1="8" x2="8" y2="11" stroke="var(--accent-green)" stroke-width="1.5"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-cidr"
+               id="sim-mount-ch4-addressing"
+               aria-label="CIDR and subnetting simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            CIDR is like <strong>postal zip codes</strong>. A /16 block is a large city-region code; a /24 is a specific neighbourhood; a /30 is a single street. Route aggregation is like a delivery company saying "everything in zip codes 90000–90999 goes to the Los Angeles depot" instead of listing every address individually.
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch4-addressing"
+               data-chapter="chapter4"
+               id="quiz-ch4-addressing"
+               aria-label="IPv4 Addressing and CIDR quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch4-addressing -->
+
+
+    <!-- ================================================================
+         SECTION 5 — DHCP & NAT
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch4-dhcp-nat"
+             data-section-id="ch4-dhcp-nat" data-section-index="4">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 5 OF 6</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch4-dhcp-nat">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">DHCP &amp; NAT</h2>
+        <p class="topic-section__subtitle">DORA exchange · Lease · NAT translation table · Port mapping · NAT traversal</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 4</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--cyan">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-cyan)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            <strong>DHCP</strong> (Dynamic Host Configuration Protocol) allows a host to automatically obtain an IP address and other network configuration when it joins a network. <strong>NAT</strong> (Network Address Translation) lets an entire private network share a single public IP address, conserving the IPv4 address space while introducing a translation layer between private and public addresses.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>DHCP DORA exchange: Discover → Offer → Request → Acknowledge (all four initial messages are broadcast)</li>
+            <li>DHCP provides: IP address, subnet mask, default gateway IP, DNS server IP</li>
+            <li>DHCP addresses are leased (temporary); hosts must renew before the lease expires</li>
+            <li>Plug-and-play: a host joining any DHCP-enabled network gets full configuration automatically, with no manual setup</li>
+            <li>NAT: a NAT router holds one public IP address; internal hosts use private address ranges (10.x.x.x, 172.16–31.x.x, 192.168.x.x)</li>
+            <li>NAT translation table: maps (private IP, private port) ↔ (public IP, public port) for each active connection</li>
+            <li>Outgoing NAT: replace source IP:port with the NAT router's public IP:new port; record mapping in table</li>
+            <li>Incoming NAT: look up destination port in translation table; replace destination IP:port with private IP:port</li>
+            <li>NAT controversy: violates the end-to-end principle; complicates inbound connections (requires port forwarding or hole-punching)</li>
+            <li>NAT traversal problem: P2P applications behind NAT require techniques like hole-punching or STUN to establish direct connections</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+              <line x1="8" y1="8" x2="8" y2="11" stroke="var(--accent-green)" stroke-width="1.5"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-dhcp"
+               id="sim-mount-ch4-dhcp-nat"
+               aria-label="DHCP and NAT simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            DHCP is like <strong>checking into a hotel</strong>. When you arrive (join the network), the front desk (DHCP server) assigns you a room number (IP address) and hands you the building map (subnet mask), the main exit (default gateway), and the concierge's extension (DNS server). NAT is like a company's reception: all external calls appear to come from the main company number (public IP), but the receptionist (NAT router) routes incoming calls to the right extension (private IP:port) using an internal directory (translation table).
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch4-dhcp-nat"
+               data-chapter="chapter4"
+               id="quiz-ch4-dhcp-nat"
+               aria-label="DHCP and NAT quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch4-dhcp-nat -->
+
+
+    <!-- ================================================================
+         SECTION 6 — IPv6
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch4-ipv6"
+             data-section-id="ch4-ipv6" data-section-index="5">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 6 OF 6</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch4-ipv6">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">IPv6</h2>
+        <p class="topic-section__subtitle">128-bit addresses · Fixed 40-byte header · No fragmentation · Dual stack · Tunnelling</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 5</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--green">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-green)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-green)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            IPv6 was developed to replace IPv4 as the 32-bit address space neared exhaustion. It uses <strong>128-bit addresses</strong> (3.4 × 10^38 possible addresses), a simplified fixed-length 40-byte header, and eliminates router fragmentation and header checksums. Transition from IPv4 to IPv6 uses dual-stack operation and tunnelling.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>IPv6 addresses: 128 bits written in colon-hexadecimal notation (8 groups of 16 bits each)</li>
+            <li>Address shorthand: leading zeros in each group can be omitted; one run of consecutive all-zero groups can be replaced with :: (used at most once per address)</li>
+            <li>Example: 2001:0db8:85a3:0000:0000:8a2e:0370:7334 → 2001:db8:85a3::8a2e:370:7334</li>
+            <li>IPv6 header: fixed 40 bytes — Version (4b), Traffic Class (8b), Flow Label (20b), Payload Length (16b), Next Header (8b), Hop Limit (8b), Src/Dst addresses (128b each)</li>
+            <li>No fragmentation at routers: IPv6 routers drop oversized datagrams and send ICMPv6 Packet Too Big; source uses Path MTU Discovery</li>
+            <li>No header checksum: removed to speed up per-hop processing (transport-layer checksums cover the data)</li>
+            <li>No options field: options handled via extension headers chained through the Next Header field</li>
+            <li>Hop Limit: same purpose as IPv4 TTL — decremented at each router; 0 → discard</li>
+            <li>Transition mechanisms: dual-stack (node runs both IPv4 and IPv6); tunnelling (encapsulate IPv6 datagram inside an IPv4 datagram to cross IPv4-only regions)</li>
+            <li>IPv4 is not disappearing soon: dual-stack and NAT keep IPv4 alive while IPv6 adoption grows</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+              <line x1="8" y1="8" x2="8" y2="11" stroke="var(--accent-green)" stroke-width="1.5"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-ipv6"
+               id="sim-mount-ch4-ipv6"
+               aria-label="IPv6 addressing and transition simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            IPv6 addresses are like <strong>expanded postal codes for an entire planet</strong>. IPv4's 32-bit address space is like a four-digit zip code that has run out of combinations for a huge country. IPv6's 128-bit space is like giving every grain of sand on Earth its own unique address — exhaustion is not a concern. Tunnelling is like shipping an international parcel inside a domestic-only envelope: the outer label (IPv4) gets it through the domestic system; the receiver removes the outer envelope to find the international contents (IPv6).
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch4-ipv6"
+               data-chapter="chapter4"
+               id="quiz-ch4-ipv6"
+               aria-label="IPv6 quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch4-ipv6 -->
+
+
+    <!-- ── Chapter Complete CTA ──────────────────────────────────────── -->
+    <div class="chapter-complete-cta glass-card" id="ch4-complete-cta" aria-hidden="true">
+      <div class="chapter-complete-cta__inner">
+        <div class="chapter-complete-cta__icon" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="22" stroke="var(--accent-green)" stroke-width="2"/>
+            <polyline points="14,25 21,32 34,18" stroke="var(--accent-green)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h2 class="chapter-complete-cta__title">Chapter 4 Complete!</h2>
+        <p class="chapter-complete-cta__text">
+          You've mastered the Network Layer Data Plane. One chapter left — the Control Plane.
+        </p>
+        <div class="chapter-complete-cta__actions">
+          <a href="chapter5.html" class="btn btn--primary btn--lg">
+            Chapter 5: Control Plane →
+          </a>
+          <a href="exam-mode.html" class="btn btn--ghost">
+            Jump to Exam Mode
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main><!-- /#main-content -->
+
+  <!-- ── XP Toast (injected by gamification.js) ──────────────────────── -->
+  <div id="xp-toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- ── Level-Up Overlay (injected by gamification.js) ─────────────── -->
+  <div id="level-up-overlay" class="level-up-overlay" aria-hidden="true" role="dialog" aria-label="Level up notification"></div>
+
+  <!-- ── Keyboard Shortcut Modal ─────────────────────────────────────── -->
+  <div id="modal-shortcuts" class="modal" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts" aria-hidden="true">
+    <div class="modal__backdrop"></div>
+    <div class="modal__sheet">
+      <div class="modal__drag-handle" aria-hidden="true"></div>
+      <div class="modal__header">
+        <h3 class="modal__title">Keyboard Shortcuts</h3>
+        <button class="modal__close" data-modal-close="modal-shortcuts" aria-label="Close shortcuts">&#x2715;</button>
+      </div>
+      <div class="modal__body">
+        <div class="step-sequence">
+          <div class="step-item"><kbd>?</kbd><span>Show this help</span></div>
+          <div class="step-item"><kbd>H</kbd><span>Go to Dashboard</span></div>
+          <div class="step-item"><kbd>1</kbd><span>Chapter 1</span></div>
+          <div class="step-item"><kbd>2</kbd><span>Chapter 2</span></div>
+          <div class="step-item"><kbd>3</kbd><span>Chapter 3</span></div>
+          <div class="step-item"><kbd>4</kbd><span>Chapter 4 (this page)</span></div>
+          <div class="step-item"><kbd>5</kbd><span>Chapter 5</span></div>
+          <div class="step-item"><kbd>E</kbd><span>Exam Mode</span></div>
+          <div class="step-item"><kbd>ESC</kbd><span>Close modal / dialog</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Offline Banner (injected by app.js) ─────────────────────────── -->
+  <div id="offline-banner" class="alert-banner alert-banner--warn" role="alert" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <polygon points="8,2 15,14 1,14" stroke="var(--accent-orange)" stroke-width="1.5" fill="none"/>
+      <line x1="8" y1="7" x2="8" y2="10" stroke="var(--accent-orange)" stroke-width="1.5"/>
+      <circle cx="8" cy="12" r="0.8" fill="var(--accent-orange)"/>
+    </svg>
+    You are offline. Progress is saved locally and will sync when reconnected.
+  </div>
+
+  <!-- ── Scripts ──────────────────────────────────────────────────────── -->
+  <!-- Data must load before engine modules that consume it -->
+  <script src="data/chapter1-data.js"></script>
+  <script src="data/chapter2-data.js"></script>
+  <script src="data/chapter3-data.js"></script>
+  <script src="data/chapter4-data.js"></script>
+  <script src="data/quiz-data.js"></script>
+  <!-- JS modules — order matters (progress → gamification → quiz → animations → app) -->
+  <script src="js/progress.js"></script>
+  <script src="js/gamification.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- One-time page init: wire quiz containers to chapter4Data -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.chapter4Data && window.Quiz) {
+        chapter4Data.sections.forEach(function (section) {
+          var container = document.querySelector(
+            '.quiz-mount-point[data-quiz-topic="' + section.id + '"]'
+          );
+          if (!container) return;
+          container.dataset.quizMounted = '1';
+          Quiz.mount(container, section.quiz, {
+            topicId: section.id,
+            chapter: 'ch4',
+            onComplete: function (result) {
+              if (window.App) App.onTopicQuizComplete(section.id, result, 'ch4');
+            }
+          });
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

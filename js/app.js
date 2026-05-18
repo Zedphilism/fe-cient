@@ -27,6 +27,9 @@
     INDEX:   'index',
     CH1:     'chapter1',
     CH2:     'chapter2',
+    CH3:     'chapter3',
+    CH4:     'chapter4',
+    CH5:     'chapter5',
     EXAM:    'exam'
   };
 
@@ -64,8 +67,11 @@
   /** Fallback: infer page from URL pathname */
   function _inferPage() {
     const path = window.location.pathname.toLowerCase();
-    if (path.includes('chapter1')) return PAGES.CH1;
+    if (path.includes('chapter5')) return PAGES.CH5;
+    if (path.includes('chapter4')) return PAGES.CH4;
+    if (path.includes('chapter3')) return PAGES.CH3;
     if (path.includes('chapter2')) return PAGES.CH2;
+    if (path.includes('chapter1')) return PAGES.CH1;
     if (path.includes('exam'))     return PAGES.EXAM;
     return PAGES.INDEX;
   }
@@ -295,16 +301,24 @@
 
   /** Wire quiz completion → topic unlock → next section reveal */
   function _setupChapterQuizCallbacks(chapterKey) {
-    document.querySelectorAll('.quiz-mount[data-topic-id]').forEach(mount => {
-      const topicId = mount.dataset.topicId;
+    // Support both selector conventions used across chapter pages.
+    // Guard: skip containers already mounted by inline page scripts (data-quiz-mounted).
+    const mounts = Array.from(document.querySelectorAll(
+      '.quiz-mount[data-topic-id]:not([data-quiz-mounted]), .quiz-mount-point[data-quiz-topic]:not([data-quiz-mounted])'
+    ));
 
-      // Build quiz from inline data (chapter pages embed their data)
+    mounts.forEach(mount => {
+      const topicId = mount.dataset.topicId || mount.dataset.quizTopic;
+      if (!topicId) return;
+
       const questions = _getTopicQuestions(topicId);
       if (!questions || !questions.length) return;
 
       if (window.Quiz) {
+        mount.dataset.quizMounted = '1';
         Quiz.mount(mount, questions, {
           topicId,
+          chapter: chapterKey,
           onComplete: result => _onTopicQuizComplete(topicId, result, chapterKey)
         });
       }
@@ -332,9 +346,14 @@
 
   /** Unlock the section that follows topicId in chapter sequence */
   function _unlockNextSection(completedId, chapterKey) {
-    const sequence = chapterKey === 'ch1'
-      ? Progress.CH1_TOPICS
-      : Progress.CH2_TOPICS;
+    const seqMap = {
+      ch1: Progress.CH1_TOPICS,
+      ch2: Progress.CH2_TOPICS,
+      ch3: Progress.CH3_TOPICS,
+      ch4: Progress.CH4_TOPICS,
+      ch5: Progress.CH5_TOPICS
+    };
+    const sequence = seqMap[chapterKey] || Progress.CH1_TOPICS;
 
     const idx  = sequence.indexOf(completedId);
     const next = sequence[idx + 1];
@@ -379,7 +398,8 @@
     // Also update status bar topic counter
     const statusEl = document.getElementById('status-progress-text');
     if (statusEl) {
-      const topics = chapterKey === 'ch1' ? Progress.CH1_TOPICS : Progress.CH2_TOPICS;
+      const seqMap = { ch1: Progress.CH1_TOPICS, ch2: Progress.CH2_TOPICS, ch3: Progress.CH3_TOPICS, ch4: Progress.CH4_TOPICS, ch5: Progress.CH5_TOPICS };
+      const topics = seqMap[chapterKey] || Progress.CH1_TOPICS;
       const state  = Progress.load();
       const done   = topics.filter(id => state.completedTopics.includes(id)).length;
       statusEl.textContent = done + ' / ' + topics.length + ' TOPICS';
@@ -388,8 +408,15 @@
 
   /** Look up questions for a topic from the globally loaded chapter data */
   function _getTopicQuestions(topicId) {
-    const ch = topicId.startsWith('ch1') ? 'chapter1Data' : 'chapter2Data';
-    const data = window[ch];
+    const prefix = topicId.split('-')[0]; // 'ch1', 'ch2', etc.
+    const dataMap = {
+      ch1: 'chapter1Data',
+      ch2: 'chapter2Data',
+      ch3: 'chapter3Data',
+      ch4: 'chapter4Data',
+      ch5: 'chapter5Data'
+    };
+    const data = window[dataMap[prefix]];
     if (!data) return [];
     const section = (data.sections || []).find(s => s.id === topicId);
     return section ? (section.quiz || []) : [];
@@ -699,6 +726,9 @@
       case PAGES.INDEX: initIndex();          break;
       case PAGES.CH1:   initChapter('ch1');   break;
       case PAGES.CH2:   initChapter('ch2');   break;
+      case PAGES.CH3:   initChapter('ch3');   break;
+      case PAGES.CH4:   initChapter('ch4');   break;
+      case PAGES.CH5:   initChapter('ch5');   break;
       case PAGES.EXAM:  /* exam-mode.js handles its own init */ break;
     }
   });

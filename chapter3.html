@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chapter 3: Transport Layer — NetCore Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+
+<body data-page="chapter3">
+
+  <!-- ── Site Header ──────────────────────────────────────────────────── -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo" aria-label="NetCore Academy home">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <circle cx="14" cy="14" r="13" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <circle cx="14" cy="14" r="4" fill="var(--accent-cyan)"/>
+          <line x1="14" y1="1" x2="14" y2="7"  stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <line x1="14" y1="21" x2="14" y2="27" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <line x1="1"  y1="14" x2="7"  y2="14" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <line x1="21" y1="14" x2="27" y2="14" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+        </svg>
+        <span class="logo-text">NetCore<span class="logo-accent">Academy</span></span>
+      </a>
+
+      <nav class="header-nav" aria-label="Chapter navigation">
+        <a href="index.html" class="nav-link">Dashboard</a>
+        <a href="chapter1.html" class="nav-link">Ch.1</a>
+        <a href="chapter2.html" class="nav-link">Ch.2</a>
+        <a href="chapter3.html" class="nav-link nav-link--active" aria-current="page">Ch.3</a>
+        <a href="chapter4.html" class="nav-link">Ch.4</a>
+        <a href="chapter5.html" class="nav-link">Ch.5</a>
+        <a href="exam-mode.html" class="nav-link">Exam</a>
+      </nav>
+
+      <div class="header-right">
+        <div class="rank-badge" id="header-rank">
+          <span class="rank-level" id="header-level">Lv.1</span>
+          <span class="rank-title" id="header-rank-title">Network Cadet</span>
+        </div>
+        <div class="xp-bar-wrap" title="XP progress to next level">
+          <div class="xp-bar-track">
+            <div class="xp-bar-fill" id="header-xp-fill" style="width:0%"></div>
+          </div>
+          <span class="xp-label" id="header-xp-label">0 XP</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Status Bar ───────────────────────────────────────────────────── -->
+  <div class="status-bar" id="status-bar" role="status" aria-live="polite">
+    <span class="status-item">
+      <span class="status-dot status-dot--green"></span>
+      <span>CHAPTER 3</span>
+    </span>
+    <span class="status-item">
+      <span class="status-dot status-dot--cyan"></span>
+      <span id="status-progress-text">0 / 10 TOPICS</span>
+    </span>
+    <span class="status-item status-item--right">
+      <span id="status-xp-earned">0 XP EARNED THIS SESSION</span>
+    </span>
+  </div>
+
+  <!-- ── Page Content ─────────────────────────────────────────────────── -->
+  <main class="page-wrapper" id="main-content">
+
+    <!-- Chapter Hero ---------------------------------------------------- -->
+    <div class="chapter-hero glass-card anim-fade-in-up">
+      <div class="chapter-hero__meta">
+        <span class="section-label">CHAPTER 3</span>
+        <h1 class="chapter-hero__title">Transport Layer</h1>
+        <p class="chapter-hero__desc">
+          Reliable and unreliable data delivery between processes. UDP, TCP, checksum, sliding window protocols, flow control, and congestion control.
+        </p>
+        <div class="chapter-hero__actions">
+          <a href="#ch3-transport-fundamentals" class="btn btn--primary">Start Learning</a>
+          <a href="index.html" class="btn btn--ghost">← Dashboard</a>
+        </div>
+      </div>
+      <div class="chapter-hero__ring" aria-label="Chapter 3 completion progress">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <circle class="ring-track" cx="50" cy="50" r="40" />
+          <circle class="ring-fill ring-fill--cyan" id="ch3-progress-ring"
+                  cx="50" cy="50" r="40"
+                  stroke-dasharray="251.3"
+                  stroke-dashoffset="251.3"
+                  transform="rotate(-90 50 50)" />
+        </svg>
+        <div class="ring-label">
+          <span class="ring-pct" id="ch3-ring-pct">0%</span>
+          <span class="ring-sub">complete</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ================================================================
+         SECTION 1 — Transport Layer Fundamentals
+    ================================================================ -->
+    <section class="topic-section" id="ch3-transport-fundamentals"
+             data-section-id="ch3-transport-fundamentals" data-section-index="0">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 1 OF 10</span>
+          <div class="topic-badge tag tag--cyan">UNLOCKED</div>
+        </div>
+        <h2 class="topic-section__title">Transport Layer Fundamentals</h2>
+        <p class="topic-section__subtitle">Process-to-process delivery · TCP vs UDP · Logical communication · Segments</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <!-- 1. EXPLAIN -->
+        <div class="learn-block glass-card glass-card--cyan">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-cyan)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            The transport layer provides logical communication between application processes running on different hosts. Unlike the network layer — which handles host-to-host delivery — the transport layer extends this to process-to-process delivery. It runs only on end systems, never inside routers, and offers two distinct services: TCP (reliable, ordered, congestion-controlled) and UDP (unreliable, connectionless).
+          </p>
+          <ul class="learn-block__bullets">
+            <li>Transport layer provides logical communication between APPLICATION PROCESSES, not between hosts</li>
+            <li>Network layer: host-to-host delivery. Transport layer: process-to-process delivery</li>
+            <li>Transport layer runs on END SYSTEMS only — routers do not implement it</li>
+            <li>TCP: reliable, in-order delivery, congestion control, flow control, connection-oriented</li>
+            <li>UDP: unreliable, unordered, connectionless — adds only multiplexing and basic error checking</li>
+            <li>The transport layer takes application messages, breaks them into segments, adds a header, and passes them down to the network layer</li>
+            <li>'Logical communication' means processes behave as if directly connected, even when separated by thousands of routers</li>
+          </ul>
+        </div>
+
+        <!-- 2. VISUALIZE -->
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+              <line x1="8" y1="8" x2="8" y2="11" stroke="var(--accent-green)" stroke-width="1.5"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-transport-layer"
+               id="sim-mount-ch3-transport-fundamentals"
+               aria-label="Transport layer simulation"></div>
+        </div>
+
+        <!-- 3. MEMORY TRIGGER -->
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            Imagine two families exchanging letters between cousins (processes) rather than between houses (hosts). The postal system (network layer) delivers mail house-to-house; but inside each house, a family member (transport layer) sorts mail and hands each letter to the right cousin. The cousins feel like they are writing directly to each other, even though the letters travel through the postal system.
+          </p>
+        </div>
+
+        <!-- 4. MINI QUIZ -->
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch3-transport-fundamentals"
+               data-chapter="chapter3"
+               id="quiz-ch3-transport-fundamentals"
+               aria-label="Transport Layer Fundamentals quiz"></div>
+        </div>
+
+      </div><!-- /.topic-section__body -->
+    </section><!-- /#ch3-transport-fundamentals -->
+
+
+    <!-- ================================================================
+         SECTION 2 — Multiplexing & Demultiplexing
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch3-mux-demux"
+             data-section-id="ch3-mux-demux" data-section-index="1">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 2 OF 10</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch3-mux-demux">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">Multiplexing &amp; Demultiplexing</h2>
+        <p class="topic-section__subtitle">Port numbers · UDP demux · TCP 4-tuple · Well-known ports</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 1</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--green">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-green)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-green)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            Multiplexing and demultiplexing allow a single network-layer channel to be shared by many application-layer sockets. At the sender, multiplexing gathers data from multiple sockets and routes it into one stream. At the receiver, demultiplexing uses port numbers in the segment header to deliver each segment to the correct socket.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>Multiplexing (sender side): gather data from multiple sockets, encapsulate with headers, send as one stream</li>
+            <li>Demultiplexing (receiver side): deliver incoming segments to the correct socket based on port numbers</li>
+            <li>Port numbers are 16-bit integers ranging from 0 to 65535</li>
+            <li>Well-known ports (0–1023): HTTP = 80, HTTPS = 443, SMTP = 25, DNS = 53</li>
+            <li>UDP demultiplexing: uses only destination IP address + destination port number</li>
+            <li>TCP demultiplexing: uses a 4-tuple (source IP, source port, destination IP, destination port)</li>
+            <li>TCP's 4-tuple demux allows many simultaneous connections to the same server port (e.g., port 80) from different clients</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-mux-demux"
+               id="sim-mount-ch3-mux-demux"
+               aria-label="Multiplexing and demultiplexing simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            Demultiplexing is like a mail room in a large office building. All letters arrive at one loading dock (the network interface) addressed to '123 Main St'. The mail room (transport layer) reads the room number (port number) on each envelope and delivers it to the correct office (socket). TCP's 4-tuple is like also reading both the sender's return address and the recipient's room number to handle letters from many senders at once.
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch3-mux-demux"
+               data-chapter="chapter3"
+               id="quiz-ch3-mux-demux"
+               aria-label="Multiplexing and demultiplexing quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch3-mux-demux -->
+
+
+    <!-- ================================================================
+         SECTION 3 — UDP: Connectionless Transport
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch3-udp"
+             data-section-id="ch3-udp" data-section-index="2">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 3 OF 10</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch3-udp">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">UDP: Connectionless Transport</h2>
+        <p class="topic-section__subtitle">8-byte header · No handshake · DNS &amp; games · QUIC</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 2</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--purple">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            UDP (User Datagram Protocol) is the 'bare-bones' transport protocol. It adds only two services on top of IP: multiplexing/demultiplexing and a simple error-checking checksum. There is no connection setup, no reliability guarantees, no congestion control, and no flow control. Despite this, UDP is widely used where speed, low overhead, or application-level control matters more than guaranteed delivery.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>UDP adds only multiplexing/demultiplexing and a checksum on top of IP</li>
+            <li>No connection establishment — no handshake, zero added delay before sending</li>
+            <li>No connection state — a UDP server can support many more active clients than TCP</li>
+            <li>UDP header is just 8 bytes: Source Port (16b), Destination Port (16b), Length (16b), Checksum (16b)</li>
+            <li>Applications that use UDP: DNS, SNMP, multimedia streaming, online games, QUIC</li>
+            <li>No congestion control: UDP can transmit at any rate, regardless of network load</li>
+            <li>Reliability can be added at the application layer if required — QUIC (used by HTTP/3) does exactly this</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-udp"
+               id="sim-mount-ch3-udp"
+               aria-label="UDP simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            UDP is like dropping a postcard in a mailbox. You write the address and drop it — no receipt, no tracking, no guarantee it arrives. If speed and simplicity matter more than certainty (think: live sports score updates), the postcard model is perfect. TCP is the registered mail with delivery confirmation, which is slower and costlier but reliable.
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch3-udp"
+               data-chapter="chapter3"
+               id="quiz-ch3-udp"
+               aria-label="UDP quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch3-udp -->
+
+
+    <!-- ================================================================
+         SECTION 4 — Internet Checksum
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch3-checksum"
+             data-section-id="ch3-checksum" data-section-index="3">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 4 OF 10</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch3-checksum">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">Internet Checksum</h2>
+        <p class="topic-section__subtitle">1's complement · End-around carry · Sender &amp; receiver computation · 0xFFFF</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 3</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--orange">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-orange)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            The Internet checksum is a simple 16-bit error-detection mechanism used by UDP, TCP, and IP. The sender computes the 1's complement sum of all 16-bit words in the segment, then complements the result and stores it in the checksum field. The receiver sums all words including the checksum — a result of all 1s (0xFFFF) indicates no error was detected.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>Internet checksum: 16-bit 1's complement sum of all 16-bit words in the segment</li>
+            <li>1's complement addition: if a carry propagates out of bit 15, it wraps around and is added to bit 0 (end-around carry)</li>
+            <li>Sender: sets checksum field to 0, sums all 16-bit words, complements the total, stores result</li>
+            <li>Receiver: sums all 16-bit words including the checksum field — the result should be 0xFFFF (all ones) if no error</li>
+            <li>Checksum = bitwise NOT (complement) of the sum of all words</li>
+            <li>Used by UDP (over the entire datagram), TCP (over the entire segment), and IP (header only)</li>
+            <li>Detects single-bit and many multi-bit errors, but is not foolproof — some error patterns cancel out</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-checksum"
+               id="sim-mount-ch3-checksum"
+               aria-label="Internet checksum simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            Think of the checksum like a balancing ledger. The sender adds up all the numbers in a message, writes the 'opposite' of that total in a special box, and sends it along. The receiver adds everything up including that special box number. If everything balanced perfectly, the total will always come out to the same magic number (all 1s). If it does not, something changed in transit.
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch3-checksum"
+               data-chapter="chapter3"
+               id="quiz-ch3-checksum"
+               aria-label="Internet checksum quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch3-checksum -->
+
+
+    <!-- ================================================================
+         SECTION 5 — Reliable Data Transfer
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch3-rdt"
+             data-section-id="ch3-rdt" data-section-index="4">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 5 OF 10</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch3-rdt">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">Reliable Data Transfer</h2>
+        <p class="topic-section__subtitle">RDT 1.0–3.0 · ACK/NAK · Sequence numbers · Stop-and-wait · Pipelining</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 4</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--cyan">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-cyan)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            Reliable data transfer (RDT) principles explain how to build a reliable channel on top of an unreliable one. The RDT protocol series progresses from a perfect-channel model (RDT 1.0) through handling bit errors (RDT 2.x) and finally packet loss (RDT 3.0). Each version adds mechanisms — checksums, ACK/NAK, sequence numbers, timers — to address new failure modes. Stop-and-wait, the simplest approach, has very low link utilisation, motivating pipelined protocols.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>RDT 1.0: assumes perfectly reliable channel — sender sends, receiver receives, no error handling needed</li>
+            <li>RDT 2.0: channel may flip bits — adds checksum, ACK (acknowledgement) and NAK (negative ACK). Stop-and-wait</li>
+            <li>RDT 2.1: handles corrupted ACK/NAK — adds 0/1 sequence numbers so receiver can detect duplicates</li>
+            <li>RDT 2.2: NAK-free — replaces NAKs with duplicate ACKs (ACK for last correctly received packet)</li>
+            <li>RDT 3.0: channel may lose packets AND have bit errors — adds a countdown timer; sender retransmits on timeout</li>
+            <li>Stop-and-wait utilisation: U = (L/R) / (RTT + L/R) — extremely low for high-bandwidth, long-delay links</li>
+            <li>Pipelined protocols (Go-Back-N, Selective Repeat) send multiple packets before waiting for ACKs</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-rdt"
+               id="sim-mount-ch3-rdt"
+               aria-label="Reliable data transfer simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            Building RDT is like designing a courier service for a noisy, unreliable road. First you assume perfect roads (RDT 1.0). Then you discover packages sometimes arrive damaged, so you add inspection cards and feedback notes (RDT 2.0). Then the feedback notes get damaged too, so you number the packages (RDT 2.1). Then packages vanish entirely, so you set a timer and resend if no receipt arrives (RDT 3.0). Each real-world problem leads to a new mechanism.
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch3-rdt"
+               data-chapter="chapter3"
+               id="quiz-ch3-rdt"
+               aria-label="Reliable data transfer quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch3-rdt -->
+
+
+    <!-- ================================================================
+         SECTION 6 — Go-Back-N & Selective Repeat
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch3-sliding-window"
+             data-section-id="ch3-sliding-window" data-section-index="5">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 6 OF 10</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch3-sliding-window">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">Go-Back-N &amp; Selective Repeat</h2>
+        <p class="topic-section__subtitle">Sliding window · Cumulative ACKs · SR buffering · Window size constraints</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 5</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--green">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-green)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-green)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            Pipelined protocols keep multiple unacknowledged packets in flight to fully utilise high-bandwidth links. Go-Back-N (GBN) and Selective Repeat (SR) differ in how they handle losses. GBN retransmits the entire window on any loss; SR retransmits only the specific lost packet. Both use sliding windows and require careful sizing to prevent sequence number ambiguity.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>GBN (Go-Back-N): uses cumulative ACKs — one ACK acknowledges all packets up to and including that sequence number</li>
+            <li>GBN: receiver discards all out-of-order packets and does not buffer them</li>
+            <li>GBN: on timeout or NAK, retransmits ALL unacknowledged packets in the window (up to N packets)</li>
+            <li>SR (Selective Repeat): individual ACKs per packet; receiver buffers out-of-order packets</li>
+            <li>SR: on timeout, retransmits ONLY the specific unacknowledged packet — much more efficient</li>
+            <li>GBN window size constraint: N ≤ 2^n − 1 (n = number of sequence number bits)</li>
+            <li>SR window size constraint: N ≤ 2^(n−1) — must be at most half the sequence number space to prevent ambiguity</li>
+            <li>TCP is a hybrid: buffers out-of-order segments (like SR) and uses fast retransmit on 3 duplicate ACKs</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-go-back-n"
+               id="sim-mount-ch3-sliding-window"
+               aria-label="Go-Back-N and Selective Repeat simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            GBN is like a strict teacher who, if any student in a row answers incorrectly, makes the entire row redo the exercise from that student onward. SR is like a tutor who only re-explains to the one student who got it wrong while everyone else moves ahead. SR is more efficient but requires the tutor to track each student individually.
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch3-sliding-window"
+               data-chapter="chapter3"
+               id="quiz-ch3-sliding-window"
+               aria-label="Go-Back-N and Selective Repeat quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch3-sliding-window -->
+
+
+    <!-- ================================================================
+         SECTION 7 — TCP Segment Structure
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch3-tcp-segment"
+             data-section-id="ch3-tcp-segment" data-section-index="6">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 7 OF 10</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch3-tcp-segment">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">TCP Segment Structure</h2>
+        <p class="topic-section__subtitle">20-byte header · Sequence &amp; ACK numbers · Flags · Receive window · MSS</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 6</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--purple">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            A TCP segment consists of a header (minimum 20 bytes) and a data payload. The header carries all the information TCP needs to provide reliable, ordered, full-duplex byte-stream delivery: port numbers for multiplexing, sequence and acknowledgement numbers for ordering and reliability, flags for connection control, a receive window for flow control, and a checksum for error detection.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>TCP header is a minimum of 20 bytes (same as IP header minimum)</li>
+            <li>Source Port and Destination Port: 16 bits each — identify sending and receiving processes</li>
+            <li>Sequence Number: 32 bits — byte-stream number of the first byte of data in this segment</li>
+            <li>Acknowledgement Number: 32 bits — next expected byte from the other side (cumulative ACK)</li>
+            <li>Header Length: 4 bits — specifies header size in 32-bit words (needed because of options)</li>
+            <li>Flags: 6 bits — URG, ACK, PSH, RST, SYN, FIN control connection setup, teardown, and data handling</li>
+            <li>Receive Window: 16 bits — advertises the receiver's free buffer space (used for flow control)</li>
+            <li>Checksum: 16 bits — Internet checksum covering header and data</li>
+            <li>MSS (Maximum Segment Size): typically 1460 bytes over Ethernet (1500 byte MTU minus 40 bytes of TCP+IP headers)</li>
+            <li>TCP is full-duplex: both sides maintain independent sequence numbers and send ACKs</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-tcp-segment"
+               id="sim-mount-ch3-tcp-segment"
+               aria-label="TCP segment structure simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            A TCP segment header is like the outer envelope and routing slip on a business letter. It contains the sender's and recipient's 'room numbers' (ports), a serial number so the letter fits into the right order in a sequence, a confirmation of the last letter received from the other side, and special check boxes (flags) that say things like 'this starts a new conversation' (SYN) or 'I am done talking' (FIN).
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch3-tcp-segment"
+               data-chapter="chapter3"
+               id="quiz-ch3-tcp-segment"
+               aria-label="TCP segment structure quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch3-tcp-segment -->
+
+
+    <!-- ================================================================
+         SECTION 8 — TCP RTT Estimation & Timeout
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch3-tcp-rtt"
+             data-section-id="ch3-tcp-rtt" data-section-index="7">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 8 OF 10</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch3-tcp-rtt">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">TCP RTT Estimation &amp; Timeout</h2>
+        <p class="topic-section__subtitle">EWMA · EstimatedRTT · DevRTT · Exponential backoff · Fast retransmit</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 7</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--orange">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-orange)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            TCP dynamically estimates the round-trip time (RTT) to set its retransmission timeout. It uses an exponential weighted moving average (EWMA) for EstimatedRTT and tracks variability with DevRTT. The timeout interval is set to EstimatedRTT plus a safety margin of 4×DevRTT. When a timeout does occur, TCP doubles the interval (exponential backoff). Fast retransmit can recover from loss faster by acting on three duplicate ACKs.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>SampleRTT: time from segment transmission to ACK receipt — measured for one unretransmitted segment at a time</li>
+            <li>EstimatedRTT = (1 − α) × EstimatedRTT + α × SampleRTT, where α = 0.125 (1/8)</li>
+            <li>DevRTT = (1 − β) × DevRTT + β × |SampleRTT − EstimatedRTT|, where β = 0.25 (1/4)</li>
+            <li>TimeoutInterval = EstimatedRTT + 4 × DevRTT</li>
+            <li>On timeout: TCP doubles TimeoutInterval (exponential backoff) to avoid flooding a congested network</li>
+            <li>Fast retransmit: receiving 3 duplicate ACKs triggers immediate retransmission before the timeout fires</li>
+            <li>Karn's algorithm: EstimatedRTT must NOT be updated using SampleRTT from retransmitted segments (ambiguity)</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-tcp-rtt"
+               id="sim-mount-ch3-tcp-rtt"
+               aria-label="TCP RTT estimation simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            TCP's RTT estimation is like learning how long your commute takes. You keep a running average (EstimatedRTT) weighted toward recent trips. You also track how variable the commute is (DevRTT). Your alarm (timeout) is set to the average plus extra time for bad-traffic days (4×DevRTT). If you seriously misjudge and are very late (timeout), you double your alarm buffer for next time (exponential backoff).
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch3-tcp-rtt"
+               data-chapter="chapter3"
+               id="quiz-ch3-tcp-rtt"
+               aria-label="TCP RTT estimation and timeout quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch3-tcp-rtt -->
+
+
+    <!-- ================================================================
+         SECTION 9 — TCP Flow Control & Handshake
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch3-tcp-flow"
+             data-section-id="ch3-tcp-flow" data-section-index="8">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 9 OF 10</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch3-tcp-flow">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">TCP Flow Control &amp; Handshake</h2>
+        <p class="topic-section__subtitle">rwnd · Three-way handshake · SYN/FIN · TIME_WAIT · State machine</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 8</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--cyan">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-cyan)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            TCP flow control prevents the sender from overwhelming the receiver's buffer by having the receiver continuously advertise its available buffer space (rwnd) in every ACK. Connection management uses the three-way handshake (SYN, SYN-ACK, ACK) to establish state before data flows, and a four-step FIN exchange to gracefully close the connection. TCP's state machine — LISTEN, SYN_SENT, ESTABLISHED, TIME_WAIT, CLOSED — governs these transitions.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>Flow control: receiver advertises rwnd (receive window) in every ACK — tells sender how much space is left in the receive buffer</li>
+            <li>Sender constraint: amount of unacknowledged in-flight data must not exceed rwnd</li>
+            <li>rwnd = RcvBuffer − [bytes received but not yet read by application]</li>
+            <li>If rwnd = 0: sender stops but sends 1-byte probe segments periodically to detect when buffer clears</li>
+            <li>Three-way handshake: (1) Client sends SYN, (2) Server replies SYN-ACK, (3) Client sends ACK — connection established</li>
+            <li>Connection close: four-step exchange — FIN → ACK → FIN → ACK (each side independently closes its half)</li>
+            <li>TIME_WAIT state: client waits 2×MSL after sending final ACK to ensure the server received it before fully closing</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-tcp-handshake"
+               id="sim-mount-ch3-tcp-flow"
+               aria-label="TCP flow control and handshake simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            Flow control is like filling a glass from a tap. The glass (receiver buffer) has a finite size. You tell the person holding the tap (sender) how much space is left (rwnd). They slow down or stop as the glass fills and resume when you drink some (application reads data). The three-way handshake is like a formal phone greeting before a business call: 'Hello?' (SYN) — 'Hello, I can hear you' (SYN-ACK) — 'Great, let's talk' (ACK).
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch3-tcp-flow"
+               data-chapter="chapter3"
+               id="quiz-ch3-tcp-flow"
+               aria-label="TCP flow control and handshake quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch3-tcp-flow -->
+
+
+    <!-- ================================================================
+         SECTION 10 — TCP Congestion Control
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch3-congestion"
+             data-section-id="ch3-congestion" data-section-index="9">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 10 OF 10</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch3-congestion">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">TCP Congestion Control</h2>
+        <p class="topic-section__subtitle">cwnd · Slow Start · Congestion Avoidance · AIMD · TCP Reno vs Tahoe</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 9</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--green">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-green)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-green)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            TCP congestion control prevents a single sender from overwhelming the network by dynamically adjusting its congestion window (cwnd). It uses three phases: Slow Start (exponential growth), Congestion Avoidance (linear growth), and reacts to loss events by cutting cwnd. The AIMD (Additive Increase Multiplicative Decrease) pattern produces the characteristic TCP saw-tooth throughput curve and ensures fairness among competing flows.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>cwnd (congestion window): the sender-side limit on unacknowledged bytes in flight</li>
+            <li>Effective window = min(cwnd, rwnd) — both congestion and flow control apply simultaneously</li>
+            <li>Slow Start: cwnd begins at 1 MSS and doubles each RTT (exponential growth) until it reaches ssthresh</li>
+            <li>Congestion Avoidance: above ssthresh, cwnd grows by 1 MSS per RTT (linear / additive increase)</li>
+            <li>On TIMEOUT: ssthresh = cwnd / 2, cwnd = 1 MSS — TCP restarts Slow Start from scratch</li>
+            <li>On 3 duplicate ACKs (TCP Reno): ssthresh = cwnd / 2, cwnd = ssthresh — enter Congestion Avoidance directly (Fast Recovery)</li>
+            <li>AIMD: Additive Increase (grow by 1 MSS/RTT), Multiplicative Decrease (halve on loss) — produces fair bandwidth sharing</li>
+            <li>TCP Tahoe: on any loss, cwnd → 1 MSS. TCP Reno: distinguishes timeout (cwnd → 1) from 3 dup ACKs (cwnd → ssthresh)</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-tcp-congestion"
+               id="sim-mount-ch3-congestion"
+               aria-label="TCP congestion control simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            Congestion control is like merging onto a freeway. You start slow (Slow Start — accelerate quickly but cautiously), then cruise at the speed limit (Congestion Avoidance — steady pace). If you see brake lights ahead (3 dup ACKs), you slow down moderately (halve speed, resume carefully). If there is a full accident and cars stop (timeout), you come to a complete stop and restart from zero. All cars doing this together keeps traffic flowing smoothly — the AIMD fairness property.
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch3-congestion"
+               data-chapter="chapter3"
+               id="quiz-ch3-congestion"
+               aria-label="TCP congestion control quiz"></div>
+        </div>
+
+      </div>
+    </section><!-- /#ch3-congestion -->
+
+
+    <!-- ── Chapter Complete CTA ──────────────────────────────────────── -->
+    <div class="chapter-complete-cta glass-card" id="ch3-complete-cta" aria-hidden="true">
+      <div class="chapter-complete-cta__inner">
+        <div class="chapter-complete-cta__icon" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="22" stroke="var(--accent-green)" stroke-width="2"/>
+            <polyline points="14,25 21,32 34,18" stroke="var(--accent-green)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h2 class="chapter-complete-cta__title">Chapter 3 Complete!</h2>
+        <p class="chapter-complete-cta__text">
+          You've covered all 10 Transport Layer topics. Time to go deeper into the Network Layer.
+        </p>
+        <div class="chapter-complete-cta__actions">
+          <a href="chapter4.html" class="btn btn--primary btn--lg">
+            Chapter 4: Network Layer &#8594;
+          </a>
+          <a href="exam-mode.html" class="btn btn--ghost">
+            Jump to Exam Mode
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main><!-- /#main-content -->
+
+  <!-- ── XP Toast (injected by gamification.js) ──────────────────────── -->
+  <div id="xp-toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- ── Level-Up Overlay (injected by gamification.js) ─────────────── -->
+  <div id="level-up-overlay" class="level-up-overlay" aria-hidden="true" role="dialog" aria-label="Level up notification"></div>
+
+  <!-- ── Keyboard Shortcut Modal ─────────────────────────────────────── -->
+  <div id="modal-shortcuts" class="modal" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts" aria-hidden="true">
+    <div class="modal__backdrop"></div>
+    <div class="modal__sheet">
+      <div class="modal__drag-handle" aria-hidden="true"></div>
+      <div class="modal__header">
+        <h3 class="modal__title">Keyboard Shortcuts</h3>
+        <button class="modal__close" data-modal-close="modal-shortcuts" aria-label="Close shortcuts">&#10005;</button>
+      </div>
+      <div class="modal__body">
+        <div class="step-sequence">
+          <div class="step-item"><kbd>?</kbd><span>Show this help</span></div>
+          <div class="step-item"><kbd>H</kbd><span>Go to Dashboard</span></div>
+          <div class="step-item"><kbd>1</kbd><span>Chapter 1</span></div>
+          <div class="step-item"><kbd>2</kbd><span>Chapter 2</span></div>
+          <div class="step-item"><kbd>3</kbd><span>Chapter 3 (this page)</span></div>
+          <div class="step-item"><kbd>4</kbd><span>Chapter 4</span></div>
+          <div class="step-item"><kbd>E</kbd><span>Exam Mode</span></div>
+          <div class="step-item"><kbd>ESC</kbd><span>Close modal / dialog</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Offline Banner (injected by app.js) ─────────────────────────── -->
+  <div id="offline-banner" class="alert-banner alert-banner--warn" role="alert" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <polygon points="8,2 15,14 1,14" stroke="var(--accent-orange)" stroke-width="1.5" fill="none"/>
+      <line x1="8" y1="7" x2="8" y2="10" stroke="var(--accent-orange)" stroke-width="1.5"/>
+      <circle cx="8" cy="12" r="0.8" fill="var(--accent-orange)"/>
+    </svg>
+    You are offline. Progress is saved locally and will sync when reconnected.
+  </div>
+
+  <!-- ── Scripts ──────────────────────────────────────────────────────── -->
+  <!-- Data must load before engine modules that consume it -->
+  <script src="data/chapter1-data.js"></script>
+  <script src="data/chapter2-data.js"></script>
+  <script src="data/chapter3-data.js"></script>
+  <script src="data/quiz-data.js"></script>
+  <!-- JS modules — order matters (progress → gamification → quiz → animations → app) -->
+  <script src="js/progress.js"></script>
+  <script src="js/gamification.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- One-time page init: wire quiz containers to chapter3Data -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.chapter3Data && window.Quiz) {
+        chapter3Data.sections.forEach(function (section) {
+          var container = document.querySelector(
+            '.quiz-mount-point[data-quiz-topic="' + section.id + '"]'
+          );
+          if (!container) return;
+          container.dataset.quizMounted = '1';
+          Quiz.mount(container, section.quiz, {
+            topicId: section.id,
+            chapter: 'ch3',
+            onComplete: function (result) {
+              if (window.App) App.onTopicQuizComplete(section.id, result, 'ch3');
+            }
+          });
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -33,6 +33,9 @@
         <a href="index.html"      class="nav-link">Dashboard</a>
         <a href="chapter1.html"   class="nav-link">Ch.1</a>
         <a href="chapter2.html"   class="nav-link nav-link--active" aria-current="page">Ch.2</a>
+        <a href="chapter3.html"   class="nav-link">Ch.3</a>
+        <a href="chapter4.html"   class="nav-link">Ch.4</a>
+        <a href="chapter5.html"   class="nav-link">Ch.5</a>
         <a href="exam-mode.html"  class="nav-link">Exam</a>
       </nav>
 
@@ -770,6 +773,7 @@
             '.quiz-mount-point[data-quiz-topic="' + section.id + '"]'
           );
           if (!container) return;
+          container.dataset.quizMounted = '1'; // prevent double-mount by app.js
           Quiz.mount(container, section.quiz, {
             topicId: section.id,
             chapter: 'ch2',
@@ -779,7 +783,6 @@
           });
         });
       }
-      if (window.App) App.init();
     });
   </script>
 

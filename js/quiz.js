@@ -48,7 +48,10 @@
     match_check:      'Check Matches',
     match_reset:      'Reset',
     true_label:       'True',
-    false_label:      'False'
+    false_label:      'False',
+    calc_placeholder: 'Enter your answer…',
+    calc_hint:        'Hint:',
+    calc_given:       'Given:'
   };
 
   const OPTION_KEYS = ['A', 'B', 'C', 'D', 'E'];
@@ -133,6 +136,7 @@
     switch (q.type) {
       case 'truefalse': containerEl.appendChild(_buildTrueFalse(q, session, containerEl)); break;
       case 'fillblank': containerEl.appendChild(_buildFillBlank(q, session, containerEl)); break;
+      case 'calc':      containerEl.appendChild(_buildCalc(q, session, containerEl));      break;
       case 'match':     containerEl.appendChild(_buildMatch(q, session, containerEl));     break;
       default:          containerEl.appendChild(_buildMCQ(q, session, containerEl));
     }
@@ -283,6 +287,118 @@
   /** Return the human-readable correct answer string for fill-blank */
   function _getFillAnswer(q) {
     return q.options ? (q.options[q.answer] || q.answer) : q.answer;
+  }
+
+  /* — CALCULATION — */
+
+  /** Build a calculation question: setup box + numeric/binary input */
+  function _buildCalc(q, session, containerEl) {
+    const wrap = document.createElement('div');
+    wrap.className = 'quiz-calc-wrap anim-fade-in-up';
+
+    // Setup / given box
+    if (q.setup) {
+      const setupBox = document.createElement('div');
+      setupBox.className = 'calc-setup';
+      setupBox.innerHTML = q.setup.replace(/\n/g, '<br>');
+      wrap.appendChild(setupBox);
+    }
+
+    // Hint line
+    if (q.hint) {
+      const hintEl = document.createElement('p');
+      hintEl.className = 'calc-hint';
+      hintEl.innerHTML = `<span class="calc-hint-label">${TEXT.calc_hint}</span> ${q.hint}`;
+      wrap.appendChild(hintEl);
+    }
+
+    // Input row
+    const inputRow = document.createElement('div');
+    inputRow.className = 'calc-input-row';
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'quiz-fill-input calc-input';
+    input.placeholder = q.unit ? `Answer in ${q.unit}…` : TEXT.calc_placeholder;
+    input.autocomplete = 'off';
+
+    if (q.unit) {
+      const unitSpan = document.createElement('span');
+      unitSpan.className = 'calc-unit';
+      unitSpan.textContent = q.unit;
+      inputRow.appendChild(input);
+      inputRow.appendChild(unitSpan);
+    } else {
+      inputRow.appendChild(input);
+    }
+    wrap.appendChild(inputRow);
+
+    const checkBtn = document.createElement('button');
+    checkBtn.className = 'btn btn--primary btn--sm';
+    checkBtn.style.marginTop = '10px';
+    checkBtn.textContent = TEXT.btn_check;
+
+    const check = () => {
+      if (containerEl.dataset.answered) return;
+      const val = input.value.trim();
+      if (!val) return;
+
+      const correct = _checkCalc(val, q);
+      containerEl.dataset.answered = '1';
+      input.disabled = true;
+      checkBtn.disabled = true;
+
+      if (correct) {
+        input.classList.add('fill-correct');
+        Gamification.flashCorrect(input);
+      } else {
+        input.classList.add('fill-wrong');
+        Gamification.flashWrong(input);
+        const hint = document.createElement('p');
+        hint.className = 'fill-correct-hint';
+        hint.textContent = 'Correct answer: ' + q.answer + (q.unit ? ' ' + q.unit : '');
+        wrap.appendChild(hint);
+      }
+
+      _recordAnswer(session, q, val, correct, true);
+      _showExplanation(q, correct, containerEl);
+      _appendNextButton(session, containerEl);
+    };
+
+    checkBtn.addEventListener('click', check);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+    wrap.appendChild(checkBtn);
+    return wrap;
+  }
+
+  /**
+   * Evaluate a calc answer.
+   * q.calcType: "numeric" | "binary" | "exact" (default "numeric")
+   */
+  function _checkCalc(val, q) {
+    const calcType = q.calcType || 'numeric';
+    const tolerance = q.calcType === 'binary' || q.calcType === 'exact' ? 0 : (q.tolerance != null ? q.tolerance : 0.05);
+
+    if (calcType === 'binary') {
+      // Strip spaces, compare case-insensitively
+      const normalize = s => s.replace(/\s+/g, '').toLowerCase();
+      const given = normalize(val);
+      const correct = normalize(String(q.answer));
+      // Accept alternate hex form
+      const alts = (q.acceptedAnswers || []).map(normalize);
+      return given === correct || alts.includes(given);
+    }
+
+    if (calcType === 'exact') {
+      const normalize = s => s.trim().toLowerCase().replace(/\s+/g, ' ');
+      return normalize(val) === normalize(String(q.answer));
+    }
+
+    // numeric: parse float, check within tolerance
+    const parsed = parseFloat(val.replace(/[^0-9.\-]/g, ''));
+    const target = parseFloat(String(q.answer));
+    if (isNaN(parsed) || isNaN(target)) return false;
+    return Math.abs(parsed - target) <= tolerance;
   }
 
   /* — MATCH — */
@@ -740,6 +856,25 @@
 
       .dnd-chip.correct { border-color: rgba(0,255,136,0.5); color: var(--accent-green); }
       .dnd-chip.wrong   { border-color: rgba(255,51,102,0.5); color: var(--accent-red);   }
+
+      .quiz-calc-wrap { display: flex; flex-direction: column; gap: 10px; }
+      .calc-setup {
+        background: rgba(0,0,0,0.35);
+        border: 1px solid var(--border-glass);
+        border-left: 3px solid var(--accent-cyan);
+        border-radius: var(--radius-sm);
+        padding: 12px 16px;
+        font-family: var(--font-display);
+        font-size: 0.8rem;
+        color: var(--accent-cyan);
+        line-height: 1.9;
+        white-space: pre-wrap;
+      }
+      .calc-hint { font-size: 0.74rem; color: var(--text-muted); font-style: italic; margin: 0; }
+      .calc-hint-label { color: var(--accent-orange); font-style: normal; font-weight: 600; }
+      .calc-input-row { display: flex; align-items: center; gap: 8px; }
+      .calc-input { flex: 1; }
+      .calc-unit { font-family: var(--font-display); font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; }
     `;
     document.head.appendChild(s);
   })();
