@@ -437,6 +437,9 @@
     .chapter-card:nth-child(3) { animation-delay: 0.7s; }
     .chapter-card:nth-child(4) { animation-delay: 0.8s; }
     .chapter-card:nth-child(5) { animation-delay: 0.9s; }
+    .chapter-card:nth-child(6) { animation-delay: 1.0s; }
+    .chapter-card:nth-child(7) { animation-delay: 1.1s; }
+    .chapter-card:nth-child(8) { animation-delay: 1.2s; }
 
     /* Top accent line */
     .chapter-card::before {
@@ -453,6 +456,9 @@
     .chapter-card.ch3::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); }
     .chapter-card.ch4::before { background: linear-gradient(90deg, var(--accent-orange), var(--accent-red)); }
     .chapter-card.ch5::before { background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)); }
+    .chapter-card.ch6::before { background: linear-gradient(90deg, var(--accent-cyan), var(--accent-orange)); }
+    .chapter-card.ch7::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); }
+    .chapter-card.ch8::before { background: linear-gradient(90deg, var(--accent-red), var(--accent-purple)); }
 
     .chapter-card:hover { transform: translateY(-5px); }
     .chapter-card:hover::before { opacity: 1; }
@@ -461,6 +467,9 @@
     .chapter-card.ch3:hover { border-color: rgba(0,255,136,0.25); box-shadow: 0 16px 48px rgba(0,255,136,0.1); }
     .chapter-card.ch4:hover { border-color: rgba(255,107,53,0.25); box-shadow: 0 16px 48px rgba(255,107,53,0.1); }
     .chapter-card.ch5:hover { border-color: rgba(168,85,247,0.25); box-shadow: 0 16px 48px rgba(168,85,247,0.1); }
+    .chapter-card.ch6:hover { border-color: rgba(0,245,255,0.25); box-shadow: 0 16px 48px rgba(0,245,255,0.1); }
+    .chapter-card.ch7:hover { border-color: rgba(0,255,136,0.25); box-shadow: 0 16px 48px rgba(0,255,136,0.1); }
+    .chapter-card.ch8:hover { border-color: rgba(255,51,102,0.25); box-shadow: 0 16px 48px rgba(255,51,102,0.1); }
 
     .chapter-card-top {
       display: flex;
@@ -484,6 +493,9 @@
     .ch3 .chapter-tag { color: var(--accent-green); }
     .ch4 .chapter-tag { color: var(--accent-orange); }
     .ch5 .chapter-tag { color: var(--accent-purple); }
+    .ch6 .chapter-tag { color: var(--accent-cyan); }
+    .ch7 .chapter-tag { color: var(--accent-green); }
+    .ch8 .chapter-tag { color: var(--accent-red); }
 
     .chapter-title {
       font-family: var(--font-display);
@@ -530,6 +542,9 @@
     .ch3 .ring-fill { stroke: var(--accent-green);  filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.55));  }
     .ch4 .ring-fill { stroke: var(--accent-orange); filter: drop-shadow(0 0 4px rgba(255, 107, 53, 0.55)); }
     .ch5 .ring-fill { stroke: var(--accent-purple); filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.55)); }
+    .ch6 .ring-fill { stroke: var(--accent-cyan);   filter: drop-shadow(0 0 4px rgba(0, 245, 255, 0.55));   }
+    .ch7 .ring-fill { stroke: var(--accent-green);  filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.55));  }
+    .ch8 .ring-fill { stroke: var(--accent-red);    filter: drop-shadow(0 0 4px rgba(255, 51, 102, 0.55));  }
 
     .ring-label {
       position: absolute;
@@ -552,6 +567,9 @@
     .ch3 .ring-pct { color: var(--accent-green);  }
     .ch4 .ring-pct { color: var(--accent-orange); }
     .ch5 .ring-pct { color: var(--accent-purple); }
+    .ch6 .ring-pct { color: var(--accent-cyan);   }
+    .ch7 .ring-pct { color: var(--accent-green);  }
+    .ch8 .ring-pct { color: var(--accent-red);    }
 
     .ring-done-label {
       font-size: 0.5rem;
@@ -1124,6 +1142,96 @@
       </div>
     </a>
 
+    <!-- Chapter 6 -->
+    <a href="chapter6.html" class="chapter-card ch6">
+      <div class="chapter-card-top">
+        <div class="chapter-info">
+          <div class="chapter-tag">CH.6 — LINK LAYER</div>
+          <div class="chapter-title">The Link Layer<br>and LANs</div>
+          <div class="chapter-desc">
+            Frames, error detection (CRC), multiple access protocols, Ethernet, ARP, and switches.
+          </div>
+        </div>
+        <div class="progress-ring-wrap">
+          <svg width="88" height="88" viewBox="0 0 88 88">
+            <circle class="ring-track" cx="44" cy="44" r="40"/>
+            <circle class="ring-fill" id="ch6Ring" cx="44" cy="44" r="40"/>
+          </svg>
+          <div class="ring-label">
+            <span class="ring-pct" id="ch6Pct">0%</span>
+            <span class="ring-done-label">Done</span>
+          </div>
+        </div>
+      </div>
+      <div class="chapter-topics" id="ch6Topics">
+        <span class="topic-pill" data-id="ch6-intro">Link Layer Intro</span>
+        <span class="topic-pill" data-id="ch6-error-detection">CRC Error Detection</span>
+        <span class="topic-pill" data-id="ch6-mac-protocols">Multiple Access</span>
+        <span class="topic-pill" data-id="ch6-ethernet-arp">Ethernet &amp; ARP</span>
+        <span class="topic-pill" data-id="ch6-switches-vlan">Switches &amp; VLANs</span>
+      </div>
+    </a>
+
+    <!-- Chapter 7 -->
+    <a href="chapter7.html" class="chapter-card ch7">
+      <div class="chapter-card-top">
+        <div class="chapter-info">
+          <div class="chapter-tag">CH.7 — WIRELESS</div>
+          <div class="chapter-title">Wireless and<br>Mobile Networks</div>
+          <div class="chapter-desc">
+            802.11 WiFi, CSMA/CA, RTS/CTS, 4G LTE, 5G, and Mobile IP mobility management.
+          </div>
+        </div>
+        <div class="progress-ring-wrap">
+          <svg width="88" height="88" viewBox="0 0 88 88">
+            <circle class="ring-track" cx="44" cy="44" r="40"/>
+            <circle class="ring-fill" id="ch7Ring" cx="44" cy="44" r="40"/>
+          </svg>
+          <div class="ring-label">
+            <span class="ring-pct" id="ch7Pct">0%</span>
+            <span class="ring-done-label">Done</span>
+          </div>
+        </div>
+      </div>
+      <div class="chapter-topics" id="ch7Topics">
+        <span class="topic-pill" data-id="ch7-wireless-intro">Wireless Characteristics</span>
+        <span class="topic-pill" data-id="ch7-wifi-arch">802.11 Architecture</span>
+        <span class="topic-pill" data-id="ch7-wifi-mac">CSMA/CA &amp; RTS/CTS</span>
+        <span class="topic-pill" data-id="ch7-cellular">4G LTE &amp; 5G</span>
+        <span class="topic-pill" data-id="ch7-mobility">Mobility Management</span>
+      </div>
+    </a>
+
+    <!-- Chapter 8 -->
+    <a href="chapter8.html" class="chapter-card ch8">
+      <div class="chapter-card-top">
+        <div class="chapter-info">
+          <div class="chapter-tag">CH.8 — SECURITY</div>
+          <div class="chapter-title">Security in<br>Computer Networks</div>
+          <div class="chapter-desc">
+            Cryptography, AES, RSA, Diffie-Hellman, TLS 1.3, firewalls, and intrusion detection.
+          </div>
+        </div>
+        <div class="progress-ring-wrap">
+          <svg width="88" height="88" viewBox="0 0 88 88">
+            <circle class="ring-track" cx="44" cy="44" r="40"/>
+            <circle class="ring-fill" id="ch8Ring" cx="44" cy="44" r="40"/>
+          </svg>
+          <div class="ring-label">
+            <span class="ring-pct" id="ch8Pct">0%</span>
+            <span class="ring-done-label">Done</span>
+          </div>
+        </div>
+      </div>
+      <div class="chapter-topics" id="ch8Topics">
+        <span class="topic-pill" data-id="ch8-intro">Security Goals</span>
+        <span class="topic-pill" data-id="ch8-symmetric">Symmetric Crypto</span>
+        <span class="topic-pill" data-id="ch8-public-key">Public Key &amp; Signatures</span>
+        <span class="topic-pill" data-id="ch8-tls">TLS / HTTPS</span>
+        <span class="topic-pill" data-id="ch8-firewalls">Firewalls &amp; IDS</span>
+      </div>
+    </a>
+
   </div>
 
   <!-- ============================================================
@@ -1269,7 +1377,16 @@
   const CH5_TOPICS = [
     'ch5-link-state', 'ch5-distance-vector', 'ch5-ospf-bgp', 'ch5-sdn', 'ch5-icmp'
   ];
-  const TOTAL_TOPICS = CH1_TOPICS.length + CH2_TOPICS.length + CH3_TOPICS.length + CH4_TOPICS.length + CH5_TOPICS.length;
+  const CH6_TOPICS = [
+    'ch6-intro', 'ch6-error-detection', 'ch6-mac-protocols', 'ch6-ethernet-arp', 'ch6-switches-vlan'
+  ];
+  const CH7_TOPICS = [
+    'ch7-wireless-intro', 'ch7-wifi-arch', 'ch7-wifi-mac', 'ch7-cellular', 'ch7-mobility'
+  ];
+  const CH8_TOPICS = [
+    'ch8-intro', 'ch8-symmetric', 'ch8-public-key', 'ch8-tls', 'ch8-firewalls'
+  ];
+  const TOTAL_TOPICS = CH1_TOPICS.length + CH2_TOPICS.length + CH3_TOPICS.length + CH4_TOPICS.length + CH5_TOPICS.length + CH6_TOPICS.length + CH7_TOPICS.length + CH8_TOPICS.length;
 
   const DAY_LABELS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
@@ -1389,7 +1506,10 @@
       { topics: CH2_TOPICS, pctId: 'ch2Pct', ringId: 'ch2Ring', topicsId: 'ch2Topics' },
       { topics: CH3_TOPICS, pctId: 'ch3Pct', ringId: 'ch3Ring', topicsId: 'ch3Topics' },
       { topics: CH4_TOPICS, pctId: 'ch4Pct', ringId: 'ch4Ring', topicsId: 'ch4Topics' },
-      { topics: CH5_TOPICS, pctId: 'ch5Pct', ringId: 'ch5Ring', topicsId: 'ch5Topics' }
+      { topics: CH5_TOPICS, pctId: 'ch5Pct', ringId: 'ch5Ring', topicsId: 'ch5Topics' },
+      { topics: CH6_TOPICS, pctId: 'ch6Pct', ringId: 'ch6Ring', topicsId: 'ch6Topics' },
+      { topics: CH7_TOPICS, pctId: 'ch7Pct', ringId: 'ch7Ring', topicsId: 'ch7Topics' },
+      { topics: CH8_TOPICS, pctId: 'ch8Pct', ringId: 'ch8Ring', topicsId: 'ch8Topics' }
     ];
 
     chDefs.forEach(function (ch) {
@@ -1443,7 +1563,13 @@
     if (ch1AllDone) continueHref = 'chapter2.html';
     if (ch1AllDone && ch2AllDone) continueHref = 'chapter3.html';
     if (ch1AllDone && ch2AllDone && ch3AllDone) continueHref = 'chapter4.html';
+    const ch5AllDone = CH5_TOPICS.every(id => state.completedTopics.includes(id));
+    const ch6AllDone = CH6_TOPICS.every(id => state.completedTopics.includes(id));
+    const ch7AllDone = CH7_TOPICS.every(id => state.completedTopics.includes(id));
     if (ch1AllDone && ch2AllDone && ch3AllDone && ch4AllDone) continueHref = 'chapter5.html';
+    if (ch1AllDone && ch2AllDone && ch3AllDone && ch4AllDone && ch5AllDone) continueHref = 'chapter6.html';
+    if (ch1AllDone && ch2AllDone && ch3AllDone && ch4AllDone && ch5AllDone && ch6AllDone) continueHref = 'chapter7.html';
+    if (ch1AllDone && ch2AllDone && ch3AllDone && ch4AllDone && ch5AllDone && ch6AllDone && ch7AllDone) continueHref = 'chapter8.html';
     document.getElementById('btnContinue').href = continueHref;
 
     // "Weak Topics" button

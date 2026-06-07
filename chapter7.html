@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chapter 5: Network Layer — Control Plane — NetCore Academy</title>
+  <title>Chapter 7: Wireless and Mobile Networks — NetCore Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="css/components.css" />
 </head>
 
-<body data-page="chapter5">
+<body data-page="chapter7">
 
   <!-- ── Site Header ──────────────────────────────────────────────────── -->
   <header class="site-header" id="site-header">
@@ -35,9 +35,9 @@
         <a href="chapter2.html" class="nav-link">Ch.2</a>
         <a href="chapter3.html" class="nav-link">Ch.3</a>
         <a href="chapter4.html" class="nav-link">Ch.4</a>
-        <a href="chapter5.html" class="nav-link nav-link--active" aria-current="page">Ch.5</a>
+        <a href="chapter5.html" class="nav-link">Ch.5</a>
         <a href="chapter6.html" class="nav-link">Ch.6</a>
-        <a href="chapter7.html" class="nav-link">Ch.7</a>
+        <a href="chapter7.html" class="nav-link nav-link--active" aria-current="page">Ch.7</a>
         <a href="chapter8.html" class="nav-link">Ch.8</a>
         <a href="exam-mode.html" class="nav-link">Exam</a>
       </nav>
@@ -61,7 +61,7 @@
   <div class="status-bar" id="status-bar" role="status" aria-live="polite">
     <span class="status-item">
       <span class="status-dot status-dot--green"></span>
-      <span>CHAPTER 5</span>
+      <span>CHAPTER 7</span>
     </span>
     <span class="status-item">
       <span class="status-dot status-dot--cyan"></span>
@@ -78,28 +78,28 @@
     <!-- Chapter Hero ---------------------------------------------------- -->
     <div class="chapter-hero glass-card anim-fade-in-up">
       <div class="chapter-hero__meta">
-        <span class="section-label">CHAPTER 5</span>
-        <h1 class="chapter-hero__title">Network Layer — Control Plane</h1>
+        <span class="section-label">CHAPTER 7</span>
+        <h1 class="chapter-hero__title">Wireless and Mobile Networks</h1>
         <p class="chapter-hero__desc">
-          How routing decisions are made across the Internet. Dijkstra's algorithm,
-          Bellman-Ford, OSPF, BGP, SDN, and ICMP.
+          WiFi, cellular networks, and mobility. How devices communicate over
+          the air and stay connected while on the move.
         </p>
         <div class="chapter-hero__actions">
-          <a href="#ch5-link-state" class="btn btn--primary">Start Learning</a>
-          <a href="chapter4.html" class="btn btn--ghost">← Chapter 4</a>
+          <a href="#ch7-wireless-intro" class="btn btn--primary">Start Learning</a>
+          <a href="chapter6.html" class="btn btn--ghost">← Chapter 6</a>
         </div>
       </div>
-      <div class="chapter-hero__ring" aria-label="Chapter 5 completion progress">
+      <div class="chapter-hero__ring" aria-label="Chapter 7 completion progress">
         <svg width="100" height="100" viewBox="0 0 100 100">
           <circle class="ring-track" cx="50" cy="50" r="40" />
-          <circle class="ring-fill ring-fill--purple" id="ch5-progress-ring"
+          <circle class="ring-fill ring-fill--green" id="ch7-progress-ring"
                   cx="50" cy="50" r="40"
                   stroke-dasharray="251.3"
                   stroke-dashoffset="251.3"
                   transform="rotate(-90 50 50)" />
         </svg>
         <div class="ring-label">
-          <span class="ring-pct" id="ch5-ring-pct">0%</span>
+          <span class="ring-pct" id="ch7-ring-pct">0%</span>
           <span class="ring-sub">complete</span>
         </div>
       </div>
@@ -107,117 +107,18 @@
 
 
     <!-- ================================================================
-         SECTION 1 — Link-State Routing & Dijkstra's Algorithm
+         SECTION 1 — Wireless Links & Network Characteristics
     ================================================================ -->
-    <section class="topic-section" id="ch5-link-state"
-             data-section-id="ch5-link-state" data-section-index="0">
+    <section class="topic-section" id="ch7-wireless-intro"
+             data-section-id="ch7-wireless-intro" data-section-index="0">
 
       <div class="topic-section__header">
         <div class="topic-section__label">
           <span class="section-label">SECTION 1 OF 5</span>
           <div class="topic-badge tag tag--cyan">UNLOCKED</div>
         </div>
-        <h2 class="topic-section__title">Link-State Routing &amp; Dijkstra's Algorithm</h2>
-        <p class="topic-section__subtitle">LSAs · Link-state database · Dijkstra · Shortest-path tree · OSPF</p>
-      </div>
-
-      <div class="topic-section__body">
-
-        <!-- 1. EXPLAIN -->
-        <div class="learn-block glass-card glass-card--cyan">
-          <div class="learn-block__eyebrow">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <circle cx="8" cy="8" r="7" stroke="var(--accent-cyan)" stroke-width="1.5"/>
-              <text x="8" y="12" text-anchor="middle" fill="var(--accent-cyan)" font-size="9" font-family="monospace">i</text>
-            </svg>
-            EXPLAIN
-          </div>
-          <p class="learn-block__summary">
-            Link-state routing gives every router a complete, identical map of the entire network topology. Each router floods the network with Link-State Advertisements (LSAs) describing its directly connected links. Once all routers hold the same link-state database, each independently runs Dijkstra's shortest-path algorithm to compute the least-cost path to every destination and builds its forwarding table from the result.
-          </p>
-          <ul class="learn-block__bullets">
-            <li>Each router floods the network with LSAs (Link-State Advertisements) describing its links and costs</li>
-            <li>All routers end up with identical complete topology map — the link-state database</li>
-            <li>Each router independently runs Dijkstra's shortest-path algorithm on that database</li>
-            <li>Dijkstra: iteratively settle the unsettled node with minimum known distance, then update its neighbors</li>
-            <li>Complexity: O(n²) with basic implementation, O(E log n) with a priority queue (binary heap)</li>
-            <li>The forwarding table is derived directly from the resulting shortest-path tree</li>
-            <li>OSPF (Open Shortest Path First) uses link-state routing for intra-AS routing</li>
-            <li>Oscillation problem: if link costs reflect current traffic load, all routers may simultaneously reroute, causing traffic to swing back and forth</li>
-          </ul>
-        </div>
-
-        <!-- 2. VISUALIZE -->
-        <div class="sim-wrapper">
-          <div class="sim-eyebrow">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
-              <line x1="8" y1="8" x2="8" y2="11" stroke="var(--accent-green)" stroke-width="1.5"/>
-            </svg>
-            INTERACTIVE SIMULATION
-          </div>
-          <div class="sim-mount-point"
-               data-sim-id="sim-dijkstra"
-               id="sim-mount-ch5-link-state"
-               aria-label="Dijkstra shortest-path algorithm simulation"></div>
-        </div>
-
-        <!-- 3. MEMORY TRIGGER -->
-        <div class="analogy-card glass-card">
-          <div class="analogy-card__eyebrow">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
-              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
-            </svg>
-            THINK OF IT LIKE…
-          </div>
-          <p class="analogy-card__text">
-            Imagine every intersection in a city posts a sign listing its road connections and current travel times. Copies of every sign reach every other intersection. Each intersection then runs its own GPS calculation from scratch. That is link-state routing — <strong>full information, independent computation</strong>.
-          </p>
-        </div>
-
-        <!-- 4. MINI QUIZ -->
-        <div class="quiz-wrapper">
-          <div class="quiz-eyebrow">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
-              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
-            </svg>
-            MINI QUIZ
-          </div>
-          <div class="quiz-mount-point"
-               data-quiz-topic="ch5-link-state"
-               data-chapter="chapter5"
-               id="quiz-ch5-link-state"
-               aria-label="Link-state routing and Dijkstra quiz"></div>
-        </div>
-
-      </div><!-- /.topic-section__body -->
-    </section><!-- /#ch5-link-state -->
-
-
-    <!-- ================================================================
-         SECTION 2 — Distance-Vector Routing & Bellman-Ford
-    ================================================================ -->
-    <section class="topic-section topic-section--locked" id="ch5-distance-vector"
-             data-section-id="ch5-distance-vector" data-section-index="1">
-
-      <div class="topic-section__header">
-        <div class="topic-section__label">
-          <span class="section-label">SECTION 2 OF 5</span>
-          <div class="topic-badge tag tag--muted" id="badge-ch5-distance-vector">LOCKED</div>
-        </div>
-        <h2 class="topic-section__title">Distance-Vector Routing &amp; Bellman-Ford</h2>
-        <p class="topic-section__subtitle">Bellman-Ford equation · DV algorithm · Count-to-infinity · Poisoned reverse · RIP</p>
-      </div>
-
-      <div class="section-lock-overlay" aria-hidden="true">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
-          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
-          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
-        </svg>
-        <p class="lock-message">Complete <strong>Section 1</strong> to unlock</p>
+        <h2 class="topic-section__title">Wireless Links &amp; Network Characteristics</h2>
+        <p class="topic-section__subtitle">Path loss · Multipath · Interference · SNR · Hidden terminal · Fading · Handoff</p>
       </div>
 
       <div class="topic-section__body">
@@ -231,17 +132,19 @@
             EXPLAIN
           </div>
           <p class="learn-block__summary">
-            Distance-vector (DV) routing is a distributed, iterative algorithm. Each router knows only the costs to its immediate neighbors and the distance vectors reported by those neighbors. Using the Bellman-Ford equation, each router computes its own minimum-cost estimate to every destination. Routers exchange updated vectors asynchronously until the algorithm converges — but bad news (link failures, cost increases) can travel very slowly, leading to the count-to-infinity problem.
+            Wireless links differ fundamentally from wired links: signals weaken with distance (path loss), bounce off objects (multipath propagation), and face interference from other radio sources. These physical realities make wireless links harder to manage than wired links — a higher bit error rate is expected and protocols must cope with it.
           </p>
           <ul class="learn-block__bullets">
-            <li>DV routing: each router maintains a distance vector — its best current estimate of cost to every destination</li>
-            <li>Bellman-Ford equation: d_x(y) = min_v { c(x,v) + d_v(y) } — minimum over all neighbors v</li>
-            <li>Iterative and asynchronous: each node updates when it receives a new DV from any neighbor</li>
-            <li>Self-terminating: the algorithm converges when no node's distance vector changes</li>
-            <li>Good news travels fast: a decrease in link cost propagates to the whole network quickly</li>
-            <li>BAD NEWS TRAVELS SLOWLY — count-to-infinity problem: when a link cost increases or breaks, nodes can count up in small increments through routing loops</li>
-            <li>Poisoned reverse: if x routes to z via y, x advertises d_x(z) = ∞ back to y — prevents two-node loops but not three-node loops</li>
-            <li>RIP (Routing Information Protocol) uses DV routing; BGP uses a related path-vector approach</li>
+            <li>Path loss: signal strength decreases with distance squared (free space) or faster in cluttered environments</li>
+            <li>Multipath propagation: radio waves reflect off buildings and objects — multiple delayed copies arrive at receiver</li>
+            <li>Interference: other wireless devices transmitting on the same or nearby frequency band</li>
+            <li>SNR (Signal-to-Noise Ratio): higher SNR → fewer bit errors; can be increased by boosting transmit power or moving closer</li>
+            <li>Higher SNR → can use higher-order modulation (more bits per symbol) → higher bit rate</li>
+            <li>Hidden terminal problem: nodes A and C both in range of B but not each other — A and C cannot sense each other's transmissions and collide at B</li>
+            <li>Fading: signal strength fluctuates over time due to movement and changing multipath patterns</li>
+            <li>Infrastructure mode: wireless hosts connect to a base station (AP or cell tower) which connects to the wired Internet</li>
+            <li>Ad hoc mode: wireless hosts communicate directly with each other, no base station</li>
+            <li>Handoff (handover): as a mobile host moves, it transitions from one base station to another</li>
           </ul>
         </div>
 
@@ -254,9 +157,9 @@
             INTERACTIVE SIMULATION
           </div>
           <div class="sim-mount-point"
-               data-sim-id="sim-bellman-ford"
-               id="sim-mount-ch5-distance-vector"
-               aria-label="Bellman-Ford distance-vector routing simulation"></div>
+               data-sim-id="sim-wireless-characteristics"
+               id="sim-mount-ch7-wireless-intro"
+               aria-label="Wireless link characteristics simulation"></div>
         </div>
 
         <div class="analogy-card glass-card">
@@ -268,7 +171,7 @@
             THINK OF IT LIKE…
           </div>
           <p class="analogy-card__text">
-            Imagine asking friends for directions. Each friend knows how long it takes to reach nearby spots, and they relay what they've heard from their own friends. The network converges as everyone updates their estimates. But if a road suddenly closes, it can take <strong>many rounds of updates</strong> before everyone stops claiming they can still reach the destination quickly.
+            Wireless communication is like shouting across a crowded party. The further away someone is, the harder they are to hear (path loss). Your voice bounces off walls creating echo (multipath). Other conversations interfere. You might not hear someone starting to talk because a wall blocks them from you but not from the person you're both trying to reach (<strong>hidden terminal problem</strong>).
           </p>
         </div>
 
@@ -281,29 +184,126 @@
             MINI QUIZ
           </div>
           <div class="quiz-mount-point"
-               data-quiz-topic="ch5-distance-vector"
-               data-chapter="chapter5"
-               id="quiz-ch5-distance-vector"
-               aria-label="Distance-vector routing and Bellman-Ford quiz"></div>
+               data-quiz-topic="ch7-wireless-intro"
+               data-chapter="chapter7"
+               id="quiz-ch7-wireless-intro"
+               aria-label="Wireless link characteristics quiz"></div>
         </div>
 
       </div>
-    </section><!-- /#ch5-distance-vector -->
+    </section>
 
 
     <!-- ================================================================
-         SECTION 3 — OSPF & BGP
+         SECTION 2 — 802.11 WiFi: Architecture & Channels
     ================================================================ -->
-    <section class="topic-section topic-section--locked" id="ch5-ospf-bgp"
-             data-section-id="ch5-ospf-bgp" data-section-index="2">
+    <section class="topic-section topic-section--locked" id="ch7-wifi-arch"
+             data-section-id="ch7-wifi-arch" data-section-index="1">
+
+      <div class="topic-section__header">
+        <div class="topic-section__label">
+          <span class="section-label">SECTION 2 OF 5</span>
+          <div class="topic-badge tag tag--muted" id="badge-ch7-wifi-arch">LOCKED</div>
+        </div>
+        <h2 class="topic-section__title">802.11 WiFi: Architecture &amp; Channels</h2>
+        <p class="topic-section__subtitle">BSS · SSID · Beacon frames · Active/passive scanning · Association · 802.11ax (WiFi 6)</p>
+      </div>
+
+      <div class="section-lock-overlay" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect x="10" y="18" width="20" height="16" rx="3" stroke="var(--text-muted)" stroke-width="1.5"/>
+          <path d="M14 18v-5a6 6 0 0 1 12 0v5" stroke="var(--text-muted)" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="26" r="2" fill="var(--text-muted)"/>
+        </svg>
+        <p class="lock-message">Complete <strong>Section 1</strong> to unlock</p>
+      </div>
+
+      <div class="topic-section__body">
+
+        <div class="learn-block glass-card glass-card--cyan">
+          <div class="learn-block__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+              <text x="8" y="12" text-anchor="middle" fill="var(--accent-cyan)" font-size="9" font-family="monospace">i</text>
+            </svg>
+            EXPLAIN
+          </div>
+          <p class="learn-block__summary">
+            The IEEE 802.11 (WiFi) standard defines wireless LAN operation. Multiple versions exist (802.11a/b/g/n/ac/ax) differing in frequency band, modulation scheme, and peak data rate. All use the same CSMA/CA MAC protocol. A BSS consists of one AP and its associated wireless stations. Stations discover and join by scanning for Beacon frames.
+          </p>
+          <ul class="learn-block__bullets">
+            <li>BSS (Basic Service Set): one AP + associated wireless hosts. Also called a 'cell'</li>
+            <li>SSID (Service Set Identifier): the network name broadcast in AP Beacon frames every ~100ms</li>
+            <li>BSSID: the AP's MAC address, uniquely identifies the BSS</li>
+            <li>Passive scanning: host listens for Beacon frames from nearby APs, picks one to associate with</li>
+            <li>Active scanning: host broadcasts Probe Request frame; APs reply with Probe Response</li>
+            <li>Association: host sends Association Request to chosen AP; AP replies with Association Response</li>
+            <li>802.11b: 2.4 GHz, up to 11 Mbps; 802.11g/n: 2.4+5 GHz, up to 600 Mbps</li>
+            <li>802.11ac (WiFi 5): 5 GHz only, up to several Gbps with MU-MIMO</li>
+            <li>802.11ax (WiFi 6): 2.4+5+6 GHz, OFDMA for multi-user efficiency in dense environments</li>
+            <li>Channels: 2.4 GHz band has 11 overlapping channels in US; only 3 non-overlapping (1, 6, 11)</li>
+          </ul>
+        </div>
+
+        <div class="sim-wrapper">
+          <div class="sim-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <polygon points="2,14 8,2 14,14" stroke="var(--accent-green)" stroke-width="1.5" fill="none"/>
+              <line x1="8" y1="8" x2="8" y2="11" stroke="var(--accent-green)" stroke-width="1.5"/>
+            </svg>
+            INTERACTIVE SIMULATION
+          </div>
+          <div class="sim-mount-point"
+               data-sim-id="sim-wifi-association"
+               id="sim-mount-ch7-wifi-arch"
+               aria-label="WiFi AP association simulation"></div>
+        </div>
+
+        <div class="analogy-card glass-card">
+          <div class="analogy-card__eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="6" r="4" stroke="var(--accent-orange)" stroke-width="1.5"/>
+              <line x1="8" y1="10" x2="8" y2="15" stroke="var(--accent-orange)" stroke-width="1.5"/>
+            </svg>
+            THINK OF IT LIKE…
+          </div>
+          <p class="analogy-card__text">
+            Associating with a WiFi AP is like tuning a radio to a specific station. You scan the dial (passive/active scanning) to see what stations are broadcasting (Beacon frames with SSID), pick the one with the strongest signal, and <strong>tune in</strong> (association). You are now on that station's channel and can communicate through it.
+          </p>
+        </div>
+
+        <div class="quiz-wrapper">
+          <div class="quiz-eyebrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="12" height="12" rx="2" stroke="var(--accent-purple)" stroke-width="1.5"/>
+              <text x="8" y="11" text-anchor="middle" fill="var(--accent-purple)" font-size="9" font-family="monospace">?</text>
+            </svg>
+            MINI QUIZ
+          </div>
+          <div class="quiz-mount-point"
+               data-quiz-topic="ch7-wifi-arch"
+               data-chapter="chapter7"
+               id="quiz-ch7-wifi-arch"
+               aria-label="802.11 WiFi architecture quiz"></div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ================================================================
+         SECTION 3 — 802.11 MAC: CSMA/CA & RTS/CTS
+    ================================================================ -->
+    <section class="topic-section topic-section--locked" id="ch7-wifi-mac"
+             data-section-id="ch7-wifi-mac" data-section-index="2">
 
       <div class="topic-section__header">
         <div class="topic-section__label">
           <span class="section-label">SECTION 3 OF 5</span>
-          <div class="topic-badge tag tag--muted" id="badge-ch5-ospf-bgp">LOCKED</div>
+          <div class="topic-badge tag tag--muted" id="badge-ch7-wifi-mac">LOCKED</div>
         </div>
-        <h2 class="topic-section__title">OSPF &amp; BGP</h2>
-        <p class="topic-section__subtitle">Autonomous Systems · Intra-AS vs inter-AS · OSPF areas · BGP path-vector · eBGP · iBGP · Hot potato routing</p>
+        <h2 class="topic-section__title">802.11 MAC: CSMA/CA &amp; RTS/CTS</h2>
+        <p class="topic-section__subtitle">DIFS · SIFS · Random back-off · Link-layer ACK · RTS/CTS · NAV · Hidden terminal fix</p>
       </div>
 
       <div class="section-lock-overlay" aria-hidden="true">
@@ -326,21 +326,18 @@
             EXPLAIN
           </div>
           <p class="learn-block__summary">
-            The Internet is divided into Autonomous Systems (ASes) — independently administered networks. Intra-AS routing uses protocols like OSPF to find efficient paths within a single organization's network. Inter-AS routing uses BGP, the single routing protocol that connects all ASes and keeps the global Internet working. OSPF optimizes for cost; BGP routes according to policy and business relationships.
+            802.11 uses CSMA/CA (Carrier Sense Multiple Access with Collision Avoidance). Unlike Ethernet's CSMA/CD, WiFi stations cannot detect collisions while transmitting. Instead, they try to avoid collisions through random back-off timers and use explicit ACKs for every frame. The optional RTS/CTS mechanism addresses the hidden terminal problem.
           </p>
           <ul class="learn-block__bullets">
-            <li>OSPF (Open Shortest Path First): intra-AS routing protocol, used within a single autonomous system</li>
-            <li>OSPF uses link-state flooding and Dijkstra's algorithm at every router</li>
-            <li>OSPF messages are carried directly over IP (protocol number 89) — not encapsulated in TCP or UDP</li>
-            <li>OSPF features: all messages authenticated, multiple equal-cost paths supported, hierarchical areas</li>
-            <li>OSPF area: routers within an area share full topology; only summary info crosses area boundaries</li>
-            <li>Backbone area (Area 0) interconnects all other OSPF areas within an AS</li>
-            <li>BGP (Border Gateway Protocol): THE inter-AS routing protocol — 'the glue that holds the Internet together'</li>
-            <li>BGP is a path-vector protocol: it advertises complete AS-level paths to destinations, not just distances</li>
-            <li>Two BGP session types: eBGP (between routers in different ASes) and iBGP (between routers within the same AS)</li>
-            <li>Key BGP attributes: AS-PATH (list of AS numbers traversed) and NEXT-HOP (border router to use as first hop)</li>
-            <li>BGP is policy-driven: ISPs can prefer or filter routes based on business agreements, not just shortest path</li>
-            <li>BGP hot potato routing: a router sends traffic out of its own AS as early as possible (least-cost intra-AS path to exit point)</li>
+            <li>DIFS (Distributed Inter-Frame Space): if channel idle, sender waits DIFS before transmitting</li>
+            <li>Random back-off: if channel is busy when node wants to send, it picks random back-off interval; only counts down when channel is idle</li>
+            <li>SIFS (Short Inter-Frame Space): shorter gap used before ACKs, CTS — allows reply without contention</li>
+            <li>ACK: receiver sends ACK after SIFS; if sender doesn't receive ACK → collision assumed → retransmit with larger back-off</li>
+            <li>Why ACKs? Wireless links have high bit error rate — ACK confirms frame arrived without corruption</li>
+            <li>RTS (Request-to-Send): sender first sends short RTS frame to AP stating how long it will use the channel</li>
+            <li>CTS (Clear-to-Send): AP broadcasts CTS after SIFS; all nodes in AP's range see CTS and defer for the stated duration (NAV)</li>
+            <li>RTS/CTS solves hidden terminal: even if C cannot hear A's RTS, C will hear AP's CTS and defer</li>
+            <li>RTS/CTS overhead is worthwhile for large frames only; for short frames, the overhead outweighs the benefit</li>
           </ul>
         </div>
 
@@ -353,9 +350,9 @@
             INTERACTIVE SIMULATION
           </div>
           <div class="sim-mount-point"
-               data-sim-id="sim-bgp"
-               id="sim-mount-ch5-ospf-bgp"
-               aria-label="BGP inter-AS routing simulation"></div>
+               data-sim-id="sim-csma-ca"
+               id="sim-mount-ch7-wifi-mac"
+               aria-label="CSMA/CA and RTS/CTS simulation"></div>
         </div>
 
         <div class="analogy-card glass-card">
@@ -367,7 +364,7 @@
             THINK OF IT LIKE…
           </div>
           <p class="analogy-card__text">
-            OSPF is like the GPS inside a delivery company's warehouse — optimizing routes within the building. BGP is the <strong>global shipping network</strong> connecting warehouses in different countries. A package (IP datagram) uses BGP to choose which country border to cross, then OSPF to navigate inside each facility.
+            CSMA/CA is polite turn-taking: wait for silence, then wait a little more (DIFS), then wait a random extra time (back-off) so not everyone rushes at once. RTS/CTS is like raising your hand and waiting for the teacher to say 'okay go ahead' — the <strong>teacher's reply is heard by everyone</strong> so they all know to stay quiet while you speak.
           </p>
         </div>
 
@@ -380,29 +377,29 @@
             MINI QUIZ
           </div>
           <div class="quiz-mount-point"
-               data-quiz-topic="ch5-ospf-bgp"
-               data-chapter="chapter5"
-               id="quiz-ch5-ospf-bgp"
-               aria-label="OSPF and BGP quiz"></div>
+               data-quiz-topic="ch7-wifi-mac"
+               data-chapter="chapter7"
+               id="quiz-ch7-wifi-mac"
+               aria-label="802.11 MAC CSMA/CA quiz"></div>
         </div>
 
       </div>
-    </section><!-- /#ch5-ospf-bgp -->
+    </section>
 
 
     <!-- ================================================================
-         SECTION 4 — SDN Control Plane
+         SECTION 4 — Cellular Networks: 4G LTE & 5G
     ================================================================ -->
-    <section class="topic-section topic-section--locked" id="ch5-sdn"
-             data-section-id="ch5-sdn" data-section-index="3">
+    <section class="topic-section topic-section--locked" id="ch7-cellular"
+             data-section-id="ch7-cellular" data-section-index="3">
 
       <div class="topic-section__header">
         <div class="topic-section__label">
           <span class="section-label">SECTION 4 OF 5</span>
-          <div class="topic-badge tag tag--muted" id="badge-ch5-sdn">LOCKED</div>
+          <div class="topic-badge tag tag--muted" id="badge-ch7-cellular">LOCKED</div>
         </div>
-        <h2 class="topic-section__title">SDN Control Plane</h2>
-        <p class="topic-section__subtitle">Control vs data plane · SDN controller · OpenFlow · Flow tables · Match-action</p>
+        <h2 class="topic-section__title">Cellular Networks: 4G LTE &amp; 5G</h2>
+        <p class="topic-section__subtitle">eNodeB · EPC · MME · S-GW · P-GW · HSS · OFDM · 5G NR · Network slicing</p>
       </div>
 
       <div class="section-lock-overlay" aria-hidden="true">
@@ -425,17 +422,20 @@
             EXPLAIN
           </div>
           <p class="learn-block__summary">
-            Software-Defined Networking (SDN) separates the control plane (deciding where traffic goes) from the data plane (actually forwarding packets). A logically centralised SDN controller maintains a global view of the network and pushes flow-table rules into switches via protocols like OpenFlow. This gives operators programmable, flexible control over traffic without reconfiguring each device individually.
+            Cellular networks provide wireless Internet access across wide geographic areas. The coverage area is divided into cells, each served by a base station. The cellular core network (EPC in 4G, 5GC in 5G) connects base stations to the Internet and manages mobility, authentication, and billing. 4G LTE uses OFDM; 5G extends this with mmWave, massive MIMO, and network slicing.
           </p>
           <ul class="learn-block__bullets">
-            <li>SDN separates the data plane (packet forwarding in switches) from the control plane (routing logic in controller)</li>
-            <li>A logically centralised SDN controller computes forwarding tables for all switches in the network</li>
-            <li>OpenFlow: the open standard protocol between an SDN controller and its managed switches</li>
-            <li>Flow table: each entry has match fields (header values to test) and action fields (forward, drop, modify, send to controller)</li>
-            <li>Match-action paradigm generalises routing: any header field can be matched, many actions are possible</li>
-            <li>SDN controller maintains network-wide state, runs routing algorithms, installs flow entries on demand</li>
-            <li>Benefits: flexible traffic engineering, easier network management, rapid innovation in control logic</li>
-            <li>Challenges: scalability of a centralised controller, fault tolerance and reliability, security of the controller itself</li>
+            <li>Cell: geographic coverage area served by one base station; cells overlap slightly for seamless handoff</li>
+            <li>eNodeB (4G) / gNodeB (5G): the radio base station; connects UE over the air to the core network via backhaul</li>
+            <li>Frequency reuse: same frequency channels reused in non-adjacent cells to avoid co-channel interference</li>
+            <li>4G LTE air interface: OFDM downlink and SC-FDMA uplink</li>
+            <li>EPC (Evolved Packet Core) components: MME, S-GW, P-GW, HSS</li>
+            <li>MME (Mobility Management Entity): authentication, handoff management, paging</li>
+            <li>S-GW (Serving Gateway): routes data packets between eNodeB and P-GW</li>
+            <li>P-GW (PDN Gateway): connects to the Internet; assigns IP to UE</li>
+            <li>HSS (Home Subscriber Server): subscriber database (IMSI, SIM keys, service profile)</li>
+            <li>5G NR: sub-6GHz for coverage + mmWave (24–100 GHz) for massive throughput in dense areas</li>
+            <li>Network slicing: logically partition 5G into isolated virtual networks per service type (eMBB, URLLC, mMTC)</li>
           </ul>
         </div>
 
@@ -448,9 +448,9 @@
             INTERACTIVE SIMULATION
           </div>
           <div class="sim-mount-point"
-               data-sim-id="sim-sdn"
-               id="sim-mount-ch5-sdn"
-               aria-label="SDN controller and OpenFlow simulation"></div>
+               data-sim-id="sim-cellular-architecture"
+               id="sim-mount-ch7-cellular"
+               aria-label="4G LTE cellular architecture simulation"></div>
         </div>
 
         <div class="analogy-card glass-card">
@@ -462,7 +462,7 @@
             THINK OF IT LIKE…
           </div>
           <p class="analogy-card__text">
-            Traditional networking is like every traffic light making its own independent timing decisions. SDN is like a <strong>city-wide traffic management centre</strong> that monitors all intersections and remotely programs every light in real time. The lights (switches) still forward cars (packets) — but the intelligence lives in the centre.
+            Think of cellular coverage like a country divided into hexagonal counties (cells), each with its own local government (base station). You carry a universal ID card (SIM). When you cross into a new county (handoff), your new local government contacts the national identity database (HSS) to verify who you are, and your data is routed through the new infrastructure.
           </p>
         </div>
 
@@ -475,29 +475,29 @@
             MINI QUIZ
           </div>
           <div class="quiz-mount-point"
-               data-quiz-topic="ch5-sdn"
-               data-chapter="chapter5"
-               id="quiz-ch5-sdn"
-               aria-label="SDN control plane quiz"></div>
+               data-quiz-topic="ch7-cellular"
+               data-chapter="chapter7"
+               id="quiz-ch7-cellular"
+               aria-label="Cellular networks 4G LTE and 5G quiz"></div>
         </div>
 
       </div>
-    </section><!-- /#ch5-sdn -->
+    </section>
 
 
     <!-- ================================================================
-         SECTION 5 — ICMP
+         SECTION 5 — Mobility Management
     ================================================================ -->
-    <section class="topic-section topic-section--locked" id="ch5-icmp"
-             data-section-id="ch5-icmp" data-section-index="4">
+    <section class="topic-section topic-section--locked" id="ch7-mobility"
+             data-section-id="ch7-mobility" data-section-index="4">
 
       <div class="topic-section__header">
         <div class="topic-section__label">
           <span class="section-label">SECTION 5 OF 5</span>
-          <div class="topic-badge tag tag--muted" id="badge-ch5-icmp">LOCKED</div>
+          <div class="topic-badge tag tag--muted" id="badge-ch7-mobility">LOCKED</div>
         </div>
-        <h2 class="topic-section__title">ICMP</h2>
-        <p class="topic-section__subtitle">Error reporting · Type &amp; Code · ping · traceroute · ICMPv6</p>
+        <h2 class="topic-section__title">Mobility Management: Handoff &amp; Mobile IP</h2>
+        <p class="topic-section__subtitle">Care-of address · Home agent · Triangle routing · Route optimization · LTE handoff · X2 interface</p>
       </div>
 
       <div class="section-lock-overlay" aria-hidden="true">
@@ -520,19 +520,18 @@
             EXPLAIN
           </div>
           <p class="learn-block__summary">
-            ICMP (Internet Control Message Protocol) is the network layer's error-reporting and diagnostic mechanism. When a router or host encounters a problem handling an IP datagram — unreachable destination, expired TTL, bad header — it sends an ICMP message back to the source. Two essential network tools, ping and traceroute, are built entirely on ICMP.
+            Mobility management solves two challenges: how to locate a mobile host (routing datagrams to wherever it currently is) and how to maintain ongoing connections as the host moves between networks. Mobile IP provides a network-layer solution allowing a device to keep its home IP address while roaming. The home agent intercepts packets and tunnels them to the mobile's current care-of address.
           </p>
           <ul class="learn-block__bullets">
-            <li>ICMP is used by hosts and routers to communicate network-layer error and informational messages</li>
-            <li>ICMP lives above IP: ICMP messages are encapsulated in IP datagrams (IP Protocol field = 1)</li>
-            <li>Each ICMP message has a Type field and a Code field that together specify the exact meaning</li>
-            <li>ICMP Type 0 (code 0): Echo Reply — sent in response to a ping</li>
-            <li>ICMP Type 3: Destination Unreachable — various codes indicate why (host unreachable, port unreachable, etc.)</li>
-            <li>ICMP Type 8 (code 0): Echo Request — sent by ping to probe a host</li>
-            <li>ICMP Type 11 (code 0): Time Exceeded — sent by a router when it discards a datagram with TTL = 0</li>
-            <li>ping: sends ICMP Echo Request (type 8) and measures round-trip time to the Echo Reply (type 0)</li>
-            <li>traceroute: sends a series of UDP segments with TTL = 1, 2, 3, …; each router along the path discards the datagram (TTL expires) and sends back ICMP Time Exceeded (type 11); the destination sends ICMP Port Unreachable (type 3, code 3) when it receives the probe</li>
-            <li>ICMPv6: the ICMP equivalent for IPv6, extended to include Neighbor Discovery (replacing ARP) and Path MTU Discovery</li>
+            <li>Challenge 1: Location — how does the network find a mobile host if its IP changes as it roams?</li>
+            <li>Challenge 2: Handoff — how do ongoing flows (TCP connections) survive as the host moves to a new base station?</li>
+            <li>Mobile IP: mobile keeps permanent home address; home agent on home network intercepts and redirects</li>
+            <li>Care-of address (CoA): temporary address at the visited network; assigned via DHCP when mobile attaches to foreign network</li>
+            <li>Registration: mobile sends CoA to home agent; home agent updates its mobility binding table (home addr → CoA)</li>
+            <li>Triangle routing: correspondent → home agent (intercept) → tunnel to CoA → mobile</li>
+            <li>Route optimization: mobile informs correspondent directly of CoA; correspondent tunnels directly (avoids triangle)</li>
+            <li>4G LTE handoff: source eNodeB signals target eNodeB → resources allocated → data forwarded via X2 interface → UE switches → path updated at S-GW</li>
+            <li>Soft handoff vs hard handoff: CDMA allows soft handoff (multiple base stations simultaneously); LTE uses hard handoff (one at a time)</li>
           </ul>
         </div>
 
@@ -545,9 +544,9 @@
             INTERACTIVE SIMULATION
           </div>
           <div class="sim-mount-point"
-               data-sim-id="sim-icmp"
-               id="sim-mount-ch5-icmp"
-               aria-label="ICMP ping and traceroute simulation"></div>
+               data-sim-id="sim-mobile-ip"
+               id="sim-mount-ch7-mobility"
+               aria-label="Mobile IP and handoff simulation"></div>
         </div>
 
         <div class="analogy-card glass-card">
@@ -559,7 +558,7 @@
             THINK OF IT LIKE…
           </div>
           <p class="analogy-card__text">
-            ICMP is like the postal service's <strong>notification cards</strong>. When a letter can't be delivered (wrong address, mailbox full, recipient moved), the post office sends a notification back to the sender explaining what went wrong. ping is asking 'are you there?' and waiting for 'yes, here!'; traceroute is sending letters that intentionally expire at each post office so each one sends back a notification, mapping the full route.
+            Mobile IP is like having a permanent home address but traveling frequently. Your home post office (home agent) catches all your mail. When you check into a hotel (visited network), you send the post office your room number (care-of address). They forward your mail to wherever you are. <strong>Triangle routing</strong> is the inefficiency: a letter from a friend across town still goes to your hometown first, then gets forwarded to your hotel.
           </p>
         </div>
 
@@ -572,18 +571,18 @@
             MINI QUIZ
           </div>
           <div class="quiz-mount-point"
-               data-quiz-topic="ch5-icmp"
-               data-chapter="chapter5"
-               id="quiz-ch5-icmp"
-               aria-label="ICMP quiz"></div>
+               data-quiz-topic="ch7-mobility"
+               data-chapter="chapter7"
+               id="quiz-ch7-mobility"
+               aria-label="Mobility management and Mobile IP quiz"></div>
         </div>
 
       </div>
-    </section><!-- /#ch5-icmp -->
+    </section>
 
 
     <!-- ── Chapter Complete CTA ──────────────────────────────────────── -->
-    <div class="chapter-complete-cta glass-card" id="ch5-complete-cta" aria-hidden="true">
+    <div class="chapter-complete-cta glass-card" id="ch7-complete-cta" aria-hidden="true">
       <div class="chapter-complete-cta__inner">
         <div class="chapter-complete-cta__icon" aria-hidden="true">
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
@@ -591,29 +590,25 @@
             <polyline points="14,25 21,32 34,18" stroke="var(--accent-green)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
           </svg>
         </div>
-        <h2 class="chapter-complete-cta__title">Chapter 5 Complete!</h2>
+        <h2 class="chapter-complete-cta__title">Chapter 7 Complete!</h2>
         <p class="chapter-complete-cta__text">
-          You've mastered the Network Layer Control Plane. Ready to go deeper?
-          Chapter 6 covers the Link Layer — frames, Ethernet, ARP, and switches.
+          You've mastered Wireless and Mobile Networks. One chapter to go —
+          Chapter 8 covers the cryptography and protocols that keep the Internet secure.
         </p>
         <div class="chapter-complete-cta__actions">
-          <a href="chapter6.html" class="btn btn--primary btn--lg">
-            Chapter 6: Link Layer →
+          <a href="chapter8.html" class="btn btn--primary btn--lg">
+            Chapter 8: Security →
           </a>
           <a href="index.html" class="btn btn--ghost">← Back to Dashboard</a>
         </div>
       </div>
     </div>
 
-  </main><!-- /#main-content -->
+  </main>
 
-  <!-- ── XP Toast (injected by gamification.js) ──────────────────────── -->
   <div id="xp-toast-container" aria-live="assertive" aria-atomic="true"></div>
-
-  <!-- ── Level-Up Overlay (injected by gamification.js) ─────────────── -->
   <div id="level-up-overlay" class="level-up-overlay" aria-hidden="true" role="dialog" aria-label="Level up notification"></div>
 
-  <!-- ── Keyboard Shortcut Modal ─────────────────────────────────────── -->
   <div id="modal-shortcuts" class="modal" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts" aria-hidden="true">
     <div class="modal__backdrop"></div>
     <div class="modal__sheet">
@@ -626,11 +621,8 @@
         <div class="step-sequence">
           <div class="step-item"><kbd>?</kbd><span>Show this help</span></div>
           <div class="step-item"><kbd>H</kbd><span>Go to Dashboard</span></div>
-          <div class="step-item"><kbd>1</kbd><span>Chapter 1</span></div>
-          <div class="step-item"><kbd>2</kbd><span>Chapter 2</span></div>
-          <div class="step-item"><kbd>3</kbd><span>Chapter 3</span></div>
-          <div class="step-item"><kbd>4</kbd><span>Chapter 4</span></div>
-          <div class="step-item"><kbd>5</kbd><span>Chapter 5 (this page)</span></div>
+          <div class="step-item"><kbd>7</kbd><span>Chapter 7 (this page)</span></div>
+          <div class="step-item"><kbd>8</kbd><span>Chapter 8</span></div>
           <div class="step-item"><kbd>E</kbd><span>Exam Mode</span></div>
           <div class="step-item"><kbd>ESC</kbd><span>Close modal / dialog</span></div>
         </div>
@@ -638,7 +630,6 @@
     </div>
   </div>
 
-  <!-- ── Offline Banner (injected by app.js) ─────────────────────────── -->
   <div id="offline-banner" class="alert-banner alert-banner--warn" role="alert" aria-hidden="true">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <polygon points="8,2 15,14 1,14" stroke="var(--accent-orange)" stroke-width="1.5" fill="none"/>
@@ -649,7 +640,6 @@
   </div>
 
   <!-- ── Scripts ──────────────────────────────────────────────────────── -->
-  <!-- Data must load before engine modules that consume it -->
   <script src="data/chapter1-data.js"></script>
   <script src="data/chapter2-data.js"></script>
   <script src="data/chapter3-data.js"></script>
@@ -659,18 +649,16 @@
   <script src="data/chapter7-data.js"></script>
   <script src="data/chapter8-data.js"></script>
   <script src="data/quiz-data.js"></script>
-  <!-- JS modules — order matters (progress → gamification → quiz → animations → app) -->
   <script src="js/progress.js"></script>
   <script src="js/gamification.js"></script>
   <script src="js/quiz.js"></script>
   <script src="js/animations.js"></script>
   <script src="js/app.js"></script>
 
-  <!-- One-time page init: wire quiz containers to chapter5Data -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      if (window.chapter5Data && window.Quiz) {
-        chapter5Data.sections.forEach(function (section) {
+      if (window.chapter7Data && window.Quiz) {
+        chapter7Data.sections.forEach(function (section) {
           var container = document.querySelector(
             '.quiz-mount-point[data-quiz-topic="' + section.id + '"]'
           );
@@ -678,9 +666,9 @@
           container.dataset.quizMounted = '1';
           Quiz.mount(container, section.quiz, {
             topicId: section.id,
-            chapter: 'ch5',
+            chapter: 'ch7',
             onComplete: function (result) {
-              if (window.App) App.onTopicQuizComplete(section.id, result, 'ch5');
+              if (window.App) App.onTopicQuizComplete(section.id, result, 'ch7');
             }
           });
         });

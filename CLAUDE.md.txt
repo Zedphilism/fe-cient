@@ -1,11 +1,73 @@
 # CLAUDE.md — Interactive Networking Study System
 
+---
+
+## SESSION HANDOFF — Chapters 6-8 Added (2026-06-07)
+
+### What was completed this session
+
+All three remaining chapters have been implemented end-to-end:
+
+| File | Status | Contents |
+|------|--------|----------|
+| `data/chapter6-data.js` | ✅ Complete | 5 sections, 19 questions (Link Layer & LANs) |
+| `data/chapter7-data.js` | ✅ Complete | 5 sections, 20 questions (Wireless & Mobile Networks) |
+| `data/chapter8-data.js` | ✅ Complete | 5 sections, 20 questions (Security in Computer Networks) |
+| `chapter6.html` | ✅ Complete | Full study page with 5 locked sections, sims, quizzes |
+| `chapter7.html` | ✅ Complete | Full study page with 5 locked sections, sims, quizzes |
+| `chapter8.html` | ✅ Complete | Full study page with 5 locked sections, sims, quizzes |
+| `data/quiz-data.js` | ✅ Updated | Now includes ch6/ch7/ch8 in SOURCES, topic metadata, and chapter metadata |
+| `index.html` | ✅ Updated | Ch.6/7/8 cards added with rings, topic pills, CSS, and JS routing |
+| `chapter1–5.html` | ✅ Updated | Nav updated with Ch.6/7/8 links |
+| `exam-mode.html` | ✅ Updated | Nav + script tags updated |
+| `chapter5.html` | ✅ Updated | CTA now points to Chapter 6 instead of exam-mode |
+
+### What still needs to be done
+
+**Simulations (animations.js)** — Each new section references a sim ID that does not yet have an implementation in `js/animations.js`. The sim mount points will render as empty divs until these are added. New sim IDs needed:
+
+| Sim ID | Chapter | Description |
+|--------|---------|-------------|
+| `sim-link-layer-intro` | 6 | Animated frame wrapping datagram, NIC highlight |
+| `sim-crc` | 6 | Step-by-step XOR long division of CRC |
+| `sim-mac-protocols` | 6 | Side-by-side ALOHA vs CSMA collision animation |
+| `sim-arp` | 6 | ARP broadcast → unicast reply → table update |
+| `sim-switch-learning` | 6 | Switch table self-learning with frame forwarding |
+| `sim-wireless-characteristics` | 7 | Path loss / hidden terminal diagram |
+| `sim-wifi-association` | 7 | Passive scan → association handshake steps |
+| `sim-csma-ca` | 7 | DIFS/SIFS timing, back-off, RTS/CTS exchange |
+| `sim-cellular-architecture` | 7 | UE ↔ eNodeB ↔ S-GW ↔ P-GW ↔ Internet diagram |
+| `sim-mobile-ip` | 7 | Triangle routing: correspondent → home agent → CoA |
+| `sim-threat-model` | 8 | Alice/Bob/Trudy intercept diagram |
+| `sim-symmetric-cipher` | 8 | Block cipher encrypt/decrypt with shared key |
+| `sim-public-key` | 8 | Encrypt with K+, sign with K−, CA cert chain |
+| `sim-tls-handshake` | 8 | TLS 1.3 1-RTT handshake step animation |
+| `sim-firewall` | 8 | ACL rule matching, stateful connection table |
+
+**Achievement badges** — `gamification.js` currently only defines badges for ch1 and ch2 completion (`ch1_complete`, `ch2_complete`). Add:
+- `ch3_complete` through `ch8_complete` badge IDs in `gamification.js`
+
+**app.js chapter registration** — Verify `app.js` dynamically discovers chapter pages or manually register ch6/ch7/ch8 if it has a static chapter list. Search for `chapter5` references in `app.js`.
+
+**CSS ring-fill colours for chapter pages** — `chapter6.html` references `.ring-fill--cyan`, `chapter7.html` uses `.ring-fill--green`, `chapter8.html` uses `.ring-fill--red`. Verify these CSS classes exist in `css/style.css` or `css/components.css` (they exist for chapter5's `--purple`). Add if missing.
+
+### Key schema facts (for next session)
+
+- All data files use `window.chapterNData = { id, title, sections: [{ id, title, xpReward, content: { summary, bullets, analogy, visual }, quiz: [...] }] }`
+- Section IDs: `ch6-intro`, `ch6-error-detection`, `ch6-mac-protocols`, `ch6-ethernet-arp`, `ch6-switches-vlan`
+- Section IDs: `ch7-wireless-intro`, `ch7-wifi-arch`, `ch7-wifi-mac`, `ch7-cellular`, `ch7-mobility`
+- Section IDs: `ch8-intro`, `ch8-symmetric`, `ch8-public-key`, `ch8-tls`, `ch8-firewalls`
+- Question IDs: `q-ch6-001` through `q-ch6-019` (including calc `q-ch6-calc-001`)
+- Quiz data pool now has **211 total questions** (152 from ch1-5 + 59 new from ch6-8)
+
+---
+
 ## Project Identity
 
 **Name:** FE-cient
 **Type:** Multi-file, modular, gamified study platform
 **Stack:** Vanilla HTML + CSS + JavaScript only. No React, no Vue, no external frameworks.
-**Target:** Computer Networking Test 1 (Chapter 1 + Chapter 2 up to Email)
+**Target:** Full Computer Networking curriculum — Chapters 1–8 (Kurose & Ross)
 
 ---
 

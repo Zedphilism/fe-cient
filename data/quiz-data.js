@@ -9,6 +9,9 @@
  *   <script src="data/chapter3-data.js"></script>
  *   <script src="data/chapter4-data.js"></script>
  *   <script src="data/chapter5-data.js"></script>
+ *   <script src="data/chapter6-data.js"></script>
+ *   <script src="data/chapter7-data.js"></script>
+ *   <script src="data/chapter8-data.js"></script>
  *   <script src="data/quiz-data.js"></script>   ← this file last
  *
  * Each question object mirrors the chapter data schema with two additional
@@ -28,7 +31,10 @@ window.quizData = (function buildExamPool() {
     [window.chapter2Data, "ch2"],
     [window.chapter3Data, "ch3"],
     [window.chapter4Data, "ch4"],
-    [window.chapter5Data, "ch5"]
+    [window.chapter5Data, "ch5"],
+    [window.chapter6Data, "ch6"],
+    [window.chapter7Data, "ch7"],
+    [window.chapter8Data, "ch8"]
   ];
 
   const pool = [];
@@ -109,7 +115,28 @@ window.quizTopicMeta = {
   "ch5-distance-vector":  { label: "Distance-Vector & Bellman-Ford",  chapter: "ch5" },
   "ch5-ospf-bgp":         { label: "OSPF & BGP",                      chapter: "ch5" },
   "ch5-sdn":              { label: "SDN Control Plane",               chapter: "ch5" },
-  "ch5-icmp":             { label: "ICMP",                            chapter: "ch5" }
+  "ch5-icmp":             { label: "ICMP",                            chapter: "ch5" },
+
+  // Chapter 6
+  "ch6-intro":            { label: "Link Layer: Intro & Services",    chapter: "ch6" },
+  "ch6-error-detection":  { label: "Error Detection & CRC",           chapter: "ch6" },
+  "ch6-mac-protocols":    { label: "Multiple Access Protocols",       chapter: "ch6" },
+  "ch6-ethernet-arp":     { label: "Ethernet & ARP",                  chapter: "ch6" },
+  "ch6-switches-vlan":    { label: "Switches & VLANs",                chapter: "ch6" },
+
+  // Chapter 7
+  "ch7-wireless-intro":   { label: "Wireless Link Characteristics",   chapter: "ch7" },
+  "ch7-wifi-arch":        { label: "802.11 WiFi Architecture",        chapter: "ch7" },
+  "ch7-wifi-mac":         { label: "802.11 MAC: CSMA/CA & RTS/CTS",  chapter: "ch7" },
+  "ch7-cellular":         { label: "Cellular: 4G LTE & 5G",           chapter: "ch7" },
+  "ch7-mobility":         { label: "Mobility Management",             chapter: "ch7" },
+
+  // Chapter 8
+  "ch8-intro":            { label: "Security Goals & Threat Model",   chapter: "ch8" },
+  "ch8-symmetric":        { label: "Symmetric Cryptography (AES)",    chapter: "ch8" },
+  "ch8-public-key":       { label: "Public Key & Digital Signatures", chapter: "ch8" },
+  "ch8-tls":              { label: "TLS/SSL & HTTPS",                 chapter: "ch8" },
+  "ch8-firewalls":        { label: "Firewalls & IDS",                 chapter: "ch8" }
 };
 
 /**
@@ -121,5 +148,8 @@ window.quizChapterMeta = {
   ch2: { label: "Chapter 2: Application Layer",                       color: "var(--accent-purple)" },
   ch3: { label: "Chapter 3: Transport Layer",                         color: "var(--accent-green)"  },
   ch4: { label: "Chapter 4: Network Layer — Data Plane",              color: "var(--accent-orange)" },
-  ch5: { label: "Chapter 5: Network Layer — Control Plane",           color: "var(--accent-purple)" }
+  ch5: { label: "Chapter 5: Network Layer — Control Plane",           color: "var(--accent-purple)" },
+  ch6: { label: "Chapter 6: The Link Layer and LANs",                 color: "var(--accent-cyan)"   },
+  ch7: { label: "Chapter 7: Wireless and Mobile Networks",            color: "var(--accent-green)"  },
+  ch8: { label: "Chapter 8: Security in Computer Networks",           color: "var(--accent-red)"    }
 };

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chapter 5: Network Layer — Control Plane — NetCore Academy</title>
+  <title>Chapter 8: Security in Computer Networks — NetCore Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="css/components.css" />
 </head>
 
-<body data-page="chapter5">
+<body data-page="chapter8">
 
   <!-- ── Site Header ──────────────────────────────────────────────────── -->
   <header class="site-header" id="site-header">
@@ -35,10 +35,10 @@
         <a href="chapter2.html" class="nav-link">Ch.2</a>
         <a href="chapter3.html" class="nav-link">Ch.3</a>
         <a href="chapter4.html" class="nav-link">Ch.4</a>
-        <a href="chapter5.html" class="nav-link nav-link--active" aria-current="page">Ch.5</a>
+        <a href="chapter5.html" class="nav-link">Ch.5</a>
         <a href="chapter6.html" class="nav-link">Ch.6</a>
         <a href="chapter7.html" class="nav-link">Ch.7</a>
-        <a href="chapter8.html" class="nav-link">Ch.8</a>
+        <a href="chapter8.html" class="nav-link nav-link--active" aria-current="page">Ch.8</a>
         <a href="exam-mode.html" class="nav-link">Exam</a>
       </nav>
 
@@ -61,7 +61,7 @@
   <div class="status-bar" id="status-bar" role="status" aria-live="polite">
     <span class="status-item">
       <span class="status-dot status-dot--green"></span>
-      <span>CHAPTER 5</span>
+      <span>CHAPTER 8</span>
     </span>
     <span class="status-item">
       <span class="status-dot status-dot--cyan"></span>
@@ -78,28 +78,28 @@
     <!-- Chapter Hero ---------------------------------------------------- -->
     <div class="chapter-hero glass-card anim-fade-in-up">
       <div class="chapter-hero__meta">
-        <span class="section-label">CHAPTER 5</span>
-        <h1 class="chapter-hero__title">Network Layer — Control Plane</h1>
+        <span class="section-label">CHAPTER 8</span>
+        <h1 class="chapter-hero__title">Security in Computer Networks</h1>
         <p class="chapter-hero__desc">
-          How routing decisions are made across the Internet. Dijkstra's algorithm,
-          Bellman-Ford, OSPF, BGP, SDN, and ICMP.
+          Cryptography, authentication, TLS, and network defenses. How the
+          Internet is secured against eavesdroppers, impersonators, and attackers.
         </p>
         <div class="chapter-hero__actions">
-          <a href="#ch5-link-state" class="btn btn--primary">Start Learning</a>
-          <a href="chapter4.html" class="btn btn--ghost">← Chapter 4</a>
+          <a href="#ch8-intro" class="btn btn--primary">Start Learning</a>
+          <a href="chapter7.html" class="btn btn--ghost">← Chapter 7</a>
         </div>
       </div>
-      <div class="chapter-hero__ring" aria-label="Chapter 5 completion progress">
+      <div class="chapter-hero__ring" aria-label="Chapter 8 completion progress">
         <svg width="100" height="100" viewBox="0 0 100 100">
           <circle class="ring-track" cx="50" cy="50" r="40" />
-          <circle class="ring-fill ring-fill--purple" id="ch5-progress-ring"
+          <circle class="ring-fill ring-fill--red" id="ch8-progress-ring"
                   cx="50" cy="50" r="40"
                   stroke-dasharray="251.3"
                   stroke-dashoffset="251.3"
                   transform="rotate(-90 50 50)" />
         </svg>
         <div class="ring-label">
-          <span class="ring-pct" id="ch5-ring-pct">0%</span>
+          <span class="ring-pct" id="ch8-ring-pct">0%</span>
           <span class="ring-sub">complete</span>
         </div>
       </div>
@@ -107,23 +107,22 @@
 
 
     <!-- ================================================================
-         SECTION 1 — Link-State Routing & Dijkstra's Algorithm
+         SECTION 1 — Network Security: Goals & Threat Model
     ================================================================ -->
-    <section class="topic-section" id="ch5-link-state"
-             data-section-id="ch5-link-state" data-section-index="0">
+    <section class="topic-section" id="ch8-intro"
+             data-section-id="ch8-intro" data-section-index="0">
 
       <div class="topic-section__header">
         <div class="topic-section__label">
           <span class="section-label">SECTION 1 OF 5</span>
           <div class="topic-badge tag tag--cyan">UNLOCKED</div>
         </div>
-        <h2 class="topic-section__title">Link-State Routing &amp; Dijkstra's Algorithm</h2>
-        <p class="topic-section__subtitle">LSAs · Link-state database · Dijkstra · Shortest-path tree · OSPF</p>
+        <h2 class="topic-section__title">Network Security: Goals &amp; Threat Model</h2>
+        <p class="topic-section__subtitle">Confidentiality · Authentication · Integrity · Availability · MitM · Replay · Eavesdropping · DoS</p>
       </div>
 
       <div class="topic-section__body">
 
-        <!-- 1. EXPLAIN -->
         <div class="learn-block glass-card glass-card--cyan">
           <div class="learn-block__eyebrow">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -133,21 +132,22 @@
             EXPLAIN
           </div>
           <p class="learn-block__summary">
-            Link-state routing gives every router a complete, identical map of the entire network topology. Each router floods the network with Link-State Advertisements (LSAs) describing its directly connected links. Once all routers hold the same link-state database, each independently runs Dijkstra's shortest-path algorithm to compute the least-cost path to every destination and builds its forwarding table from the result.
+            Network security is about ensuring that communication between parties achieves confidentiality, authentication, message integrity, and access/availability. Real security must be designed against a concrete threat model — who is the attacker, what can they observe or modify, what resources do they have?
           </p>
           <ul class="learn-block__bullets">
-            <li>Each router floods the network with LSAs (Link-State Advertisements) describing its links and costs</li>
-            <li>All routers end up with identical complete topology map — the link-state database</li>
-            <li>Each router independently runs Dijkstra's shortest-path algorithm on that database</li>
-            <li>Dijkstra: iteratively settle the unsettled node with minimum known distance, then update its neighbors</li>
-            <li>Complexity: O(n²) with basic implementation, O(E log n) with a priority queue (binary heap)</li>
-            <li>The forwarding table is derived directly from the resulting shortest-path tree</li>
-            <li>OSPF (Open Shortest Path First) uses link-state routing for intra-AS routing</li>
-            <li>Oscillation problem: if link costs reflect current traffic load, all routers may simultaneously reroute, causing traffic to swing back and forth</li>
+            <li>Confidentiality: only sender and intended receiver should understand message content → requires encryption</li>
+            <li>Authentication: sender and receiver must confirm each other's identity — is Alice really talking to Bob?</li>
+            <li>Message integrity: content must not be altered in transit (accidentally or maliciously) → requires MACs or digital signatures</li>
+            <li>Access and availability: services must remain accessible to legitimate users → defend against DoS attacks</li>
+            <li>Non-repudiation: sender cannot deny having sent a message → requires digital signatures</li>
+            <li>Attacker capabilities (Dolev-Yao threat model): attacker (Trudy) can intercept, inject, replay, impersonate</li>
+            <li>Eavesdropping: passive listening on the channel; defeats confidentiality if traffic is unencrypted</li>
+            <li>Man-in-the-Middle (MitM): attacker intercepts and possibly modifies traffic between two parties</li>
+            <li>Replay attack: attacker records a valid message and re-sends it later; encryption alone does NOT prevent this</li>
+            <li>Denial of Service (DoS): flood a host or network with traffic to exhaust resources</li>
           </ul>
         </div>
 
-        <!-- 2. VISUALIZE -->
         <div class="sim-wrapper">
           <div class="sim-eyebrow">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -157,12 +157,11 @@
             INTERACTIVE SIMULATION
           </div>
           <div class="sim-mount-point"
-               data-sim-id="sim-dijkstra"
-               id="sim-mount-ch5-link-state"
-               aria-label="Dijkstra shortest-path algorithm simulation"></div>
+               data-sim-id="sim-threat-model"
+               id="sim-mount-ch8-intro"
+               aria-label="Security threat model simulation"></div>
         </div>
 
-        <!-- 3. MEMORY TRIGGER -->
         <div class="analogy-card glass-card">
           <div class="analogy-card__eyebrow">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -172,11 +171,10 @@
             THINK OF IT LIKE…
           </div>
           <p class="analogy-card__text">
-            Imagine every intersection in a city posts a sign listing its road connections and current travel times. Copies of every sign reach every other intersection. Each intersection then runs its own GPS calculation from scratch. That is link-state routing — <strong>full information, independent computation</strong>.
+            Think of sending a letter. Confidentiality is putting it in a locked box. Authentication is the wax seal proving who sent it. Integrity is tamper-evident tape showing if anyone opened it. Availability is making sure the mail truck isn't blocked. <strong>Trudy</strong> is a spy who can copy, forge, delay, or replace letters — your security mechanisms need to defeat all of these.
           </p>
         </div>
 
-        <!-- 4. MINI QUIZ -->
         <div class="quiz-wrapper">
           <div class="quiz-eyebrow">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -186,29 +184,29 @@
             MINI QUIZ
           </div>
           <div class="quiz-mount-point"
-               data-quiz-topic="ch5-link-state"
-               data-chapter="chapter5"
-               id="quiz-ch5-link-state"
-               aria-label="Link-state routing and Dijkstra quiz"></div>
+               data-quiz-topic="ch8-intro"
+               data-chapter="chapter8"
+               id="quiz-ch8-intro"
+               aria-label="Network security goals and threat model quiz"></div>
         </div>
 
-      </div><!-- /.topic-section__body -->
-    </section><!-- /#ch5-link-state -->
+      </div>
+    </section>
 
 
     <!-- ================================================================
-         SECTION 2 — Distance-Vector Routing & Bellman-Ford
+         SECTION 2 — Symmetric Key Cryptography
     ================================================================ -->
-    <section class="topic-section topic-section--locked" id="ch5-distance-vector"
-             data-section-id="ch5-distance-vector" data-section-index="1">
+    <section class="topic-section topic-section--locked" id="ch8-symmetric"
+             data-section-id="ch8-symmetric" data-section-index="1">
 
       <div class="topic-section__header">
         <div class="topic-section__label">
           <span class="section-label">SECTION 2 OF 5</span>
-          <div class="topic-badge tag tag--muted" id="badge-ch5-distance-vector">LOCKED</div>
+          <div class="topic-badge tag tag--muted" id="badge-ch8-symmetric">LOCKED</div>
         </div>
-        <h2 class="topic-section__title">Distance-Vector Routing &amp; Bellman-Ford</h2>
-        <p class="topic-section__subtitle">Bellman-Ford equation · DV algorithm · Count-to-infinity · Poisoned reverse · RIP</p>
+        <h2 class="topic-section__title">Symmetric Key Cryptography (DES, AES)</h2>
+        <p class="topic-section__subtitle">Shared secret · Block cipher · DES · AES · CBC mode · CTR mode · Key distribution problem</p>
       </div>
 
       <div class="section-lock-overlay" aria-hidden="true">
@@ -231,17 +229,17 @@
             EXPLAIN
           </div>
           <p class="learn-block__summary">
-            Distance-vector (DV) routing is a distributed, iterative algorithm. Each router knows only the costs to its immediate neighbors and the distance vectors reported by those neighbors. Using the Bellman-Ford equation, each router computes its own minimum-cost estimate to every destination. Routers exchange updated vectors asynchronously until the algorithm converges — but bad news (link failures, cost increases) can travel very slowly, leading to the count-to-infinity problem.
+            Symmetric key cryptography uses the same secret key for both encryption and decryption. Both parties must share a secret key before communicating. Modern symmetric ciphers are efficient and can encrypt gigabits per second in hardware. The core challenge is key distribution — how do two parties securely agree on a shared key without already having one?
           </p>
           <ul class="learn-block__bullets">
-            <li>DV routing: each router maintains a distance vector — its best current estimate of cost to every destination</li>
-            <li>Bellman-Ford equation: d_x(y) = min_v { c(x,v) + d_v(y) } — minimum over all neighbors v</li>
-            <li>Iterative and asynchronous: each node updates when it receives a new DV from any neighbor</li>
-            <li>Self-terminating: the algorithm converges when no node's distance vector changes</li>
-            <li>Good news travels fast: a decrease in link cost propagates to the whole network quickly</li>
-            <li>BAD NEWS TRAVELS SLOWLY — count-to-infinity problem: when a link cost increases or breaks, nodes can count up in small increments through routing loops</li>
-            <li>Poisoned reverse: if x routes to z via y, x advertises d_x(z) = ∞ back to y — prevents two-node loops but not three-node loops</li>
-            <li>RIP (Routing Information Protocol) uses DV routing; BGP uses a related path-vector approach</li>
+            <li>Symmetric key: K_A = K_B = K_AB — same key encrypts and decrypts</li>
+            <li>Block cipher: encrypts fixed-size blocks. DES: 64-bit blocks, 56-bit key; AES: 128-bit blocks, 128/192/256-bit key</li>
+            <li>DES (Data Encryption Standard): obsolete — 56-bit key is exhaustively breakable in hours with modern hardware</li>
+            <li>3DES: apply DES three times with different keys → 168-bit effective key; legacy banking systems</li>
+            <li>AES (Advanced Encryption Standard): current standard (NIST 2001); 128-bit block, 10/12/14 rounds; considered secure</li>
+            <li>CBC (Cipher Block Chaining) mode: each plaintext block is XORed with previous ciphertext block before encryption. Uses IV.</li>
+            <li>CTR (Counter) mode: turns block cipher into stream cipher by encrypting successive counter values; parallelizable</li>
+            <li>Key distribution problem: to share a key securely, you need a secure channel — but you're trying to create one</li>
           </ul>
         </div>
 
@@ -254,9 +252,9 @@
             INTERACTIVE SIMULATION
           </div>
           <div class="sim-mount-point"
-               data-sim-id="sim-bellman-ford"
-               id="sim-mount-ch5-distance-vector"
-               aria-label="Bellman-Ford distance-vector routing simulation"></div>
+               data-sim-id="sim-symmetric-cipher"
+               id="sim-mount-ch8-symmetric"
+               aria-label="Symmetric key cipher simulation"></div>
         </div>
 
         <div class="analogy-card glass-card">
@@ -268,7 +266,7 @@
             THINK OF IT LIKE…
           </div>
           <p class="analogy-card__text">
-            Imagine asking friends for directions. Each friend knows how long it takes to reach nearby spots, and they relay what they've heard from their own friends. The network converges as everyone updates their estimates. But if a road suddenly closes, it can take <strong>many rounds of updates</strong> before everyone stops claiming they can still reach the destination quickly.
+            Symmetric key is like a padlock where Alice and Bob both have a copy of the same key. It's fast and secure — but <strong>how did they both get a copy of the key without anyone else seeing?</strong> They'd have to meet in person first. Public key cryptography (next section) solves this by using a combination lock that anyone can lock but only Bob can open.
           </p>
         </div>
 
@@ -281,29 +279,29 @@
             MINI QUIZ
           </div>
           <div class="quiz-mount-point"
-               data-quiz-topic="ch5-distance-vector"
-               data-chapter="chapter5"
-               id="quiz-ch5-distance-vector"
-               aria-label="Distance-vector routing and Bellman-Ford quiz"></div>
+               data-quiz-topic="ch8-symmetric"
+               data-chapter="chapter8"
+               id="quiz-ch8-symmetric"
+               aria-label="Symmetric key cryptography quiz"></div>
         </div>
 
       </div>
-    </section><!-- /#ch5-distance-vector -->
+    </section>
 
 
     <!-- ================================================================
-         SECTION 3 — OSPF & BGP
+         SECTION 3 — Public Key Cryptography & Digital Signatures
     ================================================================ -->
-    <section class="topic-section topic-section--locked" id="ch5-ospf-bgp"
-             data-section-id="ch5-ospf-bgp" data-section-index="2">
+    <section class="topic-section topic-section--locked" id="ch8-public-key"
+             data-section-id="ch8-public-key" data-section-index="2">
 
       <div class="topic-section__header">
         <div class="topic-section__label">
           <span class="section-label">SECTION 3 OF 5</span>
-          <div class="topic-badge tag tag--muted" id="badge-ch5-ospf-bgp">LOCKED</div>
+          <div class="topic-badge tag tag--muted" id="badge-ch8-public-key">LOCKED</div>
         </div>
-        <h2 class="topic-section__title">OSPF &amp; BGP</h2>
-        <p class="topic-section__subtitle">Autonomous Systems · Intra-AS vs inter-AS · OSPF areas · BGP path-vector · eBGP · iBGP · Hot potato routing</p>
+        <h2 class="topic-section__title">Public Key Cryptography &amp; Digital Signatures</h2>
+        <p class="topic-section__subtitle">Key pair · RSA · Diffie-Hellman · Digital signature · MAC · Certificate Authority · X.509</p>
       </div>
 
       <div class="section-lock-overlay" aria-hidden="true">
@@ -326,21 +324,18 @@
             EXPLAIN
           </div>
           <p class="learn-block__summary">
-            The Internet is divided into Autonomous Systems (ASes) — independently administered networks. Intra-AS routing uses protocols like OSPF to find efficient paths within a single organization's network. Inter-AS routing uses BGP, the single routing protocol that connects all ASes and keeps the global Internet working. OSPF optimizes for cost; BGP routes according to policy and business relationships.
+            Public key cryptography uses a mathematically linked key pair: a public key K+ (shared openly) and a private key K− (kept secret). This enables encryption for confidentiality (encrypt with recipient's public key; only they can decrypt) and digital signatures for authentication and integrity (sign with your private key; anyone can verify with your public key).
           </p>
           <ul class="learn-block__bullets">
-            <li>OSPF (Open Shortest Path First): intra-AS routing protocol, used within a single autonomous system</li>
-            <li>OSPF uses link-state flooding and Dijkstra's algorithm at every router</li>
-            <li>OSPF messages are carried directly over IP (protocol number 89) — not encapsulated in TCP or UDP</li>
-            <li>OSPF features: all messages authenticated, multiple equal-cost paths supported, hierarchical areas</li>
-            <li>OSPF area: routers within an area share full topology; only summary info crosses area boundaries</li>
-            <li>Backbone area (Area 0) interconnects all other OSPF areas within an AS</li>
-            <li>BGP (Border Gateway Protocol): THE inter-AS routing protocol — 'the glue that holds the Internet together'</li>
-            <li>BGP is a path-vector protocol: it advertises complete AS-level paths to destinations, not just distances</li>
-            <li>Two BGP session types: eBGP (between routers in different ASes) and iBGP (between routers within the same AS)</li>
-            <li>Key BGP attributes: AS-PATH (list of AS numbers traversed) and NEXT-HOP (border router to use as first hop)</li>
-            <li>BGP is policy-driven: ISPs can prefer or filter routes based on business agreements, not just shortest path</li>
-            <li>BGP hot potato routing: a router sends traffic out of its own AS as early as possible (least-cost intra-AS path to exit point)</li>
+            <li>Key pair: K+ (public, shareable) and K− (private, secret) — mathematically related</li>
+            <li>Encryption for confidentiality: E(K+_Bob, m) — only Bob can decrypt with K−_Bob</li>
+            <li>Digital signature: S = E(K−_Alice, m) — anyone can verify with K+_Alice; proves Alice created it</li>
+            <li>RSA: security based on difficulty of factoring large integers (n = p×q). Key size: 2048 or 4096 bits</li>
+            <li>Diffie-Hellman key exchange: allows two parties to establish a shared secret over a public channel</li>
+            <li>Digital signature scheme: sign hash H(m) rather than full message (RSA key size limits direct signing)</li>
+            <li>MAC (Message Authentication Code): symmetric equivalent — MAC = H(K_s || m). Faster but requires shared secret</li>
+            <li>Certificate Authority (CA): trusted third party that signs X.509 certificates binding public keys to identities</li>
+            <li>Certificate chain: root CAs are pre-installed in browsers; root CA signs intermediate CAs which sign end-entity certs</li>
           </ul>
         </div>
 
@@ -353,9 +348,9 @@
             INTERACTIVE SIMULATION
           </div>
           <div class="sim-mount-point"
-               data-sim-id="sim-bgp"
-               id="sim-mount-ch5-ospf-bgp"
-               aria-label="BGP inter-AS routing simulation"></div>
+               data-sim-id="sim-public-key"
+               id="sim-mount-ch8-public-key"
+               aria-label="Public key cryptography and digital signatures simulation"></div>
         </div>
 
         <div class="analogy-card glass-card">
@@ -367,7 +362,7 @@
             THINK OF IT LIKE…
           </div>
           <p class="analogy-card__text">
-            OSPF is like the GPS inside a delivery company's warehouse — optimizing routes within the building. BGP is the <strong>global shipping network</strong> connecting warehouses in different countries. A package (IP datagram) uses BGP to choose which country border to cross, then OSPF to navigate inside each facility.
+            A public/private key pair is like a padlock (public key) and its unique key (private key). Anyone can <em>lock</em> a message in your padlock (encrypt with your public key), but only you have the key to open it. A digital signature is the reverse: you lock something with YOUR private key. Anyone with your padlock can open it and confirm it <strong>must have been you</strong> who locked it.
           </p>
         </div>
 
@@ -380,29 +375,29 @@
             MINI QUIZ
           </div>
           <div class="quiz-mount-point"
-               data-quiz-topic="ch5-ospf-bgp"
-               data-chapter="chapter5"
-               id="quiz-ch5-ospf-bgp"
-               aria-label="OSPF and BGP quiz"></div>
+               data-quiz-topic="ch8-public-key"
+               data-chapter="chapter8"
+               id="quiz-ch8-public-key"
+               aria-label="Public key cryptography and digital signatures quiz"></div>
         </div>
 
       </div>
-    </section><!-- /#ch5-ospf-bgp -->
+    </section>
 
 
     <!-- ================================================================
-         SECTION 4 — SDN Control Plane
+         SECTION 4 — TLS/SSL & HTTPS
     ================================================================ -->
-    <section class="topic-section topic-section--locked" id="ch5-sdn"
-             data-section-id="ch5-sdn" data-section-index="3">
+    <section class="topic-section topic-section--locked" id="ch8-tls"
+             data-section-id="ch8-tls" data-section-index="3">
 
       <div class="topic-section__header">
         <div class="topic-section__label">
           <span class="section-label">SECTION 4 OF 5</span>
-          <div class="topic-badge tag tag--muted" id="badge-ch5-sdn">LOCKED</div>
+          <div class="topic-badge tag tag--muted" id="badge-ch8-tls">LOCKED</div>
         </div>
-        <h2 class="topic-section__title">SDN Control Plane</h2>
-        <p class="topic-section__subtitle">Control vs data plane · SDN controller · OpenFlow · Flow tables · Match-action</p>
+        <h2 class="topic-section__title">TLS/SSL &amp; HTTPS</h2>
+        <p class="topic-section__subtitle">TLS 1.3 handshake · Forward secrecy · ECDHE · AEAD · Certificate verification · HSTS · 0-RTT</p>
       </div>
 
       <div class="section-lock-overlay" aria-hidden="true">
@@ -425,17 +420,18 @@
             EXPLAIN
           </div>
           <p class="learn-block__summary">
-            Software-Defined Networking (SDN) separates the control plane (deciding where traffic goes) from the data plane (actually forwarding packets). A logically centralised SDN controller maintains a global view of the network and pushes flow-table rules into switches via protocols like OpenFlow. This gives operators programmable, flexible control over traffic without reconfiguring each device individually.
+            TLS (Transport Layer Security) secures HTTPS and most modern Internet communications. It provides confidentiality (encryption), server authentication (X.509 certificates), and message integrity (MAC). TLS sits between TCP and the application layer. TLS 1.3 (2018) is the current standard, simplifying the handshake to 1-RTT and mandating forward secrecy.
           </p>
           <ul class="learn-block__bullets">
-            <li>SDN separates the data plane (packet forwarding in switches) from the control plane (routing logic in controller)</li>
-            <li>A logically centralised SDN controller computes forwarding tables for all switches in the network</li>
-            <li>OpenFlow: the open standard protocol between an SDN controller and its managed switches</li>
-            <li>Flow table: each entry has match fields (header values to test) and action fields (forward, drop, modify, send to controller)</li>
-            <li>Match-action paradigm generalises routing: any header field can be matched, many actions are possible</li>
-            <li>SDN controller maintains network-wide state, runs routing algorithms, installs flow entries on demand</li>
-            <li>Benefits: flexible traffic engineering, easier network management, rapid innovation in control logic</li>
-            <li>Challenges: scalability of a centralised controller, fault tolerance and reliability, security of the controller itself</li>
+            <li>TLS provides: confidentiality (AES-GCM encryption), authentication (X.509 cert + CA), integrity (AEAD)</li>
+            <li>TLS operates between TCP and the application layer — adds security on top of reliable byte-stream</li>
+            <li>TLS 1.3 handshake: ClientHello (key_share) → ServerHello + Certificate + Finished → Client Finished — 1 RTT!</li>
+            <li>TLS 1.3 vs 1.2: 1.3 is faster (1-RTT vs 2-RTT), mandates forward secrecy (ECDHE), removes weak ciphers</li>
+            <li>Forward secrecy: compromise of long-term private key does NOT expose past recorded sessions (ephemeral ECDHE keys)</li>
+            <li>Session resumption: TLS 1.3 supports 0-RTT for repeat connections (encrypted data with first packet)</li>
+            <li>Certificate verification: check cert chain to trusted root CA, expiry date, hostname match, revocation (OCSP/CRL)</li>
+            <li>HTTPS = HTTP over TLS. Uses port 443 by default.</li>
+            <li>HSTS (HTTP Strict Transport Security): tells browser to always use HTTPS; prevents downgrade attacks</li>
           </ul>
         </div>
 
@@ -448,9 +444,9 @@
             INTERACTIVE SIMULATION
           </div>
           <div class="sim-mount-point"
-               data-sim-id="sim-sdn"
-               id="sim-mount-ch5-sdn"
-               aria-label="SDN controller and OpenFlow simulation"></div>
+               data-sim-id="sim-tls-handshake"
+               id="sim-mount-ch8-tls"
+               aria-label="TLS handshake simulation"></div>
         </div>
 
         <div class="analogy-card glass-card">
@@ -462,7 +458,7 @@
             THINK OF IT LIKE…
           </div>
           <p class="analogy-card__text">
-            Traditional networking is like every traffic light making its own independent timing decisions. SDN is like a <strong>city-wide traffic management centre</strong> that monitors all intersections and remotely programs every light in real time. The lights (switches) still forward cars (packets) — but the intelligence lives in the centre.
+            TLS is like sending a letter in a bank vault that gets assembled around the letter in front of you. The bank (CA) verified who the vault belongs to. The combination is mathematically derived during a brief conversation with the vault owner (handshake). Even if someone recorded your whole conversation, they can't figure out the combination — that's <strong>forward secrecy</strong>.
           </p>
         </div>
 
@@ -475,29 +471,29 @@
             MINI QUIZ
           </div>
           <div class="quiz-mount-point"
-               data-quiz-topic="ch5-sdn"
-               data-chapter="chapter5"
-               id="quiz-ch5-sdn"
-               aria-label="SDN control plane quiz"></div>
+               data-quiz-topic="ch8-tls"
+               data-chapter="chapter8"
+               id="quiz-ch8-tls"
+               aria-label="TLS and HTTPS quiz"></div>
         </div>
 
       </div>
-    </section><!-- /#ch5-sdn -->
+    </section>
 
 
     <!-- ================================================================
-         SECTION 5 — ICMP
+         SECTION 5 — Firewalls & IDS
     ================================================================ -->
-    <section class="topic-section topic-section--locked" id="ch5-icmp"
-             data-section-id="ch5-icmp" data-section-index="4">
+    <section class="topic-section topic-section--locked" id="ch8-firewalls"
+             data-section-id="ch8-firewalls" data-section-index="4">
 
       <div class="topic-section__header">
         <div class="topic-section__label">
           <span class="section-label">SECTION 5 OF 5</span>
-          <div class="topic-badge tag tag--muted" id="badge-ch5-icmp">LOCKED</div>
+          <div class="topic-badge tag tag--muted" id="badge-ch8-firewalls">LOCKED</div>
         </div>
-        <h2 class="topic-section__title">ICMP</h2>
-        <p class="topic-section__subtitle">Error reporting · Type &amp; Code · ping · traceroute · ICMPv6</p>
+        <h2 class="topic-section__title">Firewalls &amp; Intrusion Detection Systems (IDS)</h2>
+        <p class="topic-section__subtitle">Packet filtering · Stateful firewall · Application gateway · ACL · DMZ · IDS · IPS · Signature vs anomaly detection</p>
       </div>
 
       <div class="section-lock-overlay" aria-hidden="true">
@@ -520,19 +516,19 @@
             EXPLAIN
           </div>
           <p class="learn-block__summary">
-            ICMP (Internet Control Message Protocol) is the network layer's error-reporting and diagnostic mechanism. When a router or host encounters a problem handling an IP datagram — unreachable destination, expired TTL, bad header — it sends an ICMP message back to the source. Two essential network tools, ping and traceroute, are built entirely on ICMP.
+            Firewalls and IDS are perimeter defenses that protect networks from external threats. A firewall controls traffic based on configured rules (ACLs). A stateful firewall tracks connection state so it can allow reply traffic without permitting arbitrary inbound connections. An IDS monitors traffic patterns to detect attacks that firewalls miss.
           </p>
           <ul class="learn-block__bullets">
-            <li>ICMP is used by hosts and routers to communicate network-layer error and informational messages</li>
-            <li>ICMP lives above IP: ICMP messages are encapsulated in IP datagrams (IP Protocol field = 1)</li>
-            <li>Each ICMP message has a Type field and a Code field that together specify the exact meaning</li>
-            <li>ICMP Type 0 (code 0): Echo Reply — sent in response to a ping</li>
-            <li>ICMP Type 3: Destination Unreachable — various codes indicate why (host unreachable, port unreachable, etc.)</li>
-            <li>ICMP Type 8 (code 0): Echo Request — sent by ping to probe a host</li>
-            <li>ICMP Type 11 (code 0): Time Exceeded — sent by a router when it discards a datagram with TTL = 0</li>
-            <li>ping: sends ICMP Echo Request (type 8) and measures round-trip time to the Echo Reply (type 0)</li>
-            <li>traceroute: sends a series of UDP segments with TTL = 1, 2, 3, …; each router along the path discards the datagram (TTL expires) and sends back ICMP Time Exceeded (type 11); the destination sends ICMP Port Unreachable (type 3, code 3) when it receives the probe</li>
-            <li>ICMPv6: the ICMP equivalent for IPv6, extended to include Neighbor Discovery (replacing ARP) and Path MTU Discovery</li>
+            <li>Firewall goal: allow legitimate traffic, block malicious or unauthorized traffic</li>
+            <li>Packet filtering (stateless): examine each packet independently — filter on: src/dest IP, port, protocol, TCP flags</li>
+            <li>Stateful packet filtering: track TCP connection state; only allow inbound packets that belong to established outbound connections</li>
+            <li>Application gateway (proxy firewall): understand application-layer protocols (HTTP, FTP, DNS); can inspect content</li>
+            <li>ACL (Access Control List): ordered list of rules; first matching rule wins. Implicit deny-all at the end</li>
+            <li>DMZ (Demilitarized Zone): subnet between Internet and internal network where public servers are placed</li>
+            <li>IDS (Intrusion Detection System): passive monitoring — alerts on suspicious traffic but does NOT block</li>
+            <li>IPS (Intrusion Prevention System): active — can block or rate-limit suspicious traffic inline</li>
+            <li>Signature-based detection: match traffic against known attack patterns (e.g. Snort rules). Fast but misses zero-days</li>
+            <li>Anomaly-based detection: learn baseline of normal traffic, alert on deviations. Can detect new attacks but higher false positive rate</li>
           </ul>
         </div>
 
@@ -545,9 +541,9 @@
             INTERACTIVE SIMULATION
           </div>
           <div class="sim-mount-point"
-               data-sim-id="sim-icmp"
-               id="sim-mount-ch5-icmp"
-               aria-label="ICMP ping and traceroute simulation"></div>
+               data-sim-id="sim-firewall"
+               id="sim-mount-ch8-firewalls"
+               aria-label="Firewall and IDS simulation"></div>
         </div>
 
         <div class="analogy-card glass-card">
@@ -559,7 +555,7 @@
             THINK OF IT LIKE…
           </div>
           <p class="analogy-card__text">
-            ICMP is like the postal service's <strong>notification cards</strong>. When a letter can't be delivered (wrong address, mailbox full, recipient moved), the post office sends a notification back to the sender explaining what went wrong. ping is asking 'are you there?' and waiting for 'yes, here!'; traceroute is sending letters that intentionally expire at each post office so each one sends back a notification, mapping the full route.
+            A stateless firewall is like a bouncer who checks everyone's ID but doesn't remember who already went in. A <strong>stateful firewall</strong> is a smarter bouncer who keeps a guest list — if you called ahead (outbound connection), you can come in; random visitors without an invitation are turned away. An IDS is a security camera that records suspicious behavior and alerts staff. An IPS is a camera with an automatic door lock.
           </p>
         </div>
 
@@ -572,18 +568,18 @@
             MINI QUIZ
           </div>
           <div class="quiz-mount-point"
-               data-quiz-topic="ch5-icmp"
-               data-chapter="chapter5"
-               id="quiz-ch5-icmp"
-               aria-label="ICMP quiz"></div>
+               data-quiz-topic="ch8-firewalls"
+               data-chapter="chapter8"
+               id="quiz-ch8-firewalls"
+               aria-label="Firewalls and IDS quiz"></div>
         </div>
 
       </div>
-    </section><!-- /#ch5-icmp -->
+    </section>
 
 
     <!-- ── Chapter Complete CTA ──────────────────────────────────────── -->
-    <div class="chapter-complete-cta glass-card" id="ch5-complete-cta" aria-hidden="true">
+    <div class="chapter-complete-cta glass-card" id="ch8-complete-cta" aria-hidden="true">
       <div class="chapter-complete-cta__inner">
         <div class="chapter-complete-cta__icon" aria-hidden="true">
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
@@ -591,29 +587,26 @@
             <polyline points="14,25 21,32 34,18" stroke="var(--accent-green)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
           </svg>
         </div>
-        <h2 class="chapter-complete-cta__title">Chapter 5 Complete!</h2>
+        <h2 class="chapter-complete-cta__title">All 8 Chapters Complete!</h2>
         <p class="chapter-complete-cta__text">
-          You've mastered the Network Layer Control Plane. Ready to go deeper?
-          Chapter 6 covers the Link Layer — frames, Ethernet, ARP, and switches.
+          Outstanding work. You've covered the entire networking curriculum —
+          from basic Internet structure to cryptography and network security.
+          Time to prove what you know in the full exam.
         </p>
         <div class="chapter-complete-cta__actions">
-          <a href="chapter6.html" class="btn btn--primary btn--lg">
-            Chapter 6: Link Layer →
+          <a href="exam-mode.html" class="btn btn--primary btn--lg">
+            Take the Full Exam →
           </a>
           <a href="index.html" class="btn btn--ghost">← Back to Dashboard</a>
         </div>
       </div>
     </div>
 
-  </main><!-- /#main-content -->
+  </main>
 
-  <!-- ── XP Toast (injected by gamification.js) ──────────────────────── -->
   <div id="xp-toast-container" aria-live="assertive" aria-atomic="true"></div>
-
-  <!-- ── Level-Up Overlay (injected by gamification.js) ─────────────── -->
   <div id="level-up-overlay" class="level-up-overlay" aria-hidden="true" role="dialog" aria-label="Level up notification"></div>
 
-  <!-- ── Keyboard Shortcut Modal ─────────────────────────────────────── -->
   <div id="modal-shortcuts" class="modal" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts" aria-hidden="true">
     <div class="modal__backdrop"></div>
     <div class="modal__sheet">
@@ -626,11 +619,7 @@
         <div class="step-sequence">
           <div class="step-item"><kbd>?</kbd><span>Show this help</span></div>
           <div class="step-item"><kbd>H</kbd><span>Go to Dashboard</span></div>
-          <div class="step-item"><kbd>1</kbd><span>Chapter 1</span></div>
-          <div class="step-item"><kbd>2</kbd><span>Chapter 2</span></div>
-          <div class="step-item"><kbd>3</kbd><span>Chapter 3</span></div>
-          <div class="step-item"><kbd>4</kbd><span>Chapter 4</span></div>
-          <div class="step-item"><kbd>5</kbd><span>Chapter 5 (this page)</span></div>
+          <div class="step-item"><kbd>8</kbd><span>Chapter 8 (this page)</span></div>
           <div class="step-item"><kbd>E</kbd><span>Exam Mode</span></div>
           <div class="step-item"><kbd>ESC</kbd><span>Close modal / dialog</span></div>
         </div>
@@ -638,7 +627,6 @@
     </div>
   </div>
 
-  <!-- ── Offline Banner (injected by app.js) ─────────────────────────── -->
   <div id="offline-banner" class="alert-banner alert-banner--warn" role="alert" aria-hidden="true">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <polygon points="8,2 15,14 1,14" stroke="var(--accent-orange)" stroke-width="1.5" fill="none"/>
@@ -649,7 +637,6 @@
   </div>
 
   <!-- ── Scripts ──────────────────────────────────────────────────────── -->
-  <!-- Data must load before engine modules that consume it -->
   <script src="data/chapter1-data.js"></script>
   <script src="data/chapter2-data.js"></script>
   <script src="data/chapter3-data.js"></script>
@@ -659,18 +646,16 @@
   <script src="data/chapter7-data.js"></script>
   <script src="data/chapter8-data.js"></script>
   <script src="data/quiz-data.js"></script>
-  <!-- JS modules — order matters (progress → gamification → quiz → animations → app) -->
   <script src="js/progress.js"></script>
   <script src="js/gamification.js"></script>
   <script src="js/quiz.js"></script>
   <script src="js/animations.js"></script>
   <script src="js/app.js"></script>
 
-  <!-- One-time page init: wire quiz containers to chapter5Data -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      if (window.chapter5Data && window.Quiz) {
-        chapter5Data.sections.forEach(function (section) {
+      if (window.chapter8Data && window.Quiz) {
+        chapter8Data.sections.forEach(function (section) {
           var container = document.querySelector(
             '.quiz-mount-point[data-quiz-topic="' + section.id + '"]'
           );
@@ -678,9 +663,9 @@
           container.dataset.quizMounted = '1';
           Quiz.mount(container, section.quiz, {
             topicId: section.id,
-            chapter: 'ch5',
+            chapter: 'ch8',
             onComplete: function (result) {
-              if (window.App) App.onTopicQuizComplete(section.id, result, 'ch5');
+              if (window.App) App.onTopicQuizComplete(section.id, result, 'ch8');
             }
           });
         });

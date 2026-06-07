@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chapter 5: Network Layer — Control Plane — NetCore Academy</title>
+  <title>Chapter 6: The Link Layer and LANs — NetCore Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="css/components.css" />
 </head>
 
-<body data-page="chapter5">
+<body data-page="chapter6">
 
   <!-- ── Site Header ──────────────────────────────────────────────────── -->
   <header class="site-header" id="site-header">
@@ -35,8 +35,8 @@
         <a href="chapter2.html" class="nav-link">Ch.2</a>
         <a href="chapter3.html" class="nav-link">Ch.3</a>
         <a href="chapter4.html" class="nav-link">Ch.4</a>
-        <a href="chapter5.html" class="nav-link nav-link--active" aria-current="page">Ch.5</a>
-        <a href="chapter6.html" class="nav-link">Ch.6</a>
+        <a href="chapter5.html" class="nav-link">Ch.5</a>
+        <a href="chapter6.html" class="nav-link nav-link--active" aria-current="page">Ch.6</a>
         <a href="chapter7.html" class="nav-link">Ch.7</a>
         <a href="chapter8.html" class="nav-link">Ch.8</a>
         <a href="exam-mode.html" class="nav-link">Exam</a>
@@ -61,7 +61,7 @@
   <div class="status-bar" id="status-bar" role="status" aria-live="polite">
     <span class="status-item">
       <span class="status-dot status-dot--green"></span>
-      <span>CHAPTER 5</span>
+      <span>CHAPTER 6</span>
     </span>
     <span class="status-item">
       <span class="status-dot status-dot--cyan"></span>
@@ -78,28 +78,28 @@
     <!-- Chapter Hero ---------------------------------------------------- -->
     <div class="chapter-hero glass-card anim-fade-in-up">
       <div class="chapter-hero__meta">
-        <span class="section-label">CHAPTER 5</span>
-        <h1 class="chapter-hero__title">Network Layer — Control Plane</h1>
+        <span class="section-label">CHAPTER 6</span>
+        <h1 class="chapter-hero__title">The Link Layer and LANs</h1>
         <p class="chapter-hero__desc">
-          How routing decisions are made across the Internet. Dijkstra's algorithm,
-          Bellman-Ford, OSPF, BGP, SDN, and ICMP.
+          Frames, error detection, multiple access, Ethernet, ARP, and switches.
+          How data moves across a single physical link — one hop at a time.
         </p>
         <div class="chapter-hero__actions">
-          <a href="#ch5-link-state" class="btn btn--primary">Start Learning</a>
-          <a href="chapter4.html" class="btn btn--ghost">← Chapter 4</a>
+          <a href="#ch6-intro" class="btn btn--primary">Start Learning</a>
+          <a href="chapter5.html" class="btn btn--ghost">← Chapter 5</a>
         </div>
       </div>
-      <div class="chapter-hero__ring" aria-label="Chapter 5 completion progress">
+      <div class="chapter-hero__ring" aria-label="Chapter 6 completion progress">
         <svg width="100" height="100" viewBox="0 0 100 100">
           <circle class="ring-track" cx="50" cy="50" r="40" />
-          <circle class="ring-fill ring-fill--purple" id="ch5-progress-ring"
+          <circle class="ring-fill ring-fill--cyan" id="ch6-progress-ring"
                   cx="50" cy="50" r="40"
                   stroke-dasharray="251.3"
                   stroke-dashoffset="251.3"
                   transform="rotate(-90 50 50)" />
         </svg>
         <div class="ring-label">
-          <span class="ring-pct" id="ch5-ring-pct">0%</span>
+          <span class="ring-pct" id="ch6-ring-pct">0%</span>
           <span class="ring-sub">complete</span>
         </div>
       </div>
@@ -107,23 +107,22 @@
 
 
     <!-- ================================================================
-         SECTION 1 — Link-State Routing & Dijkstra's Algorithm
+         SECTION 1 — Link Layer: Introduction & Services
     ================================================================ -->
-    <section class="topic-section" id="ch5-link-state"
-             data-section-id="ch5-link-state" data-section-index="0">
+    <section class="topic-section" id="ch6-intro"
+             data-section-id="ch6-intro" data-section-index="0">
 
       <div class="topic-section__header">
         <div class="topic-section__label">
           <span class="section-label">SECTION 1 OF 5</span>
           <div class="topic-badge tag tag--cyan">UNLOCKED</div>
         </div>
-        <h2 class="topic-section__title">Link-State Routing &amp; Dijkstra's Algorithm</h2>
-        <p class="topic-section__subtitle">LSAs · Link-state database · Dijkstra · Shortest-path tree · OSPF</p>
+        <h2 class="topic-section__title">Link Layer: Introduction &amp; Services</h2>
+        <p class="topic-section__subtitle">Frames · NIC · Error detection · Link access · Half/Full-duplex</p>
       </div>
 
       <div class="topic-section__body">
 
-        <!-- 1. EXPLAIN -->
         <div class="learn-block glass-card glass-card--cyan">
           <div class="learn-block__eyebrow">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -133,21 +132,22 @@
             EXPLAIN
           </div>
           <p class="learn-block__summary">
-            Link-state routing gives every router a complete, identical map of the entire network topology. Each router floods the network with Link-State Advertisements (LSAs) describing its directly connected links. Once all routers hold the same link-state database, each independently runs Dijkstra's shortest-path algorithm to compute the least-cost path to every destination and builds its forwarding table from the result.
+            The link layer moves frames between directly connected nodes — two devices connected by a single physical link (wire, fiber, or wireless channel). Unlike the network layer that handles end-to-end routing across many hops, the link layer deals with one hop at a time. Every frame travels a new link-layer path at each hop, even though the IP datagram inside is the same end-to-end.
           </p>
           <ul class="learn-block__bullets">
-            <li>Each router floods the network with LSAs (Link-State Advertisements) describing its links and costs</li>
-            <li>All routers end up with identical complete topology map — the link-state database</li>
-            <li>Each router independently runs Dijkstra's shortest-path algorithm on that database</li>
-            <li>Dijkstra: iteratively settle the unsettled node with minimum known distance, then update its neighbors</li>
-            <li>Complexity: O(n²) with basic implementation, O(E log n) with a priority queue (binary heap)</li>
-            <li>The forwarding table is derived directly from the resulting shortest-path tree</li>
-            <li>OSPF (Open Shortest Path First) uses link-state routing for intra-AS routing</li>
-            <li>Oscillation problem: if link costs reflect current traffic load, all routers may simultaneously reroute, causing traffic to swing back and forth</li>
+            <li>Link layer unit of data: FRAME (wraps the IP datagram with a header and trailer)</li>
+            <li>Services vary by link type: not every link offers all services</li>
+            <li>Framing: encapsulate datagram into a frame, adding header and trailer fields</li>
+            <li>Link access: MAC (Medium Access Control) protocol governs when a node may transmit on a shared medium</li>
+            <li>Reliable delivery: some links (e.g. WiFi) guarantee error-free delivery per hop; wired links often skip this since bit errors are rare</li>
+            <li>Error detection: receiver detects bit errors introduced by noise; more powerful than network-layer checksum</li>
+            <li>Error correction: receiver corrects errors without retransmission (used on high-error links)</li>
+            <li>Half-duplex: nodes on both ends of the link can transmit but not simultaneously</li>
+            <li>Full-duplex: both ends can transmit simultaneously</li>
+            <li>Link layer is implemented in the Network Interface Card (NIC) — part hardware, part software</li>
           </ul>
         </div>
 
-        <!-- 2. VISUALIZE -->
         <div class="sim-wrapper">
           <div class="sim-eyebrow">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -157,12 +157,11 @@
             INTERACTIVE SIMULATION
           </div>
           <div class="sim-mount-point"
-               data-sim-id="sim-dijkstra"
-               id="sim-mount-ch5-link-state"
-               aria-label="Dijkstra shortest-path algorithm simulation"></div>
+               data-sim-id="sim-link-layer-intro"
+               id="sim-mount-ch6-intro"
+               aria-label="Link layer frame and NIC simulation"></div>
         </div>
 
-        <!-- 3. MEMORY TRIGGER -->
         <div class="analogy-card glass-card">
           <div class="analogy-card__eyebrow">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -172,11 +171,10 @@
             THINK OF IT LIKE…
           </div>
           <p class="analogy-card__text">
-            Imagine every intersection in a city posts a sign listing its road connections and current travel times. Copies of every sign reach every other intersection. Each intersection then runs its own GPS calculation from scratch. That is link-state routing — <strong>full information, independent computation</strong>.
+            Think of a cross-country trip by plane with layovers. The airline boarding pass (IP datagram) is the same the whole journey, but each individual flight segment (link) has its own boarding procedures, gate agent, and rules. The link layer is <strong>each individual flight segment</strong>, not the whole trip.
           </p>
         </div>
 
-        <!-- 4. MINI QUIZ -->
         <div class="quiz-wrapper">
           <div class="quiz-eyebrow">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -186,29 +184,29 @@
             MINI QUIZ
           </div>
           <div class="quiz-mount-point"
-               data-quiz-topic="ch5-link-state"
-               data-chapter="chapter5"
-               id="quiz-ch5-link-state"
-               aria-label="Link-state routing and Dijkstra quiz"></div>
+               data-quiz-topic="ch6-intro"
+               data-chapter="chapter6"
+               id="quiz-ch6-intro"
+               aria-label="Link layer introduction quiz"></div>
         </div>
 
-      </div><!-- /.topic-section__body -->
-    </section><!-- /#ch5-link-state -->
+      </div>
+    </section>
 
 
     <!-- ================================================================
-         SECTION 2 — Distance-Vector Routing & Bellman-Ford
+         SECTION 2 — Error Detection & Correction
     ================================================================ -->
-    <section class="topic-section topic-section--locked" id="ch5-distance-vector"
-             data-section-id="ch5-distance-vector" data-section-index="1">
+    <section class="topic-section topic-section--locked" id="ch6-error-detection"
+             data-section-id="ch6-error-detection" data-section-index="1">
 
       <div class="topic-section__header">
         <div class="topic-section__label">
           <span class="section-label">SECTION 2 OF 5</span>
-          <div class="topic-badge tag tag--muted" id="badge-ch5-distance-vector">LOCKED</div>
+          <div class="topic-badge tag tag--muted" id="badge-ch6-error-detection">LOCKED</div>
         </div>
-        <h2 class="topic-section__title">Distance-Vector Routing &amp; Bellman-Ford</h2>
-        <p class="topic-section__subtitle">Bellman-Ford equation · DV algorithm · Count-to-infinity · Poisoned reverse · RIP</p>
+        <h2 class="topic-section__title">Error Detection &amp; Correction (Parity, CRC)</h2>
+        <p class="topic-section__subtitle">Parity bits · 2-D parity · Internet checksum · CRC-32 · FEC</p>
       </div>
 
       <div class="section-lock-overlay" aria-hidden="true">
@@ -231,17 +229,17 @@
             EXPLAIN
           </div>
           <p class="learn-block__summary">
-            Distance-vector (DV) routing is a distributed, iterative algorithm. Each router knows only the costs to its immediate neighbors and the distance vectors reported by those neighbors. Using the Bellman-Ford equation, each router computes its own minimum-cost estimate to every destination. Routers exchange updated vectors asynchronously until the algorithm converges — but bad news (link failures, cost increases) can travel very slowly, leading to the count-to-infinity problem.
+            Bit errors on a link are introduced by noise, signal attenuation, and interference. The sender appends Error Detection and Correction (EDC) bits to the data before transmission. The receiver recomputes the check on the received bits and compares it to the received EDC bits — a mismatch signals an error. Cyclic Redundancy Check (CRC) is the dominant technique in modern NICs.
           </p>
           <ul class="learn-block__bullets">
-            <li>DV routing: each router maintains a distance vector — its best current estimate of cost to every destination</li>
-            <li>Bellman-Ford equation: d_x(y) = min_v { c(x,v) + d_v(y) } — minimum over all neighbors v</li>
-            <li>Iterative and asynchronous: each node updates when it receives a new DV from any neighbor</li>
-            <li>Self-terminating: the algorithm converges when no node's distance vector changes</li>
-            <li>Good news travels fast: a decrease in link cost propagates to the whole network quickly</li>
-            <li>BAD NEWS TRAVELS SLOWLY — count-to-infinity problem: when a link cost increases or breaks, nodes can count up in small increments through routing loops</li>
-            <li>Poisoned reverse: if x routes to z via y, x advertises d_x(z) = ∞ back to y — prevents two-node loops but not three-node loops</li>
-            <li>RIP (Routing Information Protocol) uses DV routing; BGP uses a related path-vector approach</li>
+            <li>Parity bit (1-D): add a bit so total number of 1s is even (even parity) or odd (odd parity). Detects single-bit errors only.</li>
+            <li>2-D parity: arrange bits in a grid; compute parity for each row AND column. Can detect AND correct single-bit errors.</li>
+            <li>Internet checksum (recall): sum of 16-bit words, used by TCP/UDP/IP — lightweight but weaker than CRC</li>
+            <li>CRC (Cyclic Redundancy Check): treat data as a polynomial, divide by agreed generator polynomial G, remainder R is appended</li>
+            <li>CRC transmits D·2^r XOR R so that the received bits are exactly divisible by G; any remainder ≠ 0 means error detected</li>
+            <li>CRC can detect all burst errors of length ≤ r bits (where r = degree of G)</li>
+            <li>CRC-32 (r=32) is standard in Ethernet, WiFi, USB — 32 check bits appended to every frame</li>
+            <li>Error correction (FEC — Forward Error Correction): used on links where retransmission is too costly (satellite, optical)</li>
           </ul>
         </div>
 
@@ -254,9 +252,9 @@
             INTERACTIVE SIMULATION
           </div>
           <div class="sim-mount-point"
-               data-sim-id="sim-bellman-ford"
-               id="sim-mount-ch5-distance-vector"
-               aria-label="Bellman-Ford distance-vector routing simulation"></div>
+               data-sim-id="sim-crc"
+               id="sim-mount-ch6-error-detection"
+               aria-label="CRC error detection simulation"></div>
         </div>
 
         <div class="analogy-card glass-card">
@@ -268,7 +266,7 @@
             THINK OF IT LIKE…
           </div>
           <p class="analogy-card__text">
-            Imagine asking friends for directions. Each friend knows how long it takes to reach nearby spots, and they relay what they've heard from their own friends. The network converges as everyone updates their estimates. But if a road suddenly closes, it can take <strong>many rounds of updates</strong> before everyone stops claiming they can still reach the destination quickly.
+            CRC is like a secret checksum word at the end of a message. If I send you 'HELLO5' and you receive 'HELO5', you recompute the check digit and get something different from 5, so you know an error occurred. CRC is a <strong>much more powerful</strong> version of this idea — it can catch entire bursts of flipped bits.
           </p>
         </div>
 
@@ -281,29 +279,29 @@
             MINI QUIZ
           </div>
           <div class="quiz-mount-point"
-               data-quiz-topic="ch5-distance-vector"
-               data-chapter="chapter5"
-               id="quiz-ch5-distance-vector"
-               aria-label="Distance-vector routing and Bellman-Ford quiz"></div>
+               data-quiz-topic="ch6-error-detection"
+               data-chapter="chapter6"
+               id="quiz-ch6-error-detection"
+               aria-label="Error detection and CRC quiz"></div>
         </div>
 
       </div>
-    </section><!-- /#ch5-distance-vector -->
+    </section>
 
 
     <!-- ================================================================
-         SECTION 3 — OSPF & BGP
+         SECTION 3 — Multiple Access Protocols
     ================================================================ -->
-    <section class="topic-section topic-section--locked" id="ch5-ospf-bgp"
-             data-section-id="ch5-ospf-bgp" data-section-index="2">
+    <section class="topic-section topic-section--locked" id="ch6-mac-protocols"
+             data-section-id="ch6-mac-protocols" data-section-index="2">
 
       <div class="topic-section__header">
         <div class="topic-section__label">
           <span class="section-label">SECTION 3 OF 5</span>
-          <div class="topic-badge tag tag--muted" id="badge-ch5-ospf-bgp">LOCKED</div>
+          <div class="topic-badge tag tag--muted" id="badge-ch6-mac-protocols">LOCKED</div>
         </div>
-        <h2 class="topic-section__title">OSPF &amp; BGP</h2>
-        <p class="topic-section__subtitle">Autonomous Systems · Intra-AS vs inter-AS · OSPF areas · BGP path-vector · eBGP · iBGP · Hot potato routing</p>
+        <h2 class="topic-section__title">Multiple Access Protocols (ALOHA, CSMA/CD, CSMA/CA)</h2>
+        <p class="topic-section__subtitle">TDMA · FDMA · Slotted ALOHA · CSMA · Collision detection · Exponential back-off</p>
       </div>
 
       <div class="section-lock-overlay" aria-hidden="true">
@@ -326,21 +324,19 @@
             EXPLAIN
           </div>
           <p class="learn-block__summary">
-            The Internet is divided into Autonomous Systems (ASes) — independently administered networks. Intra-AS routing uses protocols like OSPF to find efficient paths within a single organization's network. Inter-AS routing uses BGP, the single routing protocol that connects all ASes and keeps the global Internet working. OSPF optimizes for cost; BGP routes according to policy and business relationships.
+            A multiple access protocol determines how nodes share a single broadcast channel. Collisions occur when two or more nodes transmit simultaneously — their signals interfere and both frames are garbled. Multiple access protocols coordinate transmissions to avoid or recover from collisions. Three families: channel partitioning (TDMA/FDMA), random access (ALOHA, CSMA), and taking-turns (polling, token ring).
           </p>
           <ul class="learn-block__bullets">
-            <li>OSPF (Open Shortest Path First): intra-AS routing protocol, used within a single autonomous system</li>
-            <li>OSPF uses link-state flooding and Dijkstra's algorithm at every router</li>
-            <li>OSPF messages are carried directly over IP (protocol number 89) — not encapsulated in TCP or UDP</li>
-            <li>OSPF features: all messages authenticated, multiple equal-cost paths supported, hierarchical areas</li>
-            <li>OSPF area: routers within an area share full topology; only summary info crosses area boundaries</li>
-            <li>Backbone area (Area 0) interconnects all other OSPF areas within an AS</li>
-            <li>BGP (Border Gateway Protocol): THE inter-AS routing protocol — 'the glue that holds the Internet together'</li>
-            <li>BGP is a path-vector protocol: it advertises complete AS-level paths to destinations, not just distances</li>
-            <li>Two BGP session types: eBGP (between routers in different ASes) and iBGP (between routers within the same AS)</li>
-            <li>Key BGP attributes: AS-PATH (list of AS numbers traversed) and NEXT-HOP (border router to use as first hop)</li>
-            <li>BGP is policy-driven: ISPs can prefer or filter routes based on business agreements, not just shortest path</li>
-            <li>BGP hot potato routing: a router sends traffic out of its own AS as early as possible (least-cost intra-AS path to exit point)</li>
+            <li>Broadcast channel: a single shared medium heard by all attached nodes</li>
+            <li>Collision: two or more simultaneous transmissions — signals overlap and both are destroyed</li>
+            <li>TDMA: divide time into slots, each node gets dedicated slot — no collisions but idle slots waste bandwidth</li>
+            <li>FDMA: divide spectrum into bands, each node gets dedicated frequency — no collisions, same waste problem</li>
+            <li>Pure ALOHA: transmit immediately when frame arrives; on collision, retransmit after random back-off. Max efficiency ≈ 18%</li>
+            <li>Slotted ALOHA: time is slotted; nodes transmit only at slot boundaries. Max efficiency ≈ 37% (1/e)</li>
+            <li>CSMA: listen before transmit — if channel busy, defer. Reduces but does not eliminate collisions (propagation delay)</li>
+            <li>CSMA/CD (Collision Detection): after starting, listen for collision; if detected, abort and send jam signal, then exponential back-off. Used by Ethernet (wired)</li>
+            <li>CSMA/CA (Collision Avoidance): cannot detect collision while transmitting (wireless); defer for random time before transmitting. Used by 802.11 WiFi</li>
+            <li>Binary exponential back-off (Ethernet): after nth collision, wait K×512 bit-times where K is random in [0, 2^min(n,10)-1]</li>
           </ul>
         </div>
 
@@ -353,9 +349,9 @@
             INTERACTIVE SIMULATION
           </div>
           <div class="sim-mount-point"
-               data-sim-id="sim-bgp"
-               id="sim-mount-ch5-ospf-bgp"
-               aria-label="BGP inter-AS routing simulation"></div>
+               data-sim-id="sim-mac-protocols"
+               id="sim-mount-ch6-mac-protocols"
+               aria-label="Multiple access protocols simulation"></div>
         </div>
 
         <div class="analogy-card glass-card">
@@ -367,7 +363,7 @@
             THINK OF IT LIKE…
           </div>
           <p class="analogy-card__text">
-            OSPF is like the GPS inside a delivery company's warehouse — optimizing routes within the building. BGP is the <strong>global shipping network</strong> connecting warehouses in different countries. A package (IP datagram) uses BGP to choose which country border to cross, then OSPF to navigate inside each facility.
+            Imagine a group conversation at a dinner table. TDMA is like an assigned speaking order. ALOHA is everyone blurting out whenever they want — chaos. CSMA is politely waiting for silence before speaking. CSMA/CD is like a wired conversation where <strong>you can hear yourself talk over someone</strong> and immediately stop. CSMA/CA is like raising your hand and waiting a random count — since in WiFi you can't tell if you're talking over someone.
           </p>
         </div>
 
@@ -380,29 +376,29 @@
             MINI QUIZ
           </div>
           <div class="quiz-mount-point"
-               data-quiz-topic="ch5-ospf-bgp"
-               data-chapter="chapter5"
-               id="quiz-ch5-ospf-bgp"
-               aria-label="OSPF and BGP quiz"></div>
+               data-quiz-topic="ch6-mac-protocols"
+               data-chapter="chapter6"
+               id="quiz-ch6-mac-protocols"
+               aria-label="Multiple access protocols quiz"></div>
         </div>
 
       </div>
-    </section><!-- /#ch5-ospf-bgp -->
+    </section>
 
 
     <!-- ================================================================
-         SECTION 4 — SDN Control Plane
+         SECTION 4 — Ethernet & ARP
     ================================================================ -->
-    <section class="topic-section topic-section--locked" id="ch5-sdn"
-             data-section-id="ch5-sdn" data-section-index="3">
+    <section class="topic-section topic-section--locked" id="ch6-ethernet-arp"
+             data-section-id="ch6-ethernet-arp" data-section-index="3">
 
       <div class="topic-section__header">
         <div class="topic-section__label">
           <span class="section-label">SECTION 4 OF 5</span>
-          <div class="topic-badge tag tag--muted" id="badge-ch5-sdn">LOCKED</div>
+          <div class="topic-badge tag tag--muted" id="badge-ch6-ethernet-arp">LOCKED</div>
         </div>
-        <h2 class="topic-section__title">SDN Control Plane</h2>
-        <p class="topic-section__subtitle">Control vs data plane · SDN controller · OpenFlow · Flow tables · Match-action</p>
+        <h2 class="topic-section__title">Ethernet &amp; ARP</h2>
+        <p class="topic-section__subtitle">Ethernet frame · MAC address · Preamble · ARP request/reply · ARP table · Broadcast</p>
       </div>
 
       <div class="section-lock-overlay" aria-hidden="true">
@@ -425,17 +421,18 @@
             EXPLAIN
           </div>
           <p class="learn-block__summary">
-            Software-Defined Networking (SDN) separates the control plane (deciding where traffic goes) from the data plane (actually forwarding packets). A logically centralised SDN controller maintains a global view of the network and pushes flow-table rules into switches via protocols like OpenFlow. This gives operators programmable, flexible control over traffic without reconfiguring each device individually.
+            Ethernet is the dominant wired LAN technology. It uses a 48-bit MAC address burned into every NIC, framing with preamble + destination MAC + source MAC + type + payload + CRC. ARP (Address Resolution Protocol) dynamically maps a known IP address to the corresponding MAC address on the same subnet — it is the glue between the network layer and the link layer.
           </p>
           <ul class="learn-block__bullets">
-            <li>SDN separates the data plane (packet forwarding in switches) from the control plane (routing logic in controller)</li>
-            <li>A logically centralised SDN controller computes forwarding tables for all switches in the network</li>
-            <li>OpenFlow: the open standard protocol between an SDN controller and its managed switches</li>
-            <li>Flow table: each entry has match fields (header values to test) and action fields (forward, drop, modify, send to controller)</li>
-            <li>Match-action paradigm generalises routing: any header field can be matched, many actions are possible</li>
-            <li>SDN controller maintains network-wide state, runs routing algorithms, installs flow entries on demand</li>
-            <li>Benefits: flexible traffic engineering, easier network management, rapid innovation in control logic</li>
-            <li>Challenges: scalability of a centralised controller, fault tolerance and reliability, security of the controller itself</li>
+            <li>Ethernet frame structure: 8-byte preamble | 6-byte dest MAC | 6-byte src MAC | 2-byte type | 0–1500 byte data | 4-byte CRC</li>
+            <li>Preamble: 7 bytes of 10101010 + 1 byte 10101011 (SFD) — used to synchronize receiver clock</li>
+            <li>MAC address (48-bit / 6-byte): written as XX:XX:XX:XX:XX:XX in hex; first 3 bytes = OUI (manufacturer); burned into NIC ROM</li>
+            <li>Broadcast MAC: FF:FF:FF:FF:FF:FF — all nodes on the LAN receive and process the frame</li>
+            <li>Type field: identifies the network-layer protocol (0x0800 = IPv4, 0x86DD = IPv6, 0x0806 = ARP)</li>
+            <li>Ethernet is connectionless and unreliable at the link layer — no handshaking, no ACKs</li>
+            <li>ARP: given destination IP, find its MAC. Each host maintains an ARP table (IP → MAC mapping with TTL)</li>
+            <li>ARP query: broadcast ARP request 'Who has IP X? Tell IP Y'. Host with IP X unicasts ARP reply with its MAC</li>
+            <li>ARP is within-subnet only — cross-subnet frames go to the default gateway's MAC, not the final destination's MAC</li>
           </ul>
         </div>
 
@@ -448,9 +445,9 @@
             INTERACTIVE SIMULATION
           </div>
           <div class="sim-mount-point"
-               data-sim-id="sim-sdn"
-               id="sim-mount-ch5-sdn"
-               aria-label="SDN controller and OpenFlow simulation"></div>
+               data-sim-id="sim-arp"
+               id="sim-mount-ch6-ethernet-arp"
+               aria-label="ARP request and reply simulation"></div>
         </div>
 
         <div class="analogy-card glass-card">
@@ -462,7 +459,7 @@
             THINK OF IT LIKE…
           </div>
           <p class="analogy-card__text">
-            Traditional networking is like every traffic light making its own independent timing decisions. SDN is like a <strong>city-wide traffic management centre</strong> that monitors all intersections and remotely programs every light in real time. The lights (switches) still forward cars (packets) — but the intelligence lives in the centre.
+            ARP is like shouting in a room <em>'Who here goes by the name 192.168.1.5?'</em> and waiting for that person to raise their hand and tell you their seat number (MAC). Once you know the seat number, you hand your message directly to that seat without shouting again — until the ARP cache entry expires.
           </p>
         </div>
 
@@ -475,29 +472,29 @@
             MINI QUIZ
           </div>
           <div class="quiz-mount-point"
-               data-quiz-topic="ch5-sdn"
-               data-chapter="chapter5"
-               id="quiz-ch5-sdn"
-               aria-label="SDN control plane quiz"></div>
+               data-quiz-topic="ch6-ethernet-arp"
+               data-chapter="chapter6"
+               id="quiz-ch6-ethernet-arp"
+               aria-label="Ethernet and ARP quiz"></div>
         </div>
 
       </div>
-    </section><!-- /#ch5-sdn -->
+    </section>
 
 
     <!-- ================================================================
-         SECTION 5 — ICMP
+         SECTION 5 — Link-Layer Switches & VLANs
     ================================================================ -->
-    <section class="topic-section topic-section--locked" id="ch5-icmp"
-             data-section-id="ch5-icmp" data-section-index="4">
+    <section class="topic-section topic-section--locked" id="ch6-switches-vlan"
+             data-section-id="ch6-switches-vlan" data-section-index="4">
 
       <div class="topic-section__header">
         <div class="topic-section__label">
           <span class="section-label">SECTION 5 OF 5</span>
-          <div class="topic-badge tag tag--muted" id="badge-ch5-icmp">LOCKED</div>
+          <div class="topic-badge tag tag--muted" id="badge-ch6-switches-vlan">LOCKED</div>
         </div>
-        <h2 class="topic-section__title">ICMP</h2>
-        <p class="topic-section__subtitle">Error reporting · Type &amp; Code · ping · traceroute · ICMPv6</p>
+        <h2 class="topic-section__title">Link-Layer Switches &amp; VLANs</h2>
+        <p class="topic-section__subtitle">Self-learning · Switch table · Flooding · Plug-and-play · 802.1Q · VLAN ID · Trunk port</p>
       </div>
 
       <div class="section-lock-overlay" aria-hidden="true">
@@ -520,19 +517,19 @@
             EXPLAIN
           </div>
           <p class="learn-block__summary">
-            ICMP (Internet Control Message Protocol) is the network layer's error-reporting and diagnostic mechanism. When a router or host encounters a problem handling an IP datagram — unreachable destination, expired TTL, bad header — it sends an ICMP message back to the source. Two essential network tools, ping and traceroute, are built entirely on ICMP.
+            A link-layer switch forwards Ethernet frames based on MAC addresses, interconnecting hosts within a LAN without IP-level routing. Switches are self-learning: they build a switch table by observing source MAC addresses on incoming frames. VLANs logically partition a single physical switch into multiple isolated broadcast domains without needing separate hardware.
           </p>
           <ul class="learn-block__bullets">
-            <li>ICMP is used by hosts and routers to communicate network-layer error and informational messages</li>
-            <li>ICMP lives above IP: ICMP messages are encapsulated in IP datagrams (IP Protocol field = 1)</li>
-            <li>Each ICMP message has a Type field and a Code field that together specify the exact meaning</li>
-            <li>ICMP Type 0 (code 0): Echo Reply — sent in response to a ping</li>
-            <li>ICMP Type 3: Destination Unreachable — various codes indicate why (host unreachable, port unreachable, etc.)</li>
-            <li>ICMP Type 8 (code 0): Echo Request — sent by ping to probe a host</li>
-            <li>ICMP Type 11 (code 0): Time Exceeded — sent by a router when it discards a datagram with TTL = 0</li>
-            <li>ping: sends ICMP Echo Request (type 8) and measures round-trip time to the Echo Reply (type 0)</li>
-            <li>traceroute: sends a series of UDP segments with TTL = 1, 2, 3, …; each router along the path discards the datagram (TTL expires) and sends back ICMP Time Exceeded (type 11); the destination sends ICMP Port Unreachable (type 3, code 3) when it receives the probe</li>
-            <li>ICMPv6: the ICMP equivalent for IPv6, extended to include Neighbor Discovery (replacing ARP) and Path MTU Discovery</li>
+            <li>Switch (Layer-2): forwards frames based on destination MAC, not IP. Transparent to hosts — plug-and-play</li>
+            <li>Switch table: maps MAC address → port → TTL. Built dynamically by observing source MACs on incoming frames (self-learning)</li>
+            <li>Self-learning: when frame arrives on port X with source MAC Y, switch records (Y → port X) in the switch table</li>
+            <li>Forwarding logic: if dest MAC in table → forward to that port only; if not in table → flood all ports except incoming</li>
+            <li>Switches eliminate collisions: each link is a full-duplex point-to-point segment — no shared medium</li>
+            <li>Switch vs Router: switch uses MAC addresses, operates at Layer 2; router uses IPs, operates at Layer 3</li>
+            <li>VLAN (Virtual LAN): logically segments a physical switch into multiple broadcast domains using VLAN IDs (802.1Q tag)</li>
+            <li>802.1Q tag: 4-byte tag inserted into Ethernet frame; contains 12-bit VLAN ID (up to 4094 VLANs)</li>
+            <li>Inter-VLAN routing: traffic between VLANs must pass through a router (or Layer-3 switch)</li>
+            <li>Trunk port: carries frames from multiple VLANs between switches; uses 802.1Q tags to distinguish VLAN membership</li>
           </ul>
         </div>
 
@@ -545,9 +542,9 @@
             INTERACTIVE SIMULATION
           </div>
           <div class="sim-mount-point"
-               data-sim-id="sim-icmp"
-               id="sim-mount-ch5-icmp"
-               aria-label="ICMP ping and traceroute simulation"></div>
+               data-sim-id="sim-switch-learning"
+               id="sim-mount-ch6-switches-vlan"
+               aria-label="Switch self-learning and VLAN simulation"></div>
         </div>
 
         <div class="analogy-card glass-card">
@@ -559,7 +556,7 @@
             THINK OF IT LIKE…
           </div>
           <p class="analogy-card__text">
-            ICMP is like the postal service's <strong>notification cards</strong>. When a letter can't be delivered (wrong address, mailbox full, recipient moved), the post office sends a notification back to the sender explaining what went wrong. ping is asking 'are you there?' and waiting for 'yes, here!'; traceroute is sending letters that intentionally expire at each post office so each one sends back a notification, mapping the full route.
+            A switch is like a smart mail sorter in an office building who learns which mail slot belongs to which person by reading return addresses. After seeing a few messages, it can deliver directly to the right slot. VLANs are like putting up <strong>invisible walls</strong> inside the building so departments can't overhear each other's mail, even though they share the same physical room.
           </p>
         </div>
 
@@ -572,18 +569,18 @@
             MINI QUIZ
           </div>
           <div class="quiz-mount-point"
-               data-quiz-topic="ch5-icmp"
-               data-chapter="chapter5"
-               id="quiz-ch5-icmp"
-               aria-label="ICMP quiz"></div>
+               data-quiz-topic="ch6-switches-vlan"
+               data-chapter="chapter6"
+               id="quiz-ch6-switches-vlan"
+               aria-label="Switches and VLANs quiz"></div>
         </div>
 
       </div>
-    </section><!-- /#ch5-icmp -->
+    </section>
 
 
     <!-- ── Chapter Complete CTA ──────────────────────────────────────── -->
-    <div class="chapter-complete-cta glass-card" id="ch5-complete-cta" aria-hidden="true">
+    <div class="chapter-complete-cta glass-card" id="ch6-complete-cta" aria-hidden="true">
       <div class="chapter-complete-cta__inner">
         <div class="chapter-complete-cta__icon" aria-hidden="true">
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
@@ -591,29 +588,25 @@
             <polyline points="14,25 21,32 34,18" stroke="var(--accent-green)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
           </svg>
         </div>
-        <h2 class="chapter-complete-cta__title">Chapter 5 Complete!</h2>
+        <h2 class="chapter-complete-cta__title">Chapter 6 Complete!</h2>
         <p class="chapter-complete-cta__text">
-          You've mastered the Network Layer Control Plane. Ready to go deeper?
-          Chapter 6 covers the Link Layer — frames, Ethernet, ARP, and switches.
+          You've mastered the Link Layer and LANs. Ready to go wireless?
+          Chapter 7 covers 802.11 WiFi, cellular networks, and mobility management.
         </p>
         <div class="chapter-complete-cta__actions">
-          <a href="chapter6.html" class="btn btn--primary btn--lg">
-            Chapter 6: Link Layer →
+          <a href="chapter7.html" class="btn btn--primary btn--lg">
+            Chapter 7: Wireless Networks →
           </a>
           <a href="index.html" class="btn btn--ghost">← Back to Dashboard</a>
         </div>
       </div>
     </div>
 
-  </main><!-- /#main-content -->
+  </main>
 
-  <!-- ── XP Toast (injected by gamification.js) ──────────────────────── -->
   <div id="xp-toast-container" aria-live="assertive" aria-atomic="true"></div>
-
-  <!-- ── Level-Up Overlay (injected by gamification.js) ─────────────── -->
   <div id="level-up-overlay" class="level-up-overlay" aria-hidden="true" role="dialog" aria-label="Level up notification"></div>
 
-  <!-- ── Keyboard Shortcut Modal ─────────────────────────────────────── -->
   <div id="modal-shortcuts" class="modal" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts" aria-hidden="true">
     <div class="modal__backdrop"></div>
     <div class="modal__sheet">
@@ -626,11 +619,9 @@
         <div class="step-sequence">
           <div class="step-item"><kbd>?</kbd><span>Show this help</span></div>
           <div class="step-item"><kbd>H</kbd><span>Go to Dashboard</span></div>
-          <div class="step-item"><kbd>1</kbd><span>Chapter 1</span></div>
-          <div class="step-item"><kbd>2</kbd><span>Chapter 2</span></div>
-          <div class="step-item"><kbd>3</kbd><span>Chapter 3</span></div>
-          <div class="step-item"><kbd>4</kbd><span>Chapter 4</span></div>
-          <div class="step-item"><kbd>5</kbd><span>Chapter 5 (this page)</span></div>
+          <div class="step-item"><kbd>6</kbd><span>Chapter 6 (this page)</span></div>
+          <div class="step-item"><kbd>7</kbd><span>Chapter 7</span></div>
+          <div class="step-item"><kbd>8</kbd><span>Chapter 8</span></div>
           <div class="step-item"><kbd>E</kbd><span>Exam Mode</span></div>
           <div class="step-item"><kbd>ESC</kbd><span>Close modal / dialog</span></div>
         </div>
@@ -638,7 +629,6 @@
     </div>
   </div>
 
-  <!-- ── Offline Banner (injected by app.js) ─────────────────────────── -->
   <div id="offline-banner" class="alert-banner alert-banner--warn" role="alert" aria-hidden="true">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <polygon points="8,2 15,14 1,14" stroke="var(--accent-orange)" stroke-width="1.5" fill="none"/>
@@ -649,7 +639,6 @@
   </div>
 
   <!-- ── Scripts ──────────────────────────────────────────────────────── -->
-  <!-- Data must load before engine modules that consume it -->
   <script src="data/chapter1-data.js"></script>
   <script src="data/chapter2-data.js"></script>
   <script src="data/chapter3-data.js"></script>
@@ -659,18 +648,16 @@
   <script src="data/chapter7-data.js"></script>
   <script src="data/chapter8-data.js"></script>
   <script src="data/quiz-data.js"></script>
-  <!-- JS modules — order matters (progress → gamification → quiz → animations → app) -->
   <script src="js/progress.js"></script>
   <script src="js/gamification.js"></script>
   <script src="js/quiz.js"></script>
   <script src="js/animations.js"></script>
   <script src="js/app.js"></script>
 
-  <!-- One-time page init: wire quiz containers to chapter5Data -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      if (window.chapter5Data && window.Quiz) {
-        chapter5Data.sections.forEach(function (section) {
+      if (window.chapter6Data && window.Quiz) {
+        chapter6Data.sections.forEach(function (section) {
           var container = document.querySelector(
             '.quiz-mount-point[data-quiz-topic="' + section.id + '"]'
           );
@@ -678,9 +665,9 @@
           container.dataset.quizMounted = '1';
           Quiz.mount(container, section.quiz, {
             topicId: section.id,
-            chapter: 'ch5',
+            chapter: 'ch6',
             onComplete: function (result) {
-              if (window.App) App.onTopicQuizComplete(section.id, result, 'ch5');
+              if (window.App) App.onTopicQuizComplete(section.id, result, 'ch6');
             }
           });
         });
