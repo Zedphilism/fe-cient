@@ -171,6 +171,40 @@
     }
     .section-divider--ch5 .section-divider__label { color: var(--accent-purple); }
     .section-divider__line { flex: 1; height: 1px; background: var(--border-glass); }
+
+    /* ── Answer + Remember-note layout ─────────────────────────── */
+    .qa-layout {
+      display: grid;
+      grid-template-columns: 1fr 240px;
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 680px) {
+      .qa-layout { grid-template-columns: 1fr; }
+    }
+    .remember-box {
+      background: rgba(255,215,0,0.06);
+      border: 1px solid rgba(255,215,0,0.28);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+    }
+    .remember-box--top { margin-bottom: 14px; }
+    .remember-box__label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font: 700 0.62rem/1 var(--font-display);
+      letter-spacing: 0.1em;
+      color: var(--accent-gold, #ffd700);
+      margin-bottom: 7px;
+    }
+    .remember-box p {
+      font-size: 0.78rem;
+      line-height: 1.55;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .remember-box strong { color: var(--accent-gold, #ffd700); }
   </style>
 </head>
 
@@ -250,9 +284,15 @@
     <div class="q-block glass-card anim-fade-in-up" id="q1">
       <span class="q-block__num">QUESTION 1</span>
       <p class="q-block__question">Within this chapter, name a layer-3 device.</p>
-      <div class="answer-box">
-        <span class="answer-box__label">ANSWER</span>
-        <p>The <strong>router</strong>.</p>
+      <div class="qa-layout">
+        <div class="answer-box">
+          <span class="answer-box__label">ANSWER</span>
+          <p>The <strong>router</strong>.</p>
+        </div>
+        <div class="remember-box">
+          <span class="remember-box__label">💡 REMEMBER</span>
+          <p>Layer 3 = Network layer = <strong>IP addresses</strong>. Router lives here.</p>
+        </div>
       </div>
     </div>
 
@@ -260,12 +300,16 @@
     <div class="q-block glass-card anim-fade-in-up" id="q2">
       <span class="q-block__num">QUESTION 2</span>
       <p class="q-block__question">Why is that device in Q1 called a layer-3 device?</p>
-      <div class="answer-box">
-        <span class="answer-box__label">ANSWER</span>
-        <p>Because it operates at the <strong>network layer (layer 3)</strong> of the OSI/TCP-IP stack —
-        it makes its forwarding decisions by examining <strong>layer-3 (IP) header information</strong>,
-        specifically the destination IP address, to decide which output port a packet should be sent to.
-        This is different from a switch (layer 2, uses MAC addresses) or a hub (layer 1, just repeats bits).</p>
+      <div class="qa-layout">
+        <div class="answer-box">
+          <span class="answer-box__label">ANSWER</span>
+          <p>Because it forwards packets using <strong>Layer-3 (IP) header info</strong> — specifically the
+          destination IP address — to decide the output port.</p>
+        </div>
+        <div class="remember-box">
+          <span class="remember-box__label">💡 REMEMBER</span>
+          <p><strong>Hub</strong> = L1 (bits) · <strong>Switch</strong> = L2 (MAC) · <strong>Router</strong> = L3 (IP).</p>
+        </div>
       </div>
     </div>
 
@@ -273,17 +317,18 @@
     <div class="q-block glass-card anim-fade-in-up" id="q3">
       <span class="q-block__num">QUESTION 3</span>
       <p class="q-block__question">Explain the 2 main functions of the network layer.</p>
-      <div class="answer-box">
-        <span class="answer-box__label">ANSWER</span>
-        <p><strong>1. Forwarding</strong> — moving a packet from an input link to the correct output link
-        <em>inside a single router</em>. This is a local, per-router, data-plane action that happens in
-        hardware within microseconds: look up the destination in the forwarding table, switch the packet
-        to the right output port.</p>
-        <p><strong>2. Routing</strong> — determining the end-to-end path a packet takes from source to
-        destination <em>across the whole network</em>. This is a network-wide, control-plane process
-        (routing algorithms like Dijkstra or Bellman-Ford) that runs on the scale of seconds and populates
-        the forwarding tables that Function 1 then uses.</p>
-        <p>Routing computes the tables; forwarding uses them.</p>
+      <div class="qa-layout">
+        <div class="answer-box">
+          <span class="answer-box__label">ANSWER</span>
+          <p><strong>1. Forwarding</strong> — move a packet input→output <em>inside one router</em>. Fast,
+          local, data-plane (hardware, microseconds).</p>
+          <p><strong>2. Routing</strong> — compute the end-to-end path <em>across the whole network</em>.
+          Slower, network-wide, control-plane (algorithms, seconds). Populates the tables Forwarding uses.</p>
+        </div>
+        <div class="remember-box">
+          <span class="remember-box__label">💡 REMEMBER</span>
+          <p>Routing <strong>builds the map</strong>; forwarding <strong>follows it</strong>.</p>
+        </div>
       </div>
     </div>
 
@@ -310,19 +355,20 @@
         </table>
       </div>
 
+      <div class="remember-box remember-box--top">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>"O" = OSPF, "C" = directly connected. A /23 groups the <strong>3rd octet in pairs</strong>:
+        224-225, 226-227, 228-229… <strong>Always check every row</strong> — don't assume an address is
+        covered just because it's inside 172.16.0.0/16.</p>
+      </div>
+
       <div class="q-sub">
         <span class="q-sub__label">(a) What routing algorithm is being used here?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p>The <strong>"O"</strong> code on five of the eight rows stands for <strong>OSPF (Open Shortest Path
-          First)</strong> — a link-state routing protocol that internally runs <strong>Dijkstra's shortest-path
-          algorithm</strong> to build these routes. (The "[110/65]" style figures are OSPF's administrative
-          distance/110 and cost/65 — a giveaway that it's OSPF, not RIP or EIGRP, which use different AD values
-          and cost metrics.) The <strong>"C"</strong> rows are simply directly-connected interfaces, not computed
-          by any routing algorithm at all.</p>
-          <p>Separately, when the router decides WHICH row to use for a given destination (if more than one could
-          match), it applies the <strong>longest-prefix-match rule</strong> — pick the entry with the most specific
-          (longest) matching prefix.</p>
+          <p><strong>OSPF</strong> (the "O" code) — a link-state protocol using <strong>Dijkstra's
+          algorithm</strong>. "C" rows are just directly-connected interfaces, not computed by any algorithm.
+          When picking between matching rows, the router uses <strong>longest-prefix-match</strong>.</p>
         </div>
       </div>
 
@@ -330,10 +376,7 @@
         <span class="q-sub__label">(b) How many subnets can you tell are in the topology?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p><strong>8 subnets, using 3 different masks</strong> (/23, /24, /30) — this is stated directly in the
-          table's header line: "172.16.0.0/16 is variably subnetted, 8 subnets, 3 masks". You can also verify by
-          simply counting the network rows: 224.0/23, 226.0/23, 228.0/24, 229.0/24, 230.0/30, 230.4/30, 230.8/30,
-          230.12/30 = <strong>8 rows</strong> ✓.</p>
+          <p><strong>8 subnets, 3 masks</strong> (/23, /24, /30) — stated directly in the table header.</p>
         </div>
       </div>
 
@@ -341,12 +384,8 @@
         <span class="q-sub__label">(c) Destination 172.16.227.123 — which output port?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p><strong>Serial2/0</strong> (via 172.16.230.5).</p>
-          <p><strong>Working:</strong> a /23 mask (255.255.254.0) gives a block size of 2 in the third octet, so
-          <span class="mono">172.16.226.0/23</span> covers the range <span class="mono">172.16.226.0 –
-          172.16.227.255</span>. Since 227 falls inside 226–227, <strong>172.16.227.123 matches
-          172.16.226.0/23</strong> — the row that routes out <strong>Serial2/0</strong>. (Note it does NOT match
-          172.16.224.0/23, which only covers octets 224–225.)</p>
+          <p><strong>Serial2/0.</strong> A /23 covers 2 octets: 172.16.226.0/23 = range .226.0–.227.255.
+          227 falls in that range → matches 226.0/23 → <strong>Serial2/0</strong>.</p>
         </div>
       </div>
 
@@ -354,16 +393,9 @@
         <span class="q-sub__label">(d) Destination 172.16.231.2 — which output port?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p><strong>No matching route in this table — the packet cannot be forwarded</strong> (unless a default
-          route/gateway-of-last-resort exists elsewhere in the router's full configuration, which is not shown
-          in this excerpt).</p>
-          <p><strong>Working — check every row:</strong> 224.0/23 covers octets 224–225 (no) · 226.0/23 covers
-          226–227 (no) · 228.0/24 covers only 228 (no) · 229.0/24 covers only 229 (no) · the four /30 routes
-          (230.0, 230.4, 230.8, 230.12) all require the third octet to be exactly <strong>230</strong>, but our
-          destination's third octet is <strong>231</strong> (no match for any of them). <strong>No row in Figure
-          1 covers 172.16.231.x</strong> — this is a deliberate trap testing whether you actually check coverage
-          for every row instead of assuming everything under 172.16.0.0/16 is reachable. Without a default route,
-          the router would reply with a <em>Destination Unreachable</em> ICMP message.</p>
+          <p><strong>No match — packet dropped</strong> (Destination Unreachable), unless a default route
+          exists elsewhere. Check: 224-225, 226-227, 228, 229, and 230.0/230.4/230.8/230.12 all need octet3=230.
+          None cover <strong>231</strong>.</p>
         </div>
       </div>
     </div>
@@ -372,17 +404,21 @@
     <div class="q-block glass-card anim-fade-in-up" id="q5">
       <span class="q-block__num">QUESTION 5</span>
       <p class="q-block__question">If an IP address (200.20.226.5/21) is given, find the subnet's network and broadcast address. Show your workings.</p>
-      <div class="answer-box">
-        <span class="answer-box__label">ANSWER</span>
-        <p><strong>Step 1 — subnet mask:</strong> /21 → 255.255.248.0 (21 network bits: 8+8+5 = 21, so
-        octet 3 keeps 5 mask bits = 11111000 = 248)</p>
-        <p><strong>Step 2 — block size in octet 3:</strong> 2⁽⁸⁻⁵⁾ = 2³ = 8 → subnets fall on
-        multiples of 8 in the third octet: …, 216, 224, 232, …</p>
-        <p><strong>Step 3 — locate 226:</strong> 224 ≤ 226 &lt; 232, so this address belongs to the
-        224 block.</p>
-        <p><strong>Network address:</strong> <span class="mono">200.20.224.0</span></p>
-        <p><strong>Broadcast address:</strong> 224 + 8 − 1 = 231 → <span class="mono">200.20.231.255</span></p>
-        <p><strong>Usable host range:</strong> 200.20.224.1 – 200.20.231.254 (2¹¹ − 2 = 2046 usable hosts)</p>
+      <div class="qa-layout">
+        <div class="answer-box">
+          <span class="answer-box__label">ANSWER</span>
+          <p><strong>Mask:</strong> /21 → 255.255.248.0 (5 bits left in octet 3 → 248)</p>
+          <p><strong>Block size:</strong> 2⁽⁸⁻⁵⁾ = 8 → blocks: …216, 224, 232…</p>
+          <p><strong>Locate 226:</strong> 224 ≤ 226 &lt; 232 → belongs to the 224 block</p>
+          <p><strong>Network:</strong> <span class="mono">200.20.224.0</span> &nbsp;·&nbsp;
+          <strong>Broadcast:</strong> 224+8−1=231 → <span class="mono">200.20.231.255</span></p>
+          <p><strong>Usable range:</strong> .224.1 – .231.254 (2046 hosts)</p>
+        </div>
+        <div class="remember-box">
+          <span class="remember-box__label">💡 REMEMBER</span>
+          <p>Block size = <strong>2^(8−mask bits)</strong> in the varying octet. Network = round DOWN to the
+          block; Broadcast = network + block − 1.</p>
+        </div>
       </div>
     </div>
 
@@ -394,12 +430,16 @@
         A (100 hosts), B (210 hosts), C (80 hosts), D (40 hosts), E (10 hosts) — all usable hosts.
         (a) Present a subnet addressing table. (b) Calculate unused hosts per subnet.
       </p>
-      <div class="answer-box">
-        <span class="answer-box__label">ANSWER — METHOD</span>
-        <p><strong>VLSM rule:</strong> always allocate the LARGEST requirement first, so blocks pack
-        tightly with no wasted space between them.</p>
-        <p><strong>Sizing rule:</strong> usable hosts = 2ʰ − 2 ≥ needed, where h = host bits.
-        Order by size: B(210) → A(100) → C(80) → D(40) → E(10).</p>
+      <div class="qa-layout">
+        <div class="answer-box">
+          <span class="answer-box__label">ANSWER — METHOD</span>
+          <p><strong>Sizing rule:</strong> usable hosts = 2ʰ−2 ≥ needed. <strong>Order:</strong> largest
+          first — B(210) → A(100) → C(80) → D(40) → E(10) — so blocks pack tight with no gaps.</p>
+        </div>
+        <div class="remember-box">
+          <span class="remember-box__label">💡 REMEMBER</span>
+          <p>VLSM = <strong>largest need first</strong>. Always.</p>
+        </div>
       </div>
 
       <div class="table-wrap">
@@ -437,13 +477,10 @@
         </table>
       </div>
       <div class="answer-box">
-        <span class="answer-box__label">WORKING FOR EACH ROW</span>
-        <p><strong>B (210):</strong> need 2ʰ−2 ≥ 210 → h=8 (254 usable) → /24. Starts at .192.192.0 (given base).</p>
-        <p><strong>A (100):</strong> need h with 2ʰ−2 ≥ 100 → h=7 (126 usable) → /25. Next free address after B's block (188.192.193.0) → .193.0/25.</p>
-        <p><strong>C (80):</strong> need h=7 (126 usable) → /25. Next free address after A's /25 block → .193.128/25.</p>
-        <p><strong>D (40):</strong> need h=6 (62 usable) → /26. Next free address → .194.0/26.</p>
-        <p><strong>E (10):</strong> need h=4 (14 usable) → /28. Next free address → .194.64/28.</p>
-        <p><strong>Unused hosts</strong> = usable − needed for each row (shown in the table, highlighted).</p>
+        <span class="answer-box__label">WORKING (each row picks the smallest block that fits, back-to-back)</span>
+        <p><strong>B(210)→</strong>h=8,254 usable,/24 · <strong>A(100)→</strong>h=7,126,/25 ·
+        <strong>C(80)→</strong>h=7,126,/25 · <strong>D(40)→</strong>h=6,62,/26 · <strong>E(10)→</strong>h=4,14,/28.
+        Each subnet starts right after the previous one ends. Unused = usable − needed (highlighted above).</p>
       </div>
     </div>
 
@@ -452,13 +489,18 @@
       <span class="q-block__num">QUESTION 7</span>
       <p class="q-block__question">With respect to DHCP, answer the following questions.</p>
 
+      <div class="remember-box remember-box--top">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p><strong>DORA</strong> = Discover → Offer → Request → Acknowledge. Renew kicks in at
+        <strong>~50% of the lease (T1)</strong> — don't wait for full expiry to matter.</p>
+      </div>
+
       <div class="q-sub">
         <span class="q-sub__label">(a) What is DHCP?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p><strong>Dynamic Host Configuration Protocol</strong> — a protocol that allows a host to
-          automatically obtain an IP address and other network configuration (subnet mask, default
-          gateway, DNS server) when it joins a network, without any manual setup ("plug-and-play").</p>
+          <p><strong>Dynamic Host Configuration Protocol</strong> — auto-assigns an IP address + config
+          (subnet mask, gateway, DNS) to a host joining the network. No manual setup.</p>
         </div>
       </div>
 
@@ -466,11 +508,8 @@
         <span class="q-sub__label">(b) How does DHCP work?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p>Through the <strong>DORA</strong> four-message exchange (all broadcast initially):
-          <strong>D</strong>iscover (client broadcasts a request) → <strong>O</strong>ffer (one or more
-          DHCP servers respond with an offered IP + config) → <strong>R</strong>equest (client broadcasts
-          acceptance of one offer) → <strong>A</strong>cknowledge (the chosen server confirms and the
-          lease begins).</p>
+          <p><strong>DORA</strong> (all broadcast): <strong>D</strong>iscover → <strong>O</strong>ffer →
+          <strong>R</strong>equest → <strong>A</strong>cknowledge.</p>
         </div>
       </div>
 
@@ -478,9 +517,7 @@
         <span class="q-sub__label">(c) What is the benefit of DHCP?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p>Automatic, centrally-managed configuration — no manual IP assignment needed, no risk of two
-          hosts accidentally getting the same address, and addresses are reused efficiently via leases
-          as devices join and leave the network.</p>
+          <p>No manual IP assignment, no address conflicts, and efficient reuse of addresses via leases.</p>
         </div>
       </div>
 
@@ -488,25 +525,19 @@
         <span class="q-sub__label">(d) What portion of the subnetwork address is used for distribution?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p>The <strong>host portion</strong> of the subnet — specifically, an administrator-configured
-          pool/range of host addresses within that portion (e.g. .100–.200), excluding the network
-          address, broadcast address, and any statically-assigned addresses (gateway, servers, printers).
-          The network prefix stays fixed for everyone on the subnet; only host bits vary between clients.</p>
+          <p>The <strong>host portion</strong> — a configured pool of host addresses (excluding network,
+          broadcast, and static addresses). The network prefix stays fixed for everyone.</p>
         </div>
       </div>
 
       <div class="q-sub">
-        <span class="q-sub__label">(e) Lease time — what happens on expiry, and if it expires while still in use?</span>
+        <span class="q-sub__label">(e) Lease time — what happens on expiry, and if still in use?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p>The lease is a <strong>timed rental</strong> of the address (a common example duration is 24
-          hours, though it's configurable). On expiry, the address returns to the pool for reuse by
-          another client. An actively-using host doesn't just wait for expiry — at roughly the
-          <strong>halfway point of the lease (T1, ~50%)</strong> it unicasts a renewal Request to the
-          server to extend the lease invisibly. If renewal fails and rebinding (a broader retry at ~87.5%
-          of the lease) also fails, and the lease truly lapses, the host <strong>must stop using the
-          address</strong> and restart the DORA discovery process from scratch — otherwise it risks an
-          IP address conflict with whoever the server assigns that address to next.</p>
+          <p>The lease is a <strong>timed rental</strong>. On expiry, the address returns to the pool.
+          An active host renews at ~50% of the lease (T1) — it doesn't wait to expire. If renewal AND
+          rebinding both fail, the host <strong>must stop using the address</strong> and restart DORA,
+          to avoid a conflict with whoever gets it next.</p>
         </div>
       </div>
     </div>
@@ -516,13 +547,18 @@
       <span class="q-block__num">QUESTION 8</span>
       <p class="q-block__question">With regards to Network Address Translation (NAT), answer the following questions.</p>
 
+      <div class="remember-box remember-box--top">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>NAT translates <strong>(private IP:port) ↔ (public IP:port)</strong>. Purpose:
+        <strong>save public IPv4 addresses</strong> — one public IP for a whole private network.</p>
+      </div>
+
       <div class="q-sub">
         <span class="q-sub__label">(a) What is NAT?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p>A technique that lets an entire private network share a <strong>single public IP address</strong>
-          by translating between private (internal) and public (external) IP address/port combinations
-          at the border router.</p>
+          <p>Lets a whole private network share <strong>one public IP address</strong> by translating
+          private ↔ public IP:port at the border router.</p>
         </div>
       </div>
 
@@ -530,9 +566,8 @@
         <span class="q-sub__label">(b) What is the purpose of NAT?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p>To <strong>conserve the shrinking IPv4 public address space</strong> — one organisation
-          only needs to purchase/lease one public IP no matter how many internal hosts it has. It also
-          has the side benefit of hiding the internal network's topology and addressing from the outside.</p>
+          <p><strong>Conserve public IPv4 addresses</strong> — one org needs only one public IP regardless
+          of internal host count. Bonus: hides internal topology.</p>
         </div>
       </div>
 
@@ -540,13 +575,9 @@
         <span class="q-sub__label">(c) How does NAT work?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p>The NAT router maintains a <strong>translation table</strong> mapping (private IP, private
-          port) ↔ (public IP, public port) for every active connection.</p>
-          <p><strong>Outgoing packet:</strong> the router replaces the source private IP:port with its own
-          public IP and a newly-assigned port, and records this mapping in the table.</p>
-          <p><strong>Incoming packet:</strong> the router looks up the destination port in the translation
-          table, and rewrites the destination back to the correct private IP:port before forwarding it
-          onto the internal network.</p>
+          <p>Router keeps a <strong>translation table</strong>: (private IP:port) ↔ (public IP:port).
+          <strong>Out:</strong> rewrite source to public IP:new port, record mapping.
+          <strong>In:</strong> look up destination port, rewrite back to private IP:port.</p>
         </div>
       </div>
     </div>
@@ -556,12 +587,17 @@
       <span class="q-block__num">QUESTION 9</span>
       <p class="q-block__question">Given N = 5000, RTT = 150 ms, C = 5 Gbps, how much is average buffer size B?</p>
 
+      <div class="remember-box remember-box--top">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p><strong>Rule of thumb:</strong> B = RTT×C. <strong>Recent:</strong> divide by √N — many flows'
+        bursts smooth each other out, so much less buffer is actually needed.</p>
+      </div>
+
       <div class="q-sub">
         <span class="q-sub__label">(a) Following rule of thumb</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p><strong>Formula:</strong> B = RTT × C</p>
-          <p>B = 0.15 s × 5000 Mbps = <strong>750 Mbits</strong> (≈ 93.75 MB / 93.75 megabytes)</p>
+          <p>B = RTT × C = 0.15 s × 5000 Mbps = <strong>750 Mbits</strong> (≈ 93.75 MB)</p>
         </div>
       </div>
 
@@ -569,11 +605,7 @@
         <span class="q-sub__label">(b) Following recent recommendations</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p><strong>Formula:</strong> B = (RTT × C) / √N</p>
-          <p>B = 750 Mbits / √5000 = 750 / 70.71 ≈ <strong>10.61 Mbits</strong> (≈ 1.33 MB)</p>
-          <p>With many independent TCP flows (N large), their traffic bursts statistically de-synchronise
-          and smooth out, so far less buffering is needed than the conservative rule-of-thumb suggests —
-          about 70× less in this case.</p>
+          <p>B = (RTT×C)/√N = 750 / √5000 ≈ <strong>10.61 Mbits</strong> (≈ 1.33 MB) — about 70× smaller.</p>
         </div>
       </div>
     </div>
@@ -582,11 +614,17 @@
     <div class="q-block glass-card anim-fade-in-up" id="q10">
       <span class="q-block__num">QUESTION 10</span>
       <p class="q-block__question">A 6000-byte file is sent through a link with MTU 1500 bytes. Explain the fragmentation process, using the fragmentation table format from class.</p>
-      <div class="answer-box">
-        <span class="answer-box__label">ANSWER</span>
-        <p><strong>Setup:</strong> total datagram = 6000 bytes = 20-byte IP header + 5980 bytes of data.
-        MTU = 1500 bytes → max data per fragment = 1500 − 20 = 1480 bytes.</p>
-        <p><strong>Number of fragments:</strong> ⌈5980 / 1480⌉ = ⌈4.04⌉ = <strong>5 fragments</strong></p>
+      <div class="qa-layout">
+        <div class="answer-box">
+          <span class="answer-box__label">ANSWER</span>
+          <p><strong>Setup:</strong> 6000 bytes = 20-byte header + 5980 data. Max data/fragment =
+          1500−20 = 1480. <strong>Fragments:</strong> ⌈5980/1480⌉ = <strong>5</strong>.</p>
+        </div>
+        <div class="remember-box">
+          <span class="remember-box__label">💡 REMEMBER</span>
+          <p>Max data = <strong>MTU − 20</strong>. Offset = start byte <strong>÷ 8</strong>. Only the
+          LAST fragment has MF=0. Reassembly = <strong>destination only</strong>.</p>
+        </div>
       </div>
 
       <div class="table-wrap">
@@ -598,14 +636,6 @@
           <tr><td>4</td><td>1480</td><td>555</td><td>1</td></tr>
           <tr><td>5</td><td class="hl">60</td><td class="hl">740</td><td class="hl">0</td></tr>
         </table>
-      </div>
-      <div class="answer-box">
-        <p>Each fragment gets its own 20-byte IP header, so it can travel independently and be routed on
-        its own. The <strong>offset</strong> field records the starting byte position of that fragment's
-        data ÷ 8 (offset counts in 8-byte units because the 13-bit field can't address 65535 bytes
-        directly). The <strong>MF (More Fragments)</strong> flag is 1 for every fragment except the last,
-        which has MF = 0 to signal reassembly can begin. <strong>Reassembly only happens at the final
-        destination host</strong> — intermediate routers never reassemble fragments.</p>
       </div>
     </div>
 
@@ -619,6 +649,13 @@
       <span class="q-block__num">QUESTION 11 <span class="figure-note">⚠ Figure 2 reconstructed</span></span>
       <p class="q-block__question">Given the network topology in Figure 2, answer the following. Show your workings.</p>
 
+      <div class="remember-box remember-box--top">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Dijkstra = <strong>global</strong> (needs the whole map, computed centrally). Bellman-Ford =
+        <strong>local</strong> (only knows neighbours, distributed). Both reach the <strong>same</strong>
+        shortest-path answer.</p>
+      </div>
+
       <div class="answer-box">
         <span class="answer-box__label">REPRESENTATIVE TOPOLOGY USED BELOW</span>
         <p>Nodes A, B, C, D, E with edges: A–B (2), A–C (5), B–C (1), B–D (2), C–D (3), C–E (1), D–E (1).
@@ -627,9 +664,6 @@
 
       <div class="q-sub">
         <span class="q-sub__label">(a) Dijkstra's algorithm (Link-State) — forwarding table for source A</span>
-        <div class="answer-box">
-          <span class="answer-box__label">ANSWER — ITERATION TABLE</span>
-        </div>
         <div class="table-wrap">
           <table class="work-table">
             <tr><th>Step</th><th>N' (settled)</th><th>D(B), p(B)</th><th>D(C), p(C)</th><th>D(D), p(D)</th><th>D(E), p(E)</th></tr>
@@ -641,26 +675,19 @@
           </table>
         </div>
         <div class="answer-box">
-          <p><strong>Forwarding table at A</strong> (destination → next hop, from the p(v) column):</p>
-          <p>B → <strong>B</strong> (direct, cost 2) &nbsp;·&nbsp; C → <strong>B</strong> (via B, cost 3)
-          &nbsp;·&nbsp; D → <strong>B</strong> (via B, cost 4) &nbsp;·&nbsp; E → <strong>B</strong> (via B→C, cost 4)</p>
-          <p>Only the <em>next hop</em> is kept in the forwarding table — not the full path — because
-          forwarding is a hop-by-hop decision.</p>
+          <span class="answer-box__label">ANSWER — forwarding table at A</span>
+          <p>B→<strong>B</strong>(cost 2) · C→<strong>B</strong>(cost 3) · D→<strong>B</strong>(cost 4) ·
+          E→<strong>B</strong>(cost 4). Only the <em>next hop</em> is kept — forwarding is hop-by-hop.</p>
         </div>
       </div>
 
       <div class="q-sub">
         <span class="q-sub__label">(b) Bellman-Ford (Distance Vector) — forwarding table for the whole network, source A</span>
         <div class="answer-box">
-          <span class="answer-box__label">ANSWER — METHOD</span>
-          <p>Each node x computes d_x(y) = min over neighbours v of { c(x,v) + d_v(y) } and exchanges
-          vectors with neighbours until no further updates occur (convergence). Applied to the same
-          topology, Bellman-Ford converges to the <strong>identical shortest-path costs</strong> as
-          Dijkstra (both compute true shortest paths — they differ only in HOW they compute them:
-          Dijkstra is centralized/global, Bellman-Ford is distributed/iterative using only neighbour
-          information).</p>
-          <p><strong>Final distance vector at A:</strong> d_A(B)=2, d_A(C)=3, d_A(D)=4, d_A(E)=4 —
-          matching part (a). Next-hop for each destination is the same as the Dijkstra result above.</p>
+          <span class="answer-box__label">ANSWER</span>
+          <p>Each node computes d_x(y) = min over neighbours { c(x,v) + d_v(y) }, exchanging vectors until
+          convergence. Same topology → <strong>identical result</strong> as (a): d_A(B)=2, d_A(C)=3, d_A(D)=4,
+          d_A(E)=4 — same next-hops too. Only the METHOD differs (global vs distributed).</p>
         </div>
       </div>
     </div>
@@ -669,22 +696,20 @@
     <div class="q-block q-block--ch5 glass-card anim-fade-in-up" id="q12">
       <span class="q-block__num">QUESTION 12</span>
       <p class="q-block__question">Why was UDP chosen for SNMP instead of TCP? Explain your answer.</p>
-      <div class="answer-box">
-        <span class="answer-box__label">ANSWER</span>
-        <p>SNMP (Simple Network Management Protocol) manages devices that may already be
-        <strong>congested, failing, or under stress</strong> — exactly when a heavyweight, stateful
-        protocol is least appropriate. UDP is chosen because:</p>
-        <p><strong>1. No connection overhead</strong> — no 3-way handshake to fail or hang on a
-        struggling device.</p>
-        <p><strong>2. No connection state</strong> — the router/switch being managed doesn't need to
-        keep per-connection memory alive for the manager, which matters on resource-constrained network
-        equipment being polled by many managers.</p>
-        <p><strong>3. Minimal overhead for frequent small polls</strong> — SNMP traffic is typically
-        short polling messages sent repeatedly; TCP's setup/teardown cost would dominate.</p>
-        <p><strong>4. Application-level retry is sufficient</strong> — if a poll is lost, the SNMP
-        manager itself simply retries; it doesn't need TCP's automatic retransmission, and under
-        congestion TCP's retransmissions would add MORE load exactly when the network can least
-        afford it.</p>
+      <div class="qa-layout">
+        <div class="answer-box">
+          <span class="answer-box__label">ANSWER</span>
+          <p>SNMP manages devices that may already be <strong>congested or failing</strong> — the worst
+          time for a heavyweight protocol. UDP: <strong>(1)</strong> no handshake to hang on a struggling
+          device, <strong>(2)</strong> no connection state to maintain, <strong>(3)</strong> minimal
+          overhead for frequent small polls, <strong>(4)</strong> the SNMP manager retries lost polls
+          itself — TCP's retransmissions would only add MORE load during congestion.</p>
+        </div>
+        <div class="remember-box">
+          <span class="remember-box__label">💡 REMEMBER</span>
+          <p>A <strong>sick network</strong> needs a <strong>light</strong> protocol — no handshake, no
+          state, no extra retransmit overhead.</p>
+        </div>
       </div>
     </div>
 
