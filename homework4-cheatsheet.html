@@ -227,11 +227,11 @@
         Use this to check your handwritten submission or as a last-minute exam review.
       </p>
       <div class="cheat-note">
-        <strong>Note on Q4 and Q11:</strong> the original PDF's Figure 1 (forwarding table) and
-        Figure 2 (network topology) are images that could not be extracted from the file. The answers
-        below use a representative forwarding table / topology built with the same structure your
-        lecture used, so the <em>method</em> shown is exam-correct — but re-check the exact numeric
-        answers against your own copy of Figures 1 &amp; 2 before submitting.
+        <strong>Note on Q11:</strong> the original PDF's Figure 2 (network topology) is an image that
+        could not be extracted from the file. The answer below uses a representative topology built with
+        the same structure your lecture used, so the <em>method</em> shown is exam-correct — but re-check
+        the exact numeric answers against your own copy of Figure 2 before submitting. (Figure 1 for Q4
+        has been confirmed against the actual routing table and is accurate as shown.)
       </div>
     </div>
 
@@ -289,16 +289,24 @@
 
     <!-- Q4 -->
     <div class="q-block glass-card anim-fade-in-up" id="q4">
-      <span class="q-block__num">QUESTION 4 <span class="figure-note">⚠ Figure 1 reconstructed</span></span>
+      <span class="q-block__num">QUESTION 4</span>
       <p class="q-block__question">Figure 1 shows a forwarding table of a router. Refer to Figure 1 to answer the following questions.</p>
 
+      <div class="answer-box" style="margin-bottom:14px;">
+        <span class="answer-box__label">FIGURE 1 — ACTUAL ROUTING TABLE</span>
+      </div>
       <div class="table-wrap">
         <table class="work-table">
-          <tr><th>Destination Address Range</th><th>Output Port</th></tr>
-          <tr><td>172.16.224.0 – 172.16.231.255 (172.16.224.0/21)</td><td>0</td></tr>
-          <tr><td>172.16.232.0 – 172.16.235.255 (172.16.232.0/22)</td><td>1</td></tr>
-          <tr><td>172.16.236.0 – 172.16.237.255 (172.16.236.0/23)</td><td>2</td></tr>
-          <tr><td>otherwise</td><td>3</td></tr>
+          <tr><th>Code</th><th>Network</th><th>Details</th></tr>
+          <tr><td colspan="3" style="text-align:left;font-style:italic;color:var(--text-muted);">172.16.0.0/16 is variably subnetted, 8 subnets, 3 masks</td></tr>
+          <tr><td>O</td><td>172.16.224.0/23</td><td style="text-align:left;">[110/65] via 172.16.230.5, 00:00:13, Serial2/0</td></tr>
+          <tr><td>O</td><td class="hl">172.16.226.0/23</td><td style="text-align:left;">[110/129] via 172.16.230.5, 00:00:13, Serial2/0</td></tr>
+          <tr><td>C</td><td>172.16.228.0/24</td><td style="text-align:left;">is directly connected, FastEthernet1/0</td></tr>
+          <tr><td>O</td><td>172.16.229.0/24</td><td style="text-align:left;">[110/65] via 172.16.230.14, 00:00:13, Serial3/0</td></tr>
+          <tr><td>O</td><td>172.16.230.0/30</td><td style="text-align:left;">[110/128] via 172.16.230.5, 00:00:13, Serial2/0</td></tr>
+          <tr><td>C</td><td>172.16.230.4/30</td><td style="text-align:left;">is directly connected, Serial2/0</td></tr>
+          <tr><td>C</td><td>172.16.230.8/30</td><td style="text-align:left;">is directly connected, FastEthernet0/0</td></tr>
+          <tr><td>C</td><td>172.16.230.12/30</td><td style="text-align:left;">is directly connected, Serial3/0</td></tr>
         </table>
       </div>
 
@@ -306,10 +314,15 @@
         <span class="q-sub__label">(a) What routing algorithm is being used here?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p>Neither Dijkstra nor Bellman-Ford directly — the table itself is read using the
-          <strong>longest-prefix-match algorithm</strong>. When a destination address could match more
-          than one row (multiple prefixes overlapping), the router always picks the entry with the
-          <strong>longest (most specific) matching prefix</strong>.</p>
+          <p>The <strong>"O"</strong> code on five of the eight rows stands for <strong>OSPF (Open Shortest Path
+          First)</strong> — a link-state routing protocol that internally runs <strong>Dijkstra's shortest-path
+          algorithm</strong> to build these routes. (The "[110/65]" style figures are OSPF's administrative
+          distance/110 and cost/65 — a giveaway that it's OSPF, not RIP or EIGRP, which use different AD values
+          and cost metrics.) The <strong>"C"</strong> rows are simply directly-connected interfaces, not computed
+          by any routing algorithm at all.</p>
+          <p>Separately, when the router decides WHICH row to use for a given destination (if more than one could
+          match), it applies the <strong>longest-prefix-match rule</strong> — pick the entry with the most specific
+          (longest) matching prefix.</p>
         </div>
       </div>
 
@@ -317,9 +330,10 @@
         <span class="q-sub__label">(b) How many subnets can you tell are in the topology?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p>Each distinct row (excluding the "otherwise" default route) represents one subnet reachable
-          from this router: here there are <strong>3 subnets</strong> — /21, /22, /23. (Count the number
-          of specific prefix rows in your actual Figure 1.)</p>
+          <p><strong>8 subnets, using 3 different masks</strong> (/23, /24, /30) — this is stated directly in the
+          table's header line: "172.16.0.0/16 is variably subnetted, 8 subnets, 3 masks". You can also verify by
+          simply counting the network rows: 224.0/23, 226.0/23, 228.0/24, 229.0/24, 230.0/30, 230.4/30, 230.8/30,
+          230.12/30 = <strong>8 rows</strong> ✓.</p>
         </div>
       </div>
 
@@ -327,8 +341,12 @@
         <span class="q-sub__label">(c) Destination 172.16.227.123 — which output port?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p>172.16.227.123 falls inside 172.16.224.0/21 (range 172.16.224.0–172.16.231.255) →
-          <strong>Output Port 0</strong>.</p>
+          <p><strong>Serial2/0</strong> (via 172.16.230.5).</p>
+          <p><strong>Working:</strong> a /23 mask (255.255.254.0) gives a block size of 2 in the third octet, so
+          <span class="mono">172.16.226.0/23</span> covers the range <span class="mono">172.16.226.0 –
+          172.16.227.255</span>. Since 227 falls inside 226–227, <strong>172.16.227.123 matches
+          172.16.226.0/23</strong> — the row that routes out <strong>Serial2/0</strong>. (Note it does NOT match
+          172.16.224.0/23, which only covers octets 224–225.)</p>
         </div>
       </div>
 
@@ -336,8 +354,16 @@
         <span class="q-sub__label">(d) Destination 172.16.231.2 — which output port?</span>
         <div class="answer-box">
           <span class="answer-box__label">ANSWER</span>
-          <p>172.16.231.2 also falls inside 172.16.224.0/21 (231 ≤ 231, still within the /21 block) →
-          <strong>Output Port 0</strong>.</p>
+          <p><strong>No matching route in this table — the packet cannot be forwarded</strong> (unless a default
+          route/gateway-of-last-resort exists elsewhere in the router's full configuration, which is not shown
+          in this excerpt).</p>
+          <p><strong>Working — check every row:</strong> 224.0/23 covers octets 224–225 (no) · 226.0/23 covers
+          226–227 (no) · 228.0/24 covers only 228 (no) · 229.0/24 covers only 229 (no) · the four /30 routes
+          (230.0, 230.4, 230.8, 230.12) all require the third octet to be exactly <strong>230</strong>, but our
+          destination's third octet is <strong>231</strong> (no match for any of them). <strong>No row in Figure
+          1 covers 172.16.231.x</strong> — this is a deliberate trap testing whether you actually check coverage
+          for every row instead of assuming everything under 172.16.0.0/16 is reachable. Without a default route,
+          the router would reply with a <em>Destination Unreachable</em> ICMP message.</p>
         </div>
       </div>
     </div>

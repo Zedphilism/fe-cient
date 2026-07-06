@@ -248,6 +248,22 @@ window.dlChapter7Data = {
           answer: "D",
           explanation: "D flip-flops — the storage workhorse. One shared clock edge photographs the whole bus at once: Qᵢ ← Dᵢ for all 8 bits. Registers, pipeline stages, and state registers are all arrays of D-FFs, which is why D dominates VLSI design (simple rule, no invalid state, no toggle ambiguity).",
           xpReward: 25
+        },
+        {
+          id: "q-dl7-028",
+          type: "truefalse",
+          question: "A gated (EN) S-R flip-flop enters the SET state when S is HIGH, R is LOW, and EN is HIGH.",
+          answer: 0,
+          explanation: "True. The Enable input acts as a gatekeeper: the S/R inputs only have effect while EN=HIGH (or, for edge-triggered gated versions, only around the active clock edge while EN qualifies it). With EN=HIGH, S=1, R=0 applies the ordinary SET rule → Q=1. If EN were LOW instead, the flip-flop would ignore S and R entirely and simply hold its previous state — EN is the master switch that turns synchronous control on or off.",
+          xpReward: 25
+        },
+        {
+          id: "q-dl7-029",
+          type: "truefalse",
+          question: "The S-R flip-flop has three valid output states.",
+          answer: 0,
+          explanation: "True. Of the four possible (S,R) input combinations, three produce well-defined, VALID outputs — Hold (S=0,R=0), Reset (S=0,R=1→Q=0), and Set (S=1,R=0→Q=1) — while the fourth (S=1,R=1) is the INVALID/forbidden combination that must be avoided. 'Three valid states, one invalid' is the standard way this fact is tested — don't confuse 'valid states' (3) with 'total input combinations' (4).",
+          xpReward: 25
         }
       ]
     },
@@ -278,16 +294,34 @@ window.dlChapter7Data = {
         ],
         analogy: "A push-button lamp instead of a two-button one. The SR lamp has separate ON and OFF buttons — press both and it jams (invalid). The JK lamp rewires 'both pressed' to mean 'flip whatever it is now' — always well-defined. The T lamp goes further: ONE button that flips the state on every press (T=1) or is disconnected (T=0). Press it rhythmically and the lamp blinks at exactly half your pressing rate — frequency division by 2."
       },
-      workedExample: {
-        problem: "A negative-edge JK flip-flop starts at Q=0 with J=K=1 (toggle mode) for 5 clock pulses; then K changes to 0 (J=1) for pulses 6–7. Trace Q after each falling edge.",
-        steps: [
-          "<strong>Pulses 1–5 (J=K=1, toggle):</strong> Q flips each falling edge: 0→<strong>1</strong>, 1→<strong>0</strong>, 0→<strong>1</strong>, 1→<strong>0</strong>, 0→<strong>1</strong>",
-          "<strong>Observation:</strong> Q completed 2½ cycles while the clock completed 5 — output frequency is exactly half the clock",
-          "<strong>Pulses 6–7 (J=1, K=0 = Set):</strong> edge 6: Q ← 1 (already 1, stays 1) · edge 7: Q ← 1 (still 1)",
-          "<strong>Final:</strong> Q sequence after each edge = 1, 0, 1, 0, 1, 1, 1 — toggle mode alternates, set mode pins Q at 1"
-        ],
-        note: "The exam's favourite JK trace: toggle for a few pulses, then switch modes mid-stream. Track (J, K) at EVERY edge — the mode can change between pulses."
-      },
+      workedExample: [
+        {
+          problem: "A negative-edge JK flip-flop starts at Q=0 with J=K=1 (toggle mode) for 5 clock pulses; then K changes to 0 (J=1) for pulses 6–7. Trace Q after each falling edge.",
+          steps: [
+            "<strong>Pulses 1–5 (J=K=1, toggle):</strong> Q flips each falling edge: 0→<strong>1</strong>, 1→<strong>0</strong>, 0→<strong>1</strong>, 1→<strong>0</strong>, 0→<strong>1</strong>",
+            "<strong>Observation:</strong> Q completed 2½ cycles while the clock completed 5 — output frequency is exactly half the clock",
+            "<strong>Pulses 6–7 (J=1, K=0 = Set):</strong> edge 6: Q ← 1 (already 1, stays 1) · edge 7: Q ← 1 (still 1)",
+            "<strong>Final:</strong> Q sequence after each edge = 1, 0, 1, 0, 1, 1, 1 — toggle mode alternates, set mode pins Q at 1"
+          ],
+          note: "The exam's favourite JK trace: toggle for a few pulses, then switch modes mid-stream. Track (J, K) at EVERY edge — the mode can change between pulses."
+        },
+        {
+          title: "WORKED EXAMPLE — Full Sequential State Table (exam table format)",
+          problem: "A negative-clock-triggered JK flip-flop starts at Q=0. Complete the row-by-row table for the given CLK/J/K sequence, filling in Q and its STATE (Set / Reset / Hold / Toggle) for every row. This is the exact multi-row table format used in final exams (8 rows of CLK, J, K → Q, State).",
+          steps: [
+            "<strong>Golden rule:</strong> read CLK first — if CLK shows no active (negative) edge that row, Q simply CARRIES OVER from the previous row regardless of J/K (the FF is only negative-edge triggered, so a HIGH-only or no-transition row changes nothing)",
+            "<strong>Row 1 — CLK↓, J=0,K=1:</strong> Reset rule fires → Q=0. <strong>State: Reset</strong>",
+            "<strong>Row 2 — CLK↓, J=1,K=1:</strong> Toggle rule fires on previous Q=0 → Q=1. <strong>State: Toggle</strong>",
+            "<strong>Row 3 — CLK↓, J=1,K=0:</strong> Set rule fires → Q=1 (already 1, stays 1). <strong>State: Set</strong>",
+            "<strong>Row 4 — CLK↓, J=1,K=1:</strong> Toggle rule fires on previous Q=1 → Q=0. <strong>State: Toggle</strong>",
+            "<strong>Row 5 — CLK↓, J=0,K=1:</strong> Reset rule fires → Q=0 (already 0, stays 0). <strong>State: Reset</strong>",
+            "<strong>Row 6 — CLK↓, J=1,K=1:</strong> Toggle rule fires on previous Q=0 → Q=1. <strong>State: Toggle</strong>",
+            "<strong>Row 7 — no active edge this row (CLK stays HIGH, no ↓ transition):</strong> Q simply CARRIES OVER → Q=1 (unchanged). <strong>State: Hold</strong> (not because J=K=0, but because no clock edge occurred at all)",
+            "<strong>Row 8 — CLK↓, J=1,K=0:</strong> Set rule fires → Q=1 (already 1, stays 1). <strong>State: Set</strong>"
+          ],
+          note: "The single biggest scoring mistake: forgetting that Q ONLY updates on an ACTIVE edge. If a row shows no falling edge (CLK didn't transition HIGH→LOW that row), copy the PREVIOUS row's Q down unchanged — J and K are irrelevant that row. Always write the State column using the vocabulary Set / Reset / Hold / Toggle, matching the J,K combination that actually fired (or 'Hold — no clock edge' when the clock itself didn't tick)."
+        }
+      ],
       quiz: [
         {
           id: "q-dl7-013",
@@ -364,6 +398,60 @@ window.dlChapter7Data = {
           answer: 1,
           explanation: "False — by 16. Each toggling stage divides by 2, so n stages divide by 2ⁿ: 4 stages → 2⁴ = 16. (Dividing by 8 needs 3 stages.) The 2ⁿ rule connects directly to counters: a 4-stage ripple counter's MSB completes one cycle per 16 clock pulses — it counts 0–15.",
           xpReward: 25
+        },
+        {
+          id: "q-dl7-024",
+          type: "calc",
+          question: "A negative-edge JK flip-flop starts at Q=0. Four falling edges occur in sequence with (J,K) = (0,1), (1,1), (1,1), (1,0). What is Q after the 4th edge?",
+          setup: "Edge 1: J=0,K=1 (Reset) → Q=0\nEdge 2: J=1,K=1 (Toggle on Q=0) → Q=?\nEdge 3: J=1,K=1 (Toggle) → Q=?\nEdge 4: J=1,K=0 (Set) → Q=?",
+          hint: "Trace row by row: Reset→0, Toggle flips it, Toggle flips it back, Set forces 1",
+          answer: 1,
+          tolerance: 0,
+          unit: "Q =",
+          calcType: "numeric",
+          explanation: "Edge1 (Reset): Q=0. Edge2 (Toggle, was 0): Q=1. Edge3 (Toggle, was 1): Q=0. Edge4 (Set): Q=1. Final Q=1. This row-by-row sequential trace — where each row's starting point is the PREVIOUS row's Q — is exactly the multi-row JK table format used in final exams. Never evaluate a row in isolation; always carry the running Q forward.",
+          xpReward: 35
+        },
+        {
+          id: "q-dl7-025",
+          type: "mcq",
+          question: "In a multi-row JK flip-flop timing table, one row shows the clock remaining HIGH with no falling edge occurring during that row. What happens to Q in that row?",
+          options: [
+            "Q toggles regardless of J and K, since time has passed",
+            "Q carries over UNCHANGED from the previous row — J and K are irrelevant without an active clock edge",
+            "Q resets to 0 automatically",
+            "Q becomes undefined (metastable)"
+          ],
+          answer: 1,
+          explanation: "Q holds exactly its previous value. A negative-edge JK flip-flop only evaluates J and K at the instant of a HIGH→LOW clock transition — if no such edge occurs in a given row (the clock stays HIGH, or only rises), Q simply carries its old value forward untouched, no matter what J and K show. This is the #1 mark-losing mistake in exam sequential tables — always check for an actual active edge before applying the J/K rule.",
+          xpReward: 25
+        },
+        {
+          id: "q-dl7-026",
+          type: "calc",
+          question: "A T flip-flop is built by tying J=K=T on a JK flip-flop. Starting from Q=0, the following T values arrive at successive active edges: 0, 1, 1, 0, 1. What is Q after the 5th edge?",
+          setup: "T=0 → Hold · T=1 → Toggle\nEdge1: T=0 (Hold) → Q=0\nEdge2: T=1 (Toggle) → Q=?\nEdge3: T=1 (Toggle) → Q=?\nEdge4: T=0 (Hold) → Q=?\nEdge5: T=1 (Toggle) → Q=?",
+          hint: "Only T=1 edges change Q; T=0 edges just repeat the previous value",
+          answer: 1,
+          tolerance: 0,
+          unit: "Q =",
+          calcType: "numeric",
+          explanation: "Edge1 (T=0, Hold): Q=0. Edge2 (T=1, Toggle): Q=1. Edge3 (T=1, Toggle): Q=0. Edge4 (T=0, Hold): Q=0. Edge5 (T=1, Toggle): Q=1. Final Q=1. Shortcut: only T=1 edges change Q — count them (3 toggles here, an odd number), so Q ends up flipped from its starting value: 0→1.",
+          xpReward: 35
+        },
+        {
+          id: "q-dl7-027",
+          type: "match",
+          question: "Match each JK timing-table scenario to the correct Q behaviour.",
+          pairs: [
+            { term: "Active edge, J=0,K=1",           definition: "Reset fires — Q becomes 0" },
+            { term: "Active edge, J=1,K=1",           definition: "Toggle fires — Q flips from its previous value" },
+            { term: "No active edge occurs this row", definition: "Q carries over unchanged from the previous row" },
+            { term: "Active edge, J=1,K=0",           definition: "Set fires — Q becomes 1" }
+          ],
+          answer: [0, 1, 2, 3],
+          explanation: "The complete row-evaluation logic for any JK sequential timing table: check for an active edge FIRST (no edge = no change, full stop), then apply Reset/Toggle/Set based on J,K using the PREVIOUS row's Q as the toggle's starting point. Master this four-row decision process and any 8-row exam table becomes mechanical.",
+          xpReward: 25
         }
       ]
     },
@@ -395,17 +483,31 @@ window.dlChapter7Data = {
         ],
         analogy: "A scheduled meeting vs the fire alarm. Synchronous inputs are agenda items — considered only at the scheduled moments (clock edges). PRE and CLR are the fire alarm: they interrupt IMMEDIATELY, mid-sentence, no waiting for the agenda. And like a real alarm panel, the buttons are 'active-LOW' — the system is normal while the line is held high, and pulling it down triggers the override."
       },
-      workedExample: {
-        problem: "A positive-edge D flip-flop has D=1 throughout. Events: edge 1 occurs; then CLR̅ is pulsed LOW between edges 1 and 2; edges 2 and 3 occur with CLR̅ back HIGH. Trace Q.",
-        steps: [
-          "<strong>Edge 1 (CLR̅=1, D=1):</strong> normal operation → Q ← 1",
-          "<strong>CLR̅ pulses LOW between edges:</strong> asynchronous clear acts IMMEDIATELY → <strong>Q drops to 0 right there</strong>, without any clock edge",
-          "<strong>CLR̅ returns HIGH:</strong> Q stays 0 (the override released, but nothing re-evaluates until an edge)",
-          "<strong>Edge 2 (D=1):</strong> normal capture → Q ← 1",
-          "<strong>Edge 3 (D=1):</strong> Q stays 1. Final waveform: Q rises at edge 1, falls mid-cycle at the CLR̅ pulse, rises again at edge 2"
-        ],
-        note: "The mid-cycle drop is the giveaway of an async input on a timing diagram — synchronous-only behaviour NEVER changes Q between edges."
-      },
+      workedExample: [
+        {
+          problem: "A positive-edge D flip-flop has D=1 throughout. Events: edge 1 occurs; then CLR̅ is pulsed LOW between edges 1 and 2; edges 2 and 3 occur with CLR̅ back HIGH. Trace Q.",
+          steps: [
+            "<strong>Edge 1 (CLR̅=1, D=1):</strong> normal operation → Q ← 1",
+            "<strong>CLR̅ pulses LOW between edges:</strong> asynchronous clear acts IMMEDIATELY → <strong>Q drops to 0 right there</strong>, without any clock edge",
+            "<strong>CLR̅ returns HIGH:</strong> Q stays 0 (the override released, but nothing re-evaluates until an edge)",
+            "<strong>Edge 2 (D=1):</strong> normal capture → Q ← 1",
+            "<strong>Edge 3 (D=1):</strong> Q stays 1. Final waveform: Q rises at edge 1, falls mid-cycle at the CLR̅ pulse, rises again at edge 2"
+          ],
+          note: "The mid-cycle drop is the giveaway of an async input on a timing diagram — synchronous-only behaviour NEVER changes Q between edges."
+        },
+        {
+          title: "WORKED EXAMPLE — Derive Equations From a Mixed Circuit, Then Trace With Async + Sync Combined",
+          problem: "A circuit contains: FF1 (JK, negative-edge triggered, synchronous inputs J1,K1) and FF2 (D, negative-edge triggered, same clock as FF1, asynchronous input CLR̅2). An AND gate combines Q1 and K1 to drive D2 (i.e. D2 = Q1 · K1). Another AND gate combines Q1 and Q2 to form the circuit output: Y = Q1 · Q2. Starting Q1=0, Q2=0, trace 4 rows of (J1,K1,CLR̅2) = (1,1,1), (0,1,1), (1,0,0), (1,1,1).",
+          steps: [
+            "<strong>Step 1 — read the circuit, write the equations:</strong> the AND gate feeding D2 has inputs Q1 and K1, so <strong>D2 = Q1 · K1</strong>. The AND gate forming the output has inputs Q1 and Q2, so <strong>Y = Q1 · Q2</strong>. Always derive these two equations FIRST, before touching the state table.",
+            "<strong>Row 1 (J1=1,K1=1,CLR̅2=1 — no override):</strong> compute D2 BEFORE the edge using the OLD Q1=0: D2 = 0·1 = 0. At the edge: FF1 toggles (J1=K1=1, old Q1=0) → Q1=1. FF2 captures D2 → Q2=0. Output Y = Q1·Q2 = 1·0 = <strong>0</strong>. <em>FF1 state: Toggle.</em>",
+            "<strong>Row 2 (J1=0,K1=1,CLR̅2=1):</strong> D2 = Q1·K1 = 1·1 = 1 (using OLD Q1=1). At the edge: FF1 resets (J1=0,K1=1) → Q1=0. FF2 captures D2 → Q2=1. Y = 0·1 = <strong>0</strong>. <em>FF1 state: Reset.</em>",
+            "<strong>Row 3 (J1=1,K1=0, CLR̅2=0 — ASYNC CLEAR ASSERTED):</strong> CLR̅2=0 overrides the clock IMMEDIATELY → Q2 is forced to 0 regardless of D2 or any edge. Separately, FF1 still responds to its own synchronous inputs at the edge: J1=1,K1=0 (Set) → Q1=1. Y = Q1·Q2 = 1·0 = <strong>0</strong>. <em>FF1 state: Set · FF2 state: Asynchronous Clear (override, not a normal D-capture).</em>",
+            "<strong>Row 4 (J1=1,K1=1,CLR̅2=1 — override released):</strong> D2 = Q1·K1 = 1·1 = 1 (OLD Q1=1, from the just-cleared Q2 having no bearing on D2). At the edge: FF1 toggles (old Q1=1) → Q1=0. FF2 captures D2 → Q2=1. Y = 0·1 = <strong>0</strong>. <em>FF1 state: Toggle.</em>"
+          ],
+          note: "The exam scores THREE separate skills here: (1) reading the circuit to write D2 and Y correctly, (2) computing D2 from the OLD (pre-edge) value of Q1 — a very common slip is using the NEW Q1 instead, and (3) recognising that when CLR̅2=0, FF2's output is decided by the ASYNCHRONOUS override, not by D2 at all — the D-capture logic is completely bypassed that row. Always evaluate async inputs first per row, and only fall back to the synchronous rule when all async inputs are inactive (idling HIGH)."
+        }
+      ],
       quiz: [
         {
           id: "q-dl7-019",
@@ -469,6 +571,61 @@ window.dlChapter7Data = {
           ],
           answer: [0, 1, 2, 3],
           explanation: "The async-input truth table, active-LOW edition. Note the family resemblance to the SR latch's table — including the invalid both-asserted row. Idle both HIGH, pulse one LOW to override, never both: the complete operating manual in four rows.",
+          xpReward: 25
+        },
+        {
+          id: "q-dl7-030",
+          type: "mcq",
+          question: "In a mixed-flip-flop circuit, an AND gate takes Q1 (from FF1) and K1 (the K input of FF1) as its two inputs, and its output drives D2 (the D input of FF2). What is the correct Boolean equation for D2?",
+          options: [
+            "D2 = Q1 + K1",
+            "D2 = Q1 · K1",
+            "D2 = Q1 ⊕ K1",
+            "D2 = K̄1"
+          ],
+          answer: 1,
+          explanation: "D2 = Q1 · K1. An AND gate's output equation is simply the product of its inputs — reading the circuit means identifying WHICH two signals feed a gate, then writing the corresponding Boolean operator (AND→product, OR→sum, XOR→⊕). This 'read the gate, write the equation' step is graded separately from the table-tracing that follows it — get the equation right first before attempting any row.",
+          xpReward: 25
+        },
+        {
+          id: "q-dl7-031",
+          type: "calc",
+          question: "Using D2 = Q1 · K1: at the start of a clock cycle (before the edge), Q1 = 1 and K1 = 1. What is D2 for this row (the value that will be captured by FF2 at the upcoming edge)?",
+          setup: "D2 = Q1 · K1 = 1 · 1",
+          hint: "AND of two 1s",
+          answer: 1,
+          tolerance: 0,
+          unit: "D2 =",
+          calcType: "numeric",
+          explanation: "D2 = 1·1 = 1. Critically, D2 must be computed using Q1's value BEFORE the edge (its 'old' value) — D2 is a combinational function of the CURRENT state, evaluated an instant before the clock ticks and captured into FF2 at that same edge. Using the wrong (post-edge) Q1 is the most common error when tracing these combined circuits.",
+          xpReward: 35
+        },
+        {
+          id: "q-dl7-032",
+          type: "mcq",
+          question: "In a row of a mixed synchronous/asynchronous state table, CLR̅2 = 0 (asserted) for flip-flop FF2, while FF2's D input that row would normally compute to D2 = 1. What is Q2 after this row?",
+          options: [
+            "Q2 = 1, because D2 = 1 and the clock edge captures it",
+            "Q2 = 0 — the asserted asynchronous clear overrides and bypasses the D input entirely, regardless of what D2 computes to",
+            "Q2 is undefined/invalid",
+            "Q2 keeps its previous value, ignoring both D2 and CLR̅2"
+          ],
+          answer: 1,
+          explanation: "Q2 = 0. An asserted asynchronous input always takes PRECEDENCE over the synchronous data path — CLR̅2=0 forces Q2 to 0 immediately and completely bypasses D2, even though D2 itself computed to 1 that row. This precedence rule (async overrides sync, always) is exactly what full exam marks test — many students correctly compute D2 but then forget the clear overrides it.",
+          xpReward: 25
+        },
+        {
+          id: "q-dl7-033",
+          type: "match",
+          question: "Match each step of the 'derive-then-trace' mixed-circuit method to its purpose.",
+          pairs: [
+            { term: "Step 1: read the gates",              definition: "Write the Boolean equation for each derived input (e.g. D2 = Q1·K1) and for the output Y" },
+            { term: "Step 2: check async inputs each row",  definition: "If any async input (PRE̅/CLR̅) is asserted, it overrides everything else that row" },
+            { term: "Step 3: compute derived inputs",       definition: "Evaluate D2 (or J/K equations) using the PRESENT (pre-edge) state values" },
+            { term: "Step 4: apply the edge rule",          definition: "If no async override, capture the derived input normally at the active clock edge" }
+          ],
+          answer: [0, 1, 2, 3],
+          explanation: "This four-step method handles every 'circuit diagram → state table' question in the final exam, regardless of which flip-flop types or gates are used: derive the equations once, then for every row check async-first, compute derived inputs from present state, and only then apply the normal edge-triggered rule.",
           xpReward: 25
         }
       ]

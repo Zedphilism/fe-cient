@@ -131,6 +131,112 @@ window.dlChapter6Data = {
           calcType: "numeric",
           explanation: "7 + 5 = 12 = 01100₂. Stage trace: 1+1=10 (S=0,C=1) · 1+0+1=10 (S=0,C=1) · 1+1+1=11 (S=1,C=1) · 0+0+1=1 (S=1,C=0) → Sum = 1100, Cout = 0. Note stage 2's three-ones case producing BOTH sum and carry — the situation only a full adder can handle.",
           xpReward: 35
+        },
+        {
+          id: "q-dl6-023",
+          type: "truefalse",
+          question: "A full adder is characterized by two inputs and two outputs.",
+          answer: 1,
+          explanation: "False — a full adder has THREE inputs (A, B, and Cin) and two outputs (Sum, Cout). Confusing it with the half adder (which genuinely has 2 inputs, 2 outputs) is the exact trap: the defining feature added when going from half → full adder is the extra Cin input, so the input count MUST go up to 3. This exact statement is a verbatim final-exam True/False item — memorise '3 in, 2 out' for the full adder.",
+          xpReward: 25
+        },
+        {
+          id: "q-dl6-024",
+          type: "calc",
+          question: "A 4-bit parallel adder has Cin (LSB) = LOW (0). Add A = 1101 and B = 0111. What is the decimal value of the 5-bit result (Cout followed by the 4-bit Sum)?",
+          setup: "  1101  (13)\n+ 0111  (7)\nCin (LSB) = 0\n———————",
+          hint: "13 + 7 = 20",
+          answer: 20,
+          tolerance: 0,
+          unit: "=",
+          calcType: "numeric",
+          explanation: "13 + 7 = 20 = 10100₂ (Cout=1, Sum=0100). Stage trace: bit0: 1+1+0=10 (S=0,C=1) · bit1: 0+1+1=10 (S=0,C=1) · bit2: 1+1+1=11 (S=1,C=1) · bit3(MSB): 1+0+1=10 (S=0,C=1) → Sum=0100, Cout=1 → 10100₂=20 ✓. This exact setup (Cin explicitly stated as LOW) appears verbatim in final exams — always start your stage trace from Cin at the LSB.",
+          xpReward: 35
+        }
+      ]
+    },
+
+    /* ───────────────── SECTION 1b — Parity Generator/Checker ───────────────── */
+    {
+      id: "dl6-parity",
+      title: "Parity Generators & Checkers",
+      subtitle: "XOR tree detects odd/even 1-count · Even parity vs odd parity · Single-bit error detection",
+      xpReward: 10,
+      accent: "purple",
+      content: {
+        summary: "A <strong>parity bit</strong> is an extra bit added to a data word so the TOTAL number of 1s (data + parity) " +
+          "matches a chosen convention — <strong>even parity</strong> (total 1s is even) or <strong>odd parity</strong> " +
+          "(total 1s is odd). The generator/checker circuit is simply a tree of <strong>XOR gates</strong>: XOR outputs 1 when " +
+          "an ODD number of its inputs are 1, so cascading XORs across all data bits computes the <em>modulo-2 sum</em> — " +
+          "exactly the parity of the word. The same XOR-tree circuit is reused at the receiver as a <strong>checker</strong>: " +
+          "recompute parity on the received bits and compare to the received parity bit — a mismatch flags a single-bit error.",
+        formula: "Modulo-2 sum of 4 bits = ((A⊕B)⊕C)⊕D — needs exactly 3 XOR gates cascaded   ·   even parity: total 1s (data+parity) is even",
+        bullets: [
+          "XOR of n bits = 1 exactly when an ODD number of those bits are 1 — this IS the modulo-2 sum",
+          "Modulo-2 sum of 4 data bits needs exactly <strong>3 cascaded XOR gates</strong> (XOR is 2-input; n bits need n−1 XORs)",
+          "Even parity generator: parity bit P = XOR of all data bits (so data+P has an even 1-count)",
+          "Odd parity generator: parity bit P = XNOR of all data bits (complement of the even-parity XOR)",
+          "Parity CHECKER at the receiver: XOR all received bits (data + parity bit) together",
+          "Even-parity checker: output HIGH (error flagged) if the total XOR is 1 (odd) — the check FAILS when the count is odd",
+          "Odd-parity checker: output HIGH (error flagged) if the total XOR is 0 (even) — mirror logic",
+          "Parity detects any SINGLE-bit flip, but is blind to an even number of simultaneous bit flips (2 flips cancel out)"
+        ],
+        analogy: "A dinner party headcount rule: 'the total guests (data) plus the host (parity bit) must always be an even number.' If the doorperson (checker) counts everyone at the end and gets an ODD number, someone slipped in or left unnoticed — an error is flagged. But if exactly TWO uninvited guests sneak in together, the total is still even and the doorperson notices nothing — parity catches single intruders, not pairs."
+      },
+      workedExample: {
+        problem: "A sender wants EVEN parity and transmits the 8-bit data 1010 1101 with an added parity bit. Determine the parity bit, and show how the receiver's XOR-tree checker verifies it.",
+        steps: [
+          "<strong>Count the 1s in 1010 1101:</strong> bits are 1,0,1,0,1,1,0,1 → five 1s (odd count)",
+          "<strong>Even parity rule:</strong> total 1s (data + parity bit) must be EVEN. Data already has 5 (odd) → parity bit must add 1 more to make it even: <strong>P = 1</strong>",
+          "<strong>Transmitted word:</strong> 1010 1101 <strong>1</strong> (9 bits total, six 1s — even ✓)",
+          "<strong>Generator circuit:</strong> XOR all 8 data bits together (7 cascaded XOR gates for 8 bits) — the output IS the parity bit P=1",
+          "<strong>Receiver check:</strong> XOR all 9 received bits (data + P) together. If no error occurred, the result is 0 (even count) → check PASSES. If any single bit flipped in transit, the XOR result becomes 1 → error FLAGGED"
+        ],
+        note: "Marks are awarded for showing the running XOR chain bit-by-bit, not just the final parity value — draw the cascade explicitly in your answer."
+      },
+      quiz: [
+        {
+          id: "q-dl6-025",
+          type: "truefalse",
+          question: "The modulo-2 sum of four bits can be formed by three exclusive-OR gates connected in a cascade.",
+          answer: 0,
+          explanation: "True. XOR is a 2-input gate, so combining 4 bits needs 3 XORs: ((A⊕B)⊕C)⊕D — each XOR reduces the bit count by one, and 4 bits need 3 reduction steps. This exact statement is a verbatim final-exam True/False item. General rule: n bits need (n−1) cascaded XOR gates for the modulo-2 sum.",
+          xpReward: 25
+        },
+        {
+          id: "q-dl6-026",
+          type: "truefalse",
+          question: "For a parity checker using EVEN parity, when the number of 1s on the inputs (data + parity bit) is even, the output X is HIGH (indicating an error).",
+          answer: 1,
+          explanation: "False. For even parity, an EVEN 1-count is the CORRECT, expected condition — no error, so the checker output should be LOW. The checker's error flag (X = HIGH) fires when the count is ODD, since that means the even-parity convention has been violated. This exact statement (with the polarity reversed) is a verbatim final-exam trap — always match 'even parity' with 'even = OK, odd = error'.",
+          xpReward: 25
+        },
+        {
+          id: "q-dl6-027",
+          type: "calc",
+          question: "Using ODD parity, how many 1s must the transmitted data 1100 have plus its parity bit (data bits + P), in total?",
+          setup: "Data 1100 has two 1s (even count)\nOdd parity requires: total 1s (data + P) must be ODD",
+          hint: "Data already has an even count — what parity bit flips the total to odd?",
+          answer: 3,
+          tolerance: 0,
+          unit: "total 1s",
+          calcType: "numeric",
+          explanation: "Data 1100 has two 1s (even). For odd parity the TOTAL (data + P) must be odd, so P = 1 is added, giving 2 + 1 = 3 total 1s (odd ✓). If the data already had an odd count, P would be 0 to keep the total odd. Odd-parity generator logic: P = XNOR of all data bits (the complement of the even-parity XOR).",
+          xpReward: 35
+        },
+        {
+          id: "q-dl6-028",
+          type: "mcq",
+          question: "A parity scheme can reliably detect:",
+          options: [
+            "Any number of simultaneous bit errors",
+            "A single-bit error only — an even number of simultaneous flips cancels out and goes undetected",
+            "Only errors in the most significant bit",
+            "Errors only if the parity bit itself is corrupted"
+          ],
+          answer: 1,
+          explanation: "Single-bit errors only. Each bit flip toggles the XOR-tree's output, so ONE flip changes the overall parity (detected), but TWO simultaneous flips toggle it twice — back to the original parity, and the checker sees no error at all. This blind spot is why more robust codes (e.g. checksums, CRC) exist for burst-error-prone links.",
+          xpReward: 25
         }
       ]
     },
@@ -234,6 +340,33 @@ window.dlChapter6Data = {
           answer: [0, 1, 2, 3],
           explanation: "The complete comparator picture: equality is an all-bits AND-of-XNORs, magnitude is decided at the first (highest) disagreement, and IC cascade inputs let 4-bit chips chain into 8-, 12-, 16-bit comparators — the lower chip's verdict feeds the upper chip's tie-breaker inputs.",
           xpReward: 25
+        },
+        {
+          id: "q-dl6-029",
+          type: "mcq",
+          question: "A 4-bit comparator compares A = 0101 and B = 1010. At which bit position does the comparator stop comparing, and why?",
+          options: [
+            "Bit 0 (LSB) — comparators always finish at the last bit regardless of earlier results",
+            "Bit 3 (MSB) — A₃=0 and B₃=1 already differ at the very first (highest) position checked, so the decision (A<B) is made immediately and no lower bits need to be examined",
+            "It compares all 4 bits every time before deciding, since comparators cannot stop early",
+            "Bit 2 — because that is where the two numbers happen to have the same value"
+          ],
+          answer: 1,
+          explanation: "Bit 3 (the MSB). A₃=0, B₃=1 — they already differ at the very FIRST bit position examined (comparators always scan MSB-first), so B is immediately known to be larger and the comparator's decision is settled right there: A < B. Bits 2,1,0 are irrelevant and never need to be checked — explaining exactly WHERE and WHY the comparison stops is what full exam marks require, not just the final answer.",
+          xpReward: 25
+        },
+        {
+          id: "q-dl6-030",
+          type: "calc",
+          question: "A = 0110 and B = 0011 are fed into a 4-bit comparator. What is the comparator's output result — enter 1 for 'A>B is HIGH', 2 for 'A=B is HIGH', or 3 for 'A<B is HIGH'.",
+          setup: "A = 0110\nB = 0011\nScan MSB→LSB: bit3: A=0,B=0 (equal) · bit2: A=1,B=0 (differ!)",
+          hint: "At bit 2, A has the 1 and B has the 0 — who wins?",
+          answer: 1,
+          tolerance: 0,
+          unit: "result code",
+          calcType: "numeric",
+          explanation: "Result 1: A>B is HIGH (the other two outputs are LOW). Bit 3 ties (0,0); at bit 2, A=1 and B=0 — A wins immediately (0110=6 > 0011=3 ✓), and bits 1,0 are never consulted. This exact A=0110,B=0011 pairing is a verbatim final-exam True/False setup ('A<B is HIGH' would be the false statement to spot).",
+          xpReward: 35
         }
       ]
     },
@@ -351,6 +484,41 @@ window.dlChapter6Data = {
           answer: [0, 1, 2, 3],
           explanation: "Decoders and encoders are inverse translators between 'binary code' and 'which line'. Priority resolves simultaneous activations; the 7-segment driver is the decoder you see every day. Keep the directions straight: decoder = code→lines, encoder = lines→code.",
           xpReward: 25
+        },
+        {
+          id: "q-dl6-031",
+          type: "truefalse",
+          question: "A 3-to-8 decoder's logic symbol shows inputs A, B, C. If the binary value ABC = 101 is applied, output Y5 will be activated (HIGH).",
+          answer: 0,
+          explanation: "True. 101₂ = 5, so output Y5 (the minterm A·B̄·C) activates — exactly one output per input code, always the one whose subscript equals the binary value applied. Reading a decoder's logic symbol is just: convert the input code to decimal, that number's output is the active one.",
+          xpReward: 25
+        },
+        {
+          id: "q-dl6-032",
+          type: "mcq",
+          question: "An HPRI/BCD priority encoder has inputs Q3, Q5, and Q7 simultaneously active (asserted). Per priority-encoder rules, which input does the encoder actually respond to, and what happens to the others?",
+          options: [
+            "It responds to Q3 (the lowest-numbered active input) and ignores Q5 and Q7",
+            "It responds to Q7 (the HIGHEST-numbered active input) and ignores Q3 and Q5, producing the BCD code for 7",
+            "It averages all three active inputs into one code",
+            "The output is undefined/invalid whenever more than one input is active"
+          ],
+          answer: 1,
+          explanation: "It responds to Q7 and ignores Q3 and Q5. 'Priority' always means the HIGHEST-numbered active input wins — lower-numbered active inputs are simply ignored, not combined or averaged. This is exactly what makes a priority encoder well-defined and usable in real systems (e.g. interrupt controllers), unlike a plain encoder which would garble multiple simultaneous inputs.",
+          xpReward: 25
+        },
+        {
+          id: "q-dl6-033",
+          type: "calc",
+          question: "A BCD-to-7-segment decoder receives the BCD input 0111 (decimal 7). On a standard 7-segment display, digit '7' lights only segments a, b, c. Does segment 'f' light up? Enter 1 for YES or 0 for NO.",
+          setup: "BCD input: 0111 = decimal 7\nStandard 7-segment pattern for digit '7': segments a, b, c ON; segments d, e, f, g OFF",
+          hint: "Does the numeral '7' use the top-left vertical segment (f)?",
+          answer: 0,
+          tolerance: 0,
+          unit: "(1=yes, 0=no)",
+          calcType: "numeric",
+          explanation: "NO (0) — segment f is OFF for digit 7. The decoder's job is exactly this: map each BCD input code to a FIXED, pre-wired segment pattern. Digit '7' only needs segments a (top), b (upper-right), c (lower-right) to be drawn — f (upper-left) stays dark. Exam questions give you a specific BCD input and ask whether a NAMED segment lights — memorise the seven-segment patterns for 0–9, or reason from what strokes each digit actually needs.",
+          xpReward: 35
         }
       ]
     },
@@ -453,6 +621,28 @@ window.dlChapter6Data = {
           ],
           answer: [0, 1, 2, 3],
           explanation: "The four routing/translating blocks side by side. MUX/DEMUX carry DATA under select-code control; decoder/encoder translate between codes and one-hot lines with no separate data path. Counting inputs/outputs/select lines correctly identifies any of them instantly on an exam diagram.",
+          xpReward: 25
+        },
+        {
+          id: "q-dl6-034",
+          type: "truefalse",
+          question: "A MUX (multiplexer) is used to distribute a single input signal to multiple outputs.",
+          answer: 1,
+          explanation: "False — that description is the DEMULTIPLEXER's job, not the multiplexer's. A MUX does the OPPOSITE: it selects ONE of MANY inputs and routes it to a SINGLE output. 'Distributing one input to many outputs' = DEMUX (one → many); 'selecting one of many inputs to one output' = MUX (many → one). This exact role-swap is a verbatim final-exam trap — the two devices are mirror images and are easy to mix up under time pressure.",
+          xpReward: 25
+        },
+        {
+          id: "q-dl6-035",
+          type: "mcq",
+          question: "A 1-of-4 MUX logic symbol shows select inputs S1, S0. If S1S0 = 01 is applied, which data input is routed to the output Y?",
+          options: [
+            "D0",
+            "D1 — because 01₂ = 1, selecting channel 1",
+            "D2",
+            "D3"
+          ],
+          answer: 1,
+          explanation: "D1. S1S0 = 01₂ = decimal 1, so the channel numbered 1 (D1) is the one connected through to Y. Reading a MUX's select code is a direct binary-to-decimal conversion — whatever channel number that decimal value names is the one selected.",
           xpReward: 25
         }
       ]

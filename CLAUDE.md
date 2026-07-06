@@ -197,9 +197,9 @@ Network sims must be registered in `SIM_BUILDERS` in `js/animations.js`.
 | Chapter | Data file | Topics |
 |---|---|---|
 | Ch5 Combinational Logic | `logic-chapter5-data.js` | `dl5-and-or dl5-universal dl5-dual-symbols dl5-design` |
-| Ch6 Combinational Functions | `logic-chapter6-data.js` | `dl6-adders dl6-comparator dl6-decoder-encoder dl6-mux-demux` |
+| Ch6 Combinational Functions | `logic-chapter6-data.js` | `dl6-adders dl6-parity dl6-comparator dl6-decoder-encoder dl6-mux-demux` |
 | Ch7 Latches & Flip-Flops | `logic-chapter7-data.js` | `dl7-latches dl7-edge-ff dl7-jk-t dl7-async-timing` |
-| Ch8 Counters | `logic-chapter8-data.js` | `dl8-async dl8-sync dl8-modulus dl8-design` |
+| Ch8 Counters | `logic-chapter8-data.js` | `dl8-async dl8-sync dl8-modulus dl8-design dl8-shift-registers` |
 
 Source materials live in `SCSR2213-network-communication/`, `SECI1113-computational-mathematic/`,
 `SECR1013-digital-logic/` (lecture PDFs + atomic markdown notes) — always ground new content in them.

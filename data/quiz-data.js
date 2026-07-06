@@ -143,6 +143,7 @@ window.quizTopicMeta = {
 
   // ── Logic Ch6 — Functions of Combinational Logic ──
   "dl6-adders":          { label: "Half, Full & Parallel Adders", chapter: "dl6" },
+  "dl6-parity":          { label: "Parity Generators & Checkers", chapter: "dl6" },
   "dl6-comparator":      { label: "Comparators",                  chapter: "dl6" },
   "dl6-decoder-encoder": { label: "Decoders & Encoders",          chapter: "dl6" },
   "dl6-mux-demux":       { label: "Multiplexers & DEMUX",         chapter: "dl6" },
@@ -154,10 +155,11 @@ window.quizTopicMeta = {
   "dl7-async-timing": { label: "Async Inputs & Timing Diagrams",  chapter: "dl7" },
 
   // ── Logic Ch8 — Counters ──
-  "dl8-async":   { label: "Asynchronous Ripple Counters",  chapter: "dl8" },
-  "dl8-sync":    { label: "Synchronous Counters",          chapter: "dl8" },
-  "dl8-modulus": { label: "Modulus & Truncated Counters",  chapter: "dl8" },
-  "dl8-design":  { label: "Synchronous Counter Design",    chapter: "dl8" }
+  "dl8-async":           { label: "Asynchronous Ripple Counters",       chapter: "dl8" },
+  "dl8-sync":            { label: "Synchronous Counters",               chapter: "dl8" },
+  "dl8-modulus":         { label: "Modulus & Truncated Counters",       chapter: "dl8" },
+  "dl8-design":          { label: "Synchronous Counter Design",         chapter: "dl8" },
+  "dl8-shift-registers": { label: "Shift Registers, Ring & Johnson",    chapter: "dl8" }
 };
 
 /**

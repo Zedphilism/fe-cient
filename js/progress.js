@@ -89,9 +89,9 @@
 
     // ── Digital Logic ──
     dl5: ['dl5-and-or', 'dl5-universal', 'dl5-dual-symbols', 'dl5-design'],
-    dl6: ['dl6-adders', 'dl6-comparator', 'dl6-decoder-encoder', 'dl6-mux-demux'],
+    dl6: ['dl6-adders', 'dl6-parity', 'dl6-comparator', 'dl6-decoder-encoder', 'dl6-mux-demux'],
     dl7: ['dl7-latches', 'dl7-edge-ff', 'dl7-jk-t', 'dl7-async-timing'],
-    dl8: ['dl8-async', 'dl8-sync', 'dl8-modulus', 'dl8-design']
+    dl8: ['dl8-async', 'dl8-sync', 'dl8-modulus', 'dl8-design', 'dl8-shift-registers']
   };
 
   const MODULES = {
