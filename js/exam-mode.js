@@ -4,9 +4,12 @@
  * Exposes window.ExamMode — initialised by exam-mode.html's inline init script.
  *
  * Dependencies (must be loaded before this file):
- *   data/chapter1-data.js  → window.chapter1Data
- *   data/chapter2-data.js  → window.chapter2Data
- *   data/quiz-data.js      → window.quizData, window.quizTopicMeta, window.quizChapterMeta
+ *   every chapter data file (net ch4–8, math ch5–10, logic ch5–8)
+ *   data/quiz-data.js      → window.quizData, window.quizTopicMeta,
+ *                            window.quizChapterMeta, window.quizModuleMeta
+ *
+ * Module scoping: exam-mode.html?module=net|math|logic filters the pool;
+ * no param = combined exam across all three modules.
  *   js/progress.js         → window.Progress
  *   js/gamification.js     → window.Gamification
  *   js/quiz.js             → window.Quiz (used for shuffle + sample helpers)
@@ -35,6 +38,14 @@
 
   // ── Module State ────────────────────────────────────────────────────────
   let _session = null; // active exam session object
+  let _module  = null; // 'net' | 'math' | 'logic' | null (= all modules)
+
+  /** Return the quizData pool filtered to the selected module (if any). */
+  function _modulePool() {
+    var pool = global.quizData || [];
+    if (!_module) return pool;
+    return pool.filter(function (q) { return q.module === _module; });
+  }
 
   // ── Helpers ─────────────────────────────────────────────────────────────
 
@@ -658,6 +669,31 @@
      * Wires all button event listeners, prepares UI state.
      */
     init: function () {
+      // Module scope from URL: exam-mode.html?module=net|math|logic
+      var mod = new URLSearchParams(window.location.search).get('module');
+      var modMeta = (global.quizModuleMeta || {})[mod];
+      _module = modMeta ? mod : null;
+
+      // Reflect the module scope on the landing screen
+      var scopeEl = document.getElementById('exam-module-scope');
+      if (scopeEl) {
+        scopeEl.textContent = modMeta
+          ? modMeta.code + ' — ' + modMeta.label.toUpperCase()
+          : 'ALL MODULES — COMBINED EXAM';
+        if (modMeta) scopeEl.style.color = modMeta.color;
+      }
+      var titleEl = document.getElementById('exam-landing-title');
+      if (titleEl && modMeta) {
+        titleEl.textContent = modMeta.label + ' — Exam Mode';
+      }
+
+      // Module switcher pills (if present on the landing screen)
+      document.querySelectorAll('[data-exam-module]').forEach(function (pill) {
+        var key = pill.dataset.examModule || '';
+        var active = (key === (_module || ''));
+        pill.classList.toggle('nav-link--active', active);
+      });
+
       // Start exam button
       document.getElementById('btn-start-exam').addEventListener('click', function () {
         ExamMode.start(false);
@@ -736,16 +772,20 @@
           alert(STR.noWeak);
           return;
         }
-        // Filter quizData to only weak topic questions
-        pool = (global.quizData || []).filter(function (q) {
+        // Filter the (module-scoped) pool to only weak topic questions
+        pool = _modulePool().filter(function (q) {
           return weakTopicIds.indexOf(q.topicId) !== -1;
         });
         if (pool.length === 0) {
-          alert('No questions found for your weak topics. Try running a full exam first.');
+          alert('No questions found for your weak topics in this module. Try running a full exam first.');
           return;
         }
       } else {
-        pool = global.quizData || [];
+        pool = _modulePool();
+        if (pool.length === 0) {
+          alert('No questions available for this module. Check that all data files are loaded.');
+          return;
+        }
       }
 
       // Sample questions

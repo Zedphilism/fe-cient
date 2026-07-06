@@ -25,12 +25,27 @@
 
   const PAGES = {
     INDEX:   'index',
-    CH1:     'chapter1',
-    CH2:     'chapter2',
-    CH3:     'chapter3',
-    CH4:     'chapter4',
-    CH5:     'chapter5',
-    EXAM:    'exam'
+    EXAM:    'exam',
+    CHAPTER: 'chapter'
+  };
+
+  /** Chapter key → window data global name (all 15 chapters) */
+  const DATA_GLOBALS = {
+    ch4: 'chapter4Data', ch5: 'chapter5Data', ch6: 'chapter6Data',
+    ch7: 'chapter7Data', ch8: 'chapter8Data',
+    math5: 'mathChapter5Data', math6: 'mathChapter6Data', math7: 'mathChapter7Data',
+    math8: 'mathChapter8Data', math9: 'mathChapter9Data', math10: 'mathChapter10Data',
+    dl5: 'dlChapter5Data', dl6: 'dlChapter6Data', dl7: 'dlChapter7Data', dl8: 'dlChapter8Data'
+  };
+
+  /** Chapter key → page URL */
+  const PAGE_URLS = {
+    ch4: 'chapter4.html', ch5: 'chapter5.html', ch6: 'chapter6.html',
+    ch7: 'chapter7.html', ch8: 'chapter8.html',
+    math5: 'math-chapter5.html', math6: 'math-chapter6.html', math7: 'math-chapter7.html',
+    math8: 'math-chapter8.html', math9: 'math-chapter9.html', math10: 'math-chapter10.html',
+    dl5: 'logic-chapter5.html', dl6: 'logic-chapter6.html',
+    dl7: 'logic-chapter7.html', dl8: 'logic-chapter8.html'
   };
 
   /* ----------------------------------------------------------
@@ -53,26 +68,55 @@
   ---------------------------------------------------------- */
 
   let _page       = null;   // current PAGES value
+  let _chapterKey = null;   // e.g. 'ch4', 'math7', 'dl5' when on a chapter page
   let _modalStack = [];     // open modal IDs for ESC handling
 
   /* ----------------------------------------------------------
      PAGE DETECTION
   ---------------------------------------------------------- */
 
-  /** Read the data-page attribute from <body> to identify the page */
+  /**
+   * Identify the current page and (if a chapter page) the chapter key.
+   * Chapter pages declare themselves in one of two ways:
+   *   <body data-page="chapter" data-chapter="dl5">    (renderer pages)
+   *   <body data-page="chapter4">                      (legacy static pages)
+   */
   function detectPage() {
-    return document.body.dataset.page || _inferPage();
-  }
+    const ds = document.body.dataset;
 
-  /** Fallback: infer page from URL pathname */
-  function _inferPage() {
+    if (ds.chapter && Progress.CHAPTER_TOPICS[ds.chapter]) {
+      _chapterKey = ds.chapter;
+      return PAGES.CHAPTER;
+    }
+
+    const dp = (ds.page || '').toLowerCase();
+    if (dp === 'exam' || dp === 'index') return dp;
+
+    // Legacy static pages: data-page="chapter4" / "math-chapter10"
+    let m = dp.match(/^chapter(\d+)$/);
+    if (m && Progress.CHAPTER_TOPICS['ch' + m[1]]) {
+      _chapterKey = 'ch' + m[1];
+      return PAGES.CHAPTER;
+    }
+    m = dp.match(/^math-chapter(\d+)$/);
+    if (m && Progress.CHAPTER_TOPICS['math' + m[1]]) {
+      _chapterKey = 'math' + m[1];
+      return PAGES.CHAPTER;
+    }
+
+    // Fallback: infer from URL
     const path = window.location.pathname.toLowerCase();
-    if (path.includes('chapter5')) return PAGES.CH5;
-    if (path.includes('chapter4')) return PAGES.CH4;
-    if (path.includes('chapter3')) return PAGES.CH3;
-    if (path.includes('chapter2')) return PAGES.CH2;
-    if (path.includes('chapter1')) return PAGES.CH1;
-    if (path.includes('exam'))     return PAGES.EXAM;
+    if (path.includes('exam')) return PAGES.EXAM;
+    const pm = path.match(/(math-|logic-)?chapter(\d+)/);
+    if (pm) {
+      const key = pm[1] === 'math-' ? 'math' + pm[2]
+                : pm[1] === 'logic-' ? 'dl' + pm[2]
+                : 'ch' + pm[2];
+      if (Progress.CHAPTER_TOPICS[key]) {
+        _chapterKey = key;
+        return PAGES.CHAPTER;
+      }
+    }
     return PAGES.INDEX;
   }
 
@@ -149,37 +193,13 @@
      PAGE INIT FUNCTIONS
   ---------------------------------------------------------- */
 
-  /** Initialise the index / dashboard page */
+  /** Initialise the index / hub dashboard page */
   function initIndex() {
     _refreshDashboardStats();
-
-    // "Continue Studying" routing
-    const btn = document.getElementById('btnContinue');
-    if (btn) {
-      const state    = Progress.load();
-      const ch1Done  = Progress.CH1_TOPICS.every(id => state.completedTopics.includes(id));
-      btn.href       = ch1Done ? 'chapter2.html' : 'chapter1.html';
-    }
-
-    // Weak topics button state
-    const weakBtn  = document.getElementById('btnWeakTopics');
-    const weakLbl  = document.getElementById('weakTopicsLabel');
-    if (weakBtn && weakLbl) {
-      const wc = Progress.load().weakTopics.length;
-      weakLbl.textContent = wc > 0
-        ? `Retry ${wc} Weak Topic${wc !== 1 ? 's' : ''}`
-        : 'View Weak Topics';
-      weakBtn.href = wc > 0 ? 'exam-mode.html?mode=retry' : '#';
-      if (wc === 0) {
-        weakBtn.addEventListener('click', e => e.preventDefault());
-      }
-    }
-
-    // Animate stats counters on load
     _animateDashboardCounters();
   }
 
-  /** Refresh all stat values on the dashboard */
+  /** Refresh all stat values on the hub dashboard */
   function _refreshDashboardStats() {
     const s = Progress.getSummary();
 
@@ -197,7 +217,9 @@
     }
 
     // Status bar
-    _setText('statusTopics', `${s.topicsDone}/16 TOPICS LOADED`);
+    const totalTopics = Object.keys(Progress.CHAPTER_TOPICS)
+      .reduce((n, ch) => n + Progress.CHAPTER_TOPICS[ch].length, 0);
+    _setText('statusTopics', `${s.topicsDone}/${totalTopics} TOPICS`);
     _setText('statusWeak',   `${s.weakCount} WEAK TOPIC${s.weakCount !== 1 ? 'S' : ''}`);
 
     const weakDot = document.getElementById('weakDot');
@@ -215,16 +237,30 @@
         .toUpperCase();
     }
 
-    // Chapter progress rings
-    _animateRing('ch1Ring', s.ch1Pct);
-    _animateRing('ch2Ring', s.ch2Pct);
-    _setText('ch1Pct', s.ch1Pct + '%');
-    _setText('ch2Pct', s.ch2Pct + '%');
+    // ── Per-module cards ──
+    Object.keys(Progress.MODULES).forEach(function (modKey) {
+      const mp = Progress.getModuleProgress(modKey);
 
-    // Topic pills
-    const state = Progress.load();
-    document.querySelectorAll('.topic-pill[data-id]').forEach(pill => {
-      pill.classList.toggle('done', state.completedTopics.includes(pill.dataset.id));
+      const fill = document.getElementById('mod-' + modKey + '-fill');
+      if (fill) fill.style.width = mp.pct + '%';
+      _setText('mod-' + modKey + '-pct', mp.pct + '%');
+      _setText('mod-' + modKey + '-topics', mp.done + ' / ' + mp.total + ' topics');
+
+      // Continue button → first chapter that isn't 100% complete
+      const btn = document.getElementById('btn-continue-' + modKey);
+      if (btn) {
+        const chapters = Progress.MODULES[modKey].chapters;
+        const target = chapters.find(ch => Progress.getChapterProgress(ch) < 100) || chapters[0];
+        btn.href = PAGE_URLS[target] || '#';
+      }
+    });
+
+    // Per-chapter link badges: .chapter-link[data-chapter]
+    document.querySelectorAll('.chapter-link[data-chapter]').forEach(link => {
+      const pct = Progress.getChapterProgress(link.dataset.chapter);
+      link.classList.toggle('chapter-link--done', pct === 100);
+      const pctEl = link.querySelector('.chapter-link__pct');
+      if (pctEl) pctEl.textContent = pct > 0 ? pct + '%' : '';
     });
 
     // Recent achievements
@@ -256,6 +292,7 @@
     _setupSimulationMountPoints();
     _setupChapterQuizCallbacks(chapterKey);
     _setupSectionProgressMarkers();
+    _refreshChapterProgress(chapterKey);
   }
 
   /** Lock/unlock sections based on progress state */
@@ -346,14 +383,7 @@
 
   /** Unlock the section that follows topicId in chapter sequence */
   function _unlockNextSection(completedId, chapterKey) {
-    const seqMap = {
-      ch1: Progress.CH1_TOPICS,
-      ch2: Progress.CH2_TOPICS,
-      ch3: Progress.CH3_TOPICS,
-      ch4: Progress.CH4_TOPICS,
-      ch5: Progress.CH5_TOPICS
-    };
-    const sequence = seqMap[chapterKey] || Progress.CH1_TOPICS;
+    const sequence = Progress.CHAPTER_TOPICS[chapterKey] || [];
 
     const idx  = sequence.indexOf(completedId);
     const next = sequence[idx + 1];
@@ -398,8 +428,7 @@
     // Also update status bar topic counter
     const statusEl = document.getElementById('status-progress-text');
     if (statusEl) {
-      const seqMap = { ch1: Progress.CH1_TOPICS, ch2: Progress.CH2_TOPICS, ch3: Progress.CH3_TOPICS, ch4: Progress.CH4_TOPICS, ch5: Progress.CH5_TOPICS };
-      const topics = seqMap[chapterKey] || Progress.CH1_TOPICS;
+      const topics = Progress.CHAPTER_TOPICS[chapterKey] || [];
       const state  = Progress.load();
       const done   = topics.filter(id => state.completedTopics.includes(id)).length;
       statusEl.textContent = done + ' / ' + topics.length + ' TOPICS';
@@ -408,15 +437,8 @@
 
   /** Look up questions for a topic from the globally loaded chapter data */
   function _getTopicQuestions(topicId) {
-    const prefix = topicId.split('-')[0]; // 'ch1', 'ch2', etc.
-    const dataMap = {
-      ch1: 'chapter1Data',
-      ch2: 'chapter2Data',
-      ch3: 'chapter3Data',
-      ch4: 'chapter4Data',
-      ch5: 'chapter5Data'
-    };
-    const data = window[dataMap[prefix]];
+    const prefix = topicId.split('-')[0]; // 'ch4', 'math7', 'dl5', …
+    const data = window[DATA_GLOBALS[prefix]];
     if (!data) return [];
     const section = (data.sections || []).find(s => s.id === topicId);
     return section ? (section.quiz || []) : [];
@@ -481,27 +503,21 @@
       return;
     }
 
-    // H — go to home / dashboard
+    // H — go to home / hub dashboard
     if (e.key === 'h' || e.key === 'H') {
       if (_page !== PAGES.INDEX) navigate('index.html');
       return;
     }
 
-    // 1 — chapter 1
-    if (e.key === '1' && _page !== PAGES.CH1) {
-      navigate('chapter1.html');
-      return;
-    }
-
-    // 2 — chapter 2
-    if (e.key === '2' && _page !== PAGES.CH2) {
-      navigate('chapter2.html');
-      return;
-    }
-
-    // E — exam mode
+    // E — exam mode (scoped to the current module when on a chapter page)
     if ((e.key === 'e' || e.key === 'E') && _page !== PAGES.EXAM) {
-      navigate('exam-mode.html');
+      let url = 'exam-mode.html';
+      if (_chapterKey) {
+        const modKey = Object.keys(Progress.MODULES).find(m =>
+          Progress.MODULES[m].chapters.includes(_chapterKey));
+        if (modKey) url += '?module=' + modKey;
+      }
+      navigate(url);
       return;
     }
   }
@@ -577,10 +593,8 @@
 
     const shortcuts = [
       { key: '?',   desc: 'Show this help panel' },
-      { key: 'H',   desc: 'Go to Dashboard' },
-      { key: '1',   desc: 'Go to Chapter 1' },
-      { key: '2',   desc: 'Go to Chapter 2' },
-      { key: 'E',   desc: 'Enter Exam Mode' },
+      { key: 'H',   desc: 'Go to Hub Dashboard' },
+      { key: 'E',   desc: 'Exam Mode (current module)' },
       { key: 'ESC', desc: 'Close modal / overlay' }
     ];
 
@@ -723,13 +737,9 @@
 
     // Page-specific startup
     switch (_page) {
-      case PAGES.INDEX: initIndex();          break;
-      case PAGES.CH1:   initChapter('ch1');   break;
-      case PAGES.CH2:   initChapter('ch2');   break;
-      case PAGES.CH3:   initChapter('ch3');   break;
-      case PAGES.CH4:   initChapter('ch4');   break;
-      case PAGES.CH5:   initChapter('ch5');   break;
-      case PAGES.EXAM:  /* exam-mode.js handles its own init */ break;
+      case PAGES.INDEX:   initIndex();               break;
+      case PAGES.CHAPTER: initChapter(_chapterKey);  break;
+      case PAGES.EXAM:    /* exam-mode.js handles its own init */ break;
     }
   });
 

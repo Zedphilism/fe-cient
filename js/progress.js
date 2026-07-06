@@ -47,41 +47,66 @@
   ];
 
   const BADGE_DEFS = {
-    first_quiz:    { name: 'First Signal',     icon: '⚡', trigger: 'Complete your first quiz'             },
-    streak_3:      { name: 'Consistent Node',  icon: '🔗', trigger: '3-day study streak'                   },
-    streak_7:      { name: 'Uptime Champion',  icon: '🏆', trigger: '7-day study streak'                   },
-    ch1_complete:  { name: 'Layer 1 Cleared',  icon: '✓',  trigger: 'Finish all Chapter 1 topics'          },
-    ch2_complete:  { name: 'App Layer Expert', icon: '★',  trigger: 'Finish all Chapter 2 topics'          },
-    exam_pass:     { name: 'Exam Ready',       icon: '📋', trigger: 'Pass exam mode with ≥80%'             },
-    perfect_score: { name: 'Zero Loss Packet', icon: '💎', trigger: 'Score 100% on any quiz'               },
-    speed_run:     { name: 'Low Latency',      icon: '⚡', trigger: 'Complete exam mode in under 5 minutes' },
-    weak_cleared:  { name: 'Self-Correcting',  icon: '↺',  trigger: 'Clear all weak topics in retry mode'  }
+    first_quiz:     { name: 'First Signal',       icon: '⚡', trigger: 'Complete your first quiz'             },
+    streak_3:       { name: 'Consistent Node',    icon: '🔗', trigger: '3-day study streak'                   },
+    streak_7:       { name: 'Uptime Champion',    icon: '🏆', trigger: '7-day study streak'                   },
+    net_complete:   { name: 'Network Engineer',   icon: '🌐', trigger: 'Finish every Network Communication topic' },
+    math_complete:  { name: 'Numerical Analyst',  icon: '∫',  trigger: 'Finish every Computational Maths topic'   },
+    logic_complete: { name: 'Logic Architect',    icon: '⊕',  trigger: 'Finish every Digital Logic topic'         },
+    exam_pass:      { name: 'Exam Ready',         icon: '📋', trigger: 'Pass exam mode with ≥80%'             },
+    perfect_score:  { name: 'Zero Loss Packet',   icon: '💎', trigger: 'Score 100% on any quiz'               },
+    speed_run:      { name: 'Low Latency',        icon: '⚡', trigger: 'Complete exam mode in under 5 minutes' },
+    weak_cleared:   { name: 'Self-Correcting',    icon: '↺',  trigger: 'Clear all weak topics in retry mode'  }
   };
 
-  const CH1_TOPICS = ['ch1-internet', 'ch1-protocols', 'ch1-structure', 'ch1-access'];
+  /* ── Chapter → topic map (single source of truth) ──────────
+     Three modules share the engine:
+       net   — SCSR2213 Network Communication   (ch4–ch8)
+       math  — SECI1113 Computational Maths     (math5–math10)
+       logic — SECR1013 Digital Logic           (dl5–dl8)
+  ────────────────────────────────────────────────────────── */
 
-  const CH2_TOPICS = [
-    'ch2-client-server', 'ch2-p2p', 'ch2-processes', 'ch2-addressing',
-    'ch2-app-protocols', 'ch2-transport-req', 'ch2-tcp-udp',
-    'ch2-http-intro', 'ch2-http-char', 'ch2-http-persistent',
-    'ch2-http-flow', 'ch2-email'
-  ];
+  const CHAPTER_TOPICS = {
+    // ── Network Communication ──
+    ch4: ['ch4-planes', 'ch4-ip-format', 'ch4-fragmentation', 'ch4-addressing',
+          'ch4-dhcp-nat', 'ch4-ipv6'],
+    ch5: ['ch5-link-state', 'ch5-distance-vector', 'ch5-ospf-bgp',
+          'ch5-sdn', 'ch5-icmp'],
+    ch6: ['ch6-intro', 'ch6-error-detection', 'ch6-mac-protocols',
+          'ch6-ethernet-arp', 'ch6-switches-vlan'],
+    ch7: ['ch7-wireless-intro', 'ch7-wifi-arch', 'ch7-wifi-mac',
+          'ch7-cellular', 'ch7-mobility'],
+    ch8: ['ch8-intro', 'ch8-symmetric', 'ch8-public-key',
+          'ch8-tls', 'ch8-firewalls'],
 
-  const CH3_TOPICS = [
-    'ch3-transport-fundamentals', 'ch3-mux-demux', 'ch3-udp', 'ch3-checksum',
-    'ch3-rdt', 'ch3-sliding-window', 'ch3-tcp-segment', 'ch3-tcp-rtt',
-    'ch3-tcp-flow', 'ch3-congestion'
-  ];
+    // ── Computational Mathematics ──
+    math5:  ['math5-error-types', 'math5-abs-rel-error', 'math5-propagation'],
+    math6:  ['math6-ivt', 'math6-bisection', 'math6-newton', 'math6-secant'],
+    math7:  ['math7-definition', 'math7-characteristic', 'math7-power-method'],
+    math8:  ['math8-concept', 'math8-forward', 'math8-backward'],
+    math9:  ['math9-finite-diff', 'math9-central'],
+    math10: ['math10-trapezoidal', 'math10-simpsons', 'math10-comparison'],
 
-  const CH4_TOPICS = [
-    'ch4-planes', 'ch4-ip-format', 'ch4-fragmentation', 'ch4-addressing',
-    'ch4-dhcp-nat', 'ch4-ipv6'
-  ];
+    // ── Digital Logic ──
+    dl5: ['dl5-and-or', 'dl5-universal', 'dl5-dual-symbols', 'dl5-design'],
+    dl6: ['dl6-adders', 'dl6-comparator', 'dl6-decoder-encoder', 'dl6-mux-demux'],
+    dl7: ['dl7-latches', 'dl7-edge-ff', 'dl7-jk-t', 'dl7-async-timing'],
+    dl8: ['dl8-async', 'dl8-sync', 'dl8-modulus', 'dl8-design']
+  };
 
-  const CH5_TOPICS = [
-    'ch5-link-state', 'ch5-distance-vector', 'ch5-ospf-bgp',
-    'ch5-sdn', 'ch5-icmp'
-  ];
+  const MODULES = {
+    net:   { label: 'Network Communication',     code: 'SCSR2213', chapters: ['ch4', 'ch5', 'ch6', 'ch7', 'ch8'] },
+    math:  { label: 'Computational Mathematics', code: 'SECI1113', chapters: ['math5', 'math6', 'math7', 'math8', 'math9', 'math10'] },
+    logic: { label: 'Digital Logic',             code: 'SECR1013', chapters: ['dl5', 'dl6', 'dl7', 'dl8'] }
+  };
+
+  /** First topic of every chapter — always unlocked */
+  const FIRST_TOPICS = Object.keys(CHAPTER_TOPICS).map(k => CHAPTER_TOPICS[k][0]);
+
+  // Legacy aliases (older chapter pages reference these)
+  const CH4_TOPICS      = CHAPTER_TOPICS.ch4;
+  const CH5_TOPICS      = CHAPTER_TOPICS.ch5;
+  const MATH_CH10_TOPICS = CHAPTER_TOPICS.math10;
 
   const MS_PER_DAY = 86400000;
 
@@ -94,7 +119,7 @@
     level:            1,
     streak:           0,
     lastStudied:      null,
-    unlockedSections: ['ch1-internet', 'ch2-client-server', 'ch3-transport-fundamentals', 'ch4-planes', 'ch5-link-state'],
+    unlockedSections: FIRST_TOPICS.slice(),
     completedTopics:  [],
     achievements:     [],
     weakTopics:       [],
@@ -150,15 +175,12 @@
     try {
       const raw = localStorage.getItem(STATE_KEY);
       const state = raw ? mergeWithDefaults(JSON.parse(raw)) : clone(DEFAULT_STATE);
-      
-      // Ensure starting topics are always unlocked, even in old saves
-      if (!state.unlockedSections.includes('ch1-internet')) {
-        state.unlockedSections.push('ch1-internet');
-      }
-      if (!state.unlockedSections.includes('ch2-client-server')) {
-        state.unlockedSections.push('ch2-client-server');
-      }
-      
+
+      // Ensure the first topic of every chapter is unlocked, even in old saves
+      FIRST_TOPICS.forEach(id => {
+        if (!state.unlockedSections.includes(id)) state.unlockedSections.push(id);
+      });
+
       return state;
     } catch {
       return clone(DEFAULT_STATE);
@@ -544,18 +566,14 @@
     if (state.streak >= 3)  tryUnlock('streak_3');
     if (state.streak >= 7)  tryUnlock('streak_7');
 
-    // ch1_complete — all 4 Chapter 1 topics done
-    if (CH1_TOPICS.every(id => state.completedTopics.includes(id))) {
-      tryUnlock('ch1_complete');
-    }
-
-    // ch2_complete — all 12 Chapter 2 topics done
-    if (CH2_TOPICS.every(id => state.completedTopics.includes(id))) {
-      tryUnlock('ch2_complete');
-    }
-
-    // ch3/ch4/ch5 completion (no dedicated badge yet, handled silently)
-    // Future: add badge definitions for ch3_complete, ch4_complete, ch5_complete
+    // Module completion badges — every topic of every chapter in the module
+    Object.keys(MODULES).forEach(function (modKey) {
+      const allTopics = MODULES[modKey].chapters.reduce(
+        (acc, ch) => acc.concat(CHAPTER_TOPICS[ch]), []);
+      if (allTopics.every(id => state.completedTopics.includes(id))) {
+        tryUnlock(modKey + '_complete');
+      }
+    });
 
     // exam_pass — passed with ≥80%
     if (context.examPassed) tryUnlock('exam_pass');
@@ -576,13 +594,27 @@
      DERIVED GETTERS (no state write)
   ---------------------------------------------------------- */
 
-  /** Return progress % (0–100) for a given chapter */
+  /** Return progress % (0–100) for a given chapter key */
   function getChapterProgress(chapter) {
-    const map = { ch1: CH1_TOPICS, ch2: CH2_TOPICS, ch3: CH3_TOPICS, ch4: CH4_TOPICS, ch5: CH5_TOPICS };
-    const topics = map[chapter] || CH1_TOPICS;
+    const topics = CHAPTER_TOPICS[chapter];
+    if (!topics || !topics.length) return 0;
     const state  = load();
     const done   = topics.filter(id => state.completedTopics.includes(id)).length;
     return Math.round((done / topics.length) * 100);
+  }
+
+  /** Return { pct, done, total } progress for a whole module (net|math|logic) */
+  function getModuleProgress(modKey) {
+    const mod = MODULES[modKey];
+    if (!mod) return { pct: 0, done: 0, total: 0 };
+    const topics = mod.chapters.reduce((acc, ch) => acc.concat(CHAPTER_TOPICS[ch]), []);
+    const state  = load();
+    const done   = topics.filter(id => state.completedTopics.includes(id)).length;
+    return {
+      pct:   topics.length ? Math.round((done / topics.length) * 100) : 0,
+      done:  done,
+      total: topics.length
+    };
   }
 
   /** Return true if a topic has been completed */
@@ -616,6 +648,10 @@
   function getSummary() {
     const state = load();
     const level = calcLevel(state.xp);
+
+    const chapterPct = {};
+    Object.keys(CHAPTER_TOPICS).forEach(ch => { chapterPct[ch] = getChapterProgress(ch); });
+
     return {
       xp:           state.xp,
       level,
@@ -627,11 +663,12 @@
       topicsDone:   state.completedTopics.length,
       badgeCount:   state.achievements.length,
       weakCount:    state.weakTopics.length,
-      ch1Pct:       getChapterProgress('ch1'),
-      ch2Pct:       getChapterProgress('ch2'),
-      ch3Pct:       getChapterProgress('ch3'),
-      ch4Pct:       getChapterProgress('ch4'),
-      ch5Pct:       getChapterProgress('ch5')
+      chapterPct,
+      modules: {
+        net:   getModuleProgress('net'),
+        math:  getModuleProgress('math'),
+        logic: getModuleProgress('logic')
+      }
     };
   }
 
@@ -650,11 +687,12 @@
     XP_THRESHOLDS,
     RANK_TITLES,
     BADGE_DEFS,
-    CH1_TOPICS,
-    CH2_TOPICS,
-    CH3_TOPICS,
+    CHAPTER_TOPICS,
+    MODULES,
+    // Legacy aliases still referenced by older chapter pages
     CH4_TOPICS,
     CH5_TOPICS,
+    MATH_CH10_TOPICS,
 
     // XP
     addXP,
@@ -692,6 +730,7 @@
     getLevelProgress,
     getXPToNextLevel,
     getChapterProgress,
+    getModuleProgress,
     getTotalCompleted,
     getRecentExams,
     getBestExamScore,

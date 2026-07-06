@@ -81,6 +81,60 @@ window.chapter4Data = {
           answer: "forwarding",
           explanation: "Forwarding is the data-plane action that happens inside a single router in microseconds: look up the destination in the forwarding table and switch the packet to the correct output port. Routing is the control-plane process (milliseconds to seconds) that populates those forwarding tables across the whole network.",
           xpReward: 25
+        },
+        {
+          id: "q-ch4-hw01",
+          type: "mcq",
+          question: "[Homework 4] Name the layer-3 device discussed in this chapter, and the reason it is called a layer-3 device.",
+          options: [
+            "Switch — it operates on MAC addresses at layer 3",
+            "Router — it makes forwarding decisions using layer-3 (IP) header information such as the destination IP address",
+            "Hub — it repeats signals at the network layer",
+            "Firewall — it blocks traffic at every layer"
+          ],
+          answer: 1,
+          explanation: "The router. It is called a layer-3 device because it processes packets up to the NETWORK layer: it examines the IP header (destination address, TTL, etc.) to decide the output port. A switch is layer-2 (MAC addresses), a hub is layer-1 (raw bits). Device-to-layer mapping is a guaranteed exam warm-up question.",
+          xpReward: 25
+        },
+        {
+          id: "q-ch4-hw02",
+          type: "match",
+          question: "[Homework 4] Match the two main functions of the network layer (plus their planes and timescales).",
+          pairs: [
+            { term: "Forwarding",         definition: "Move a packet from input link to output link inside ONE router" },
+            { term: "Routing",            definition: "Determine the end-to-end path packets take from source to destination" },
+            { term: "Forwarding plane",   definition: "Data plane — hardware, nanoseconds/microseconds" },
+            { term: "Routing plane",      definition: "Control plane — algorithms/software, seconds" }
+          ],
+          answer: [0, 1, 2, 3],
+          explanation: "The two main functions of the network layer: FORWARDING (local, per-router, data plane, very fast) and ROUTING (global, network-wide path computation, control plane, slower). Routing computes the tables; forwarding uses them. This is Homework 4 Q3 — and reliably an exam question.",
+          xpReward: 25
+        },
+        {
+          id: "q-ch4-hw03",
+          type: "calc",
+          question: "[Homework 4] Router buffer sizing by the classic RULE OF THUMB: with RTT = 150 ms and link capacity C = 5 Gbps, how many Megabits of buffering are needed? (B = RTT × C)",
+          setup: "Rule of thumb: B = RTT × C\nRTT = 150 ms = 0.15 s\nC = 5 Gbps = 5000 Mbps\n\nB = 0.15 × 5000 Mbps",
+          answer: 750,
+          tolerance: 5,
+          unit: "Mbits",
+          calcType: "numeric",
+          hint: "B = 0.15 s × 5000 Mbps",
+          explanation: "B = RTT × C = 0.15 s × 5000 Mbps = 750 Mbits (≈ 94 MB). The classic rule: one full round-trip worth of data can be 'in flight' and may need buffering when the link stalls. The follow-up question shows why this over-provisions when many flows share the link.",
+          xpReward: 35
+        },
+        {
+          id: "q-ch4-hw04",
+          type: "calc",
+          question: "[Homework 4] Same link (RTT = 150 ms, C = 5 Gbps) but now with the RECENT recommendation for N = 5000 flows: B = RTT × C / √N. How many Megabits? (2 d.p. tolerance)",
+          setup: "Recent recommendation: B = RTT × C / √N\nRTT × C = 750 Mbits (from previous question)\nN = 5000  →  √5000 ≈ 70.71",
+          answer: 10.61,
+          tolerance: 0.3,
+          unit: "Mbits",
+          calcType: "numeric",
+          hint: "750 / 70.71",
+          explanation: "B = 750 Mbits / √5000 = 750 / 70.71 ≈ 10.61 Mbits (≈ 1.3 MB) — about 70× less than the rule of thumb. With many independent TCP flows, their bursts de-synchronise and statistically smooth out, so far less buffering is needed. Both formulas (and when each applies) are exam material.",
+          xpReward: 35
         }
       ]
     },
@@ -232,6 +286,32 @@ window.chapter4Data = {
           hint: "2980 bytes of data \u00f7 1480 = 2 full fragments + 20 bytes remainder \u2192 3 fragments total",
           explanation: "Fragment 1: 1480 bytes data, offset = 0/8 = 0, MF = 1.\nFragment 2: 1480 bytes data, offset = 1480/8 = 185, MF = 1.\nFragment 3: 2980 \u2212 2960 = 20 bytes data, offset = 2960/8 = 370, MF = 0.\nThree fragments total; the third fragment\u2019s offset = 370.",
           xpReward: 35
+        },
+        {
+          id: "q-ch4-hw05",
+          type: "calc",
+          question: "[Homework 4] A 6000-byte datagram (20-byte header + 5980 bytes of data) is sent over a link with MTU = 1500 bytes. Into how many fragments is it split?",
+          setup: "Total datagram: 6000 bytes (20 header + 5980 data)\nMTU = 1500 \u2192 max data per fragment = 1500 \u2212 20 = 1480 bytes\n\nFragments = \u23085980 / 1480\u2309",
+          answer: 5,
+          tolerance: 0,
+          unit: "fragments",
+          calcType: "numeric",
+          hint: "4 \u00d7 1480 = 5920 < 5980 \u2014 the remainder needs one more fragment",
+          explanation: "5980 / 1480 = 4.04 \u2192 5 fragments. Fragmentation table:\nFrag 1: 1480 bytes, offset 0, MF=1\nFrag 2: 1480 bytes, offset 185, MF=1\nFrag 3: 1480 bytes, offset 370, MF=1\nFrag 4: 1480 bytes, offset 555, MF=1\nFrag 5: 60 bytes, offset 740, MF=0\nEach fragment gets its own 20-byte IP header; offsets count 8-byte units. Reassembly happens only at the destination.",
+          xpReward: 35
+        },
+        {
+          id: "q-ch4-hw06",
+          type: "calc",
+          question: "[Homework 4] In the previous 6000-byte / MTU-1500 scenario, what is the fragment OFFSET value of the FIFTH (last) fragment?",
+          setup: "Fragment 5 carries data bytes starting at byte 4 \u00d7 1480 = 5920\nOffset field = starting byte \u00f7 8",
+          answer: 740,
+          tolerance: 0,
+          unit: "offset",
+          calcType: "numeric",
+          hint: "5920 / 8",
+          explanation: "Offset = 5920/8 = 740. The offset field counts 8-byte blocks (13 bits couldn't address 65,535 bytes directly). The last fragment carries the 60 remaining data bytes and has MF = 0 (no more fragments). Building the full fragmentation table \u2014 lengths, offsets, MF flags \u2014 is exactly Homework 4 Q10 and a standard exam table question.",
+          xpReward: 35
         }
       ]
     },
@@ -309,6 +389,73 @@ window.chapter4Data = {
           hint: "Additional bits borrowed = new prefix length \u2212 original prefix length. Subnets = 2^(borrowed bits).",
           explanation: "Going from /20 to /23 borrows 3 bits from the host portion (23 \u2212 20 = 3). Number of subnets = 2^3 = 8. Each /23 subnet provides 2^9 = 512 total addresses (510 usable hosts), and the 8 subnets together exactly fill the original /20 block.",
           xpReward: 35
+        },
+        {
+          id: "q-ch4-hw07",
+          type: "mcq",
+          question: "[Homework 4] A router's forwarding table contains several prefixes. A packet's destination matches BOTH 172.16.224.0/19 and 172.16.226.0/23. Which entry is used, and by what rule?",
+          options: [
+            "172.16.224.0/19 \u2014 the shortest prefix is preferred",
+            "172.16.226.0/23 \u2014 the LONGEST-PREFIX-MATCH rule picks the most specific entry",
+            "Whichever entry appears first in the table",
+            "Both \u2014 the packet is duplicated to both output ports"
+          ],
+          answer: 1,
+          explanation: "Longest prefix match: when multiple table entries match a destination, the router uses the one with the MOST prefix bits (most specific route). /23 (23 matching bits) beats /19. This is the algorithm behind Homework 4 Q4 \u2014 given a forwarding table, always match destination addresses against the longest prefix first.",
+          xpReward: 25
+        },
+        {
+          id: "q-ch4-hw08",
+          type: "calc",
+          question: "[Homework 4] For the address 200.20.226.5/21, find the NETWORK address. Enter the value of the THIRD octet of the network address (200.20.X.0).",
+          setup: "/21 \u2192 subnet mask 255.255.248.0 (5 network bits in the 3rd octet, block size 8)\n3rd octet: 226 = 11100010\u2082\nMask 3rd octet: 248 = 11111000\u2082\nNetwork 3rd octet = 226 AND 248 = ?",
+          answer: 224,
+          tolerance: 0,
+          unit: "octet 3",
+          calcType: "numeric",
+          hint: "Block size 8 in the 3rd octet: multiples of 8 \u2014 which multiple contains 226?",
+          explanation: "226 AND 248 = 224 (block size 8: 224 \u2264 226 < 232). Network address = 200.20.224.0/21. Working shown Homework-style: /21 leaves 3 host bits in octet 3 \u2192 blocks of 8 \u2192 226 falls in the 224\u2013231 block. This AND-with-mask (or block-size) method solves every 'find the network address' exam question.",
+          xpReward: 35
+        },
+        {
+          id: "q-ch4-hw09",
+          type: "calc",
+          question: "[Homework 4] Same subnet (200.20.226.5/21, network 200.20.224.0). Find the BROADCAST address. Enter the value of its THIRD octet (200.20.X.255).",
+          setup: "Network: 200.20.224.0/21, block size 8 in the 3rd octet\nBroadcast = last address of the block\n3rd octet = 224 + 8 \u2212 1 = ?",
+          answer: 231,
+          tolerance: 0,
+          unit: "octet 3",
+          calcType: "numeric",
+          hint: "Top of the 224-block: 224 + 7",
+          explanation: "Broadcast = 200.20.231.255 (3rd octet 231 = 224 + 8 \u2212 1, 4th octet all-ones = 255). Usable host range: 200.20.224.1 \u2013 200.20.231.254 (2\u00b9\u00b9 \u2212 2 = 2046 hosts). Network address + broadcast address bracket every subnet \u2014 compute both for full marks in Homework 4 Q5-style questions.",
+          xpReward: 35
+        },
+        {
+          id: "q-ch4-hw10",
+          type: "mcq",
+          question: "[Homework 4] VLSM subnetting of 188.192.192.0/22 for departments A(100), B(210), C(80), D(40), E(10 usable hosts). Which prefix length must department B (210 hosts) receive?",
+          options: [
+            "/23 \u2014 510 usable hosts",
+            "/24 \u2014 254 usable hosts, the smallest block that fits 210",
+            "/25 \u2014 126 usable hosts",
+            "/26 \u2014 62 usable hosts"
+          ],
+          answer: 1,
+          explanation: "B needs 210 usable hosts: 2\u02b0 \u2212 2 \u2265 210 \u2192 h = 8 host bits \u2192 /24 (254 usable, 44 unused). VLSM always allocates LARGEST department first: B /24, then A(100) /25 (126 usable), C(80) /25, D(40) /26 (62 usable), E(10) /28 (14 usable). Unused hosts per subnet = usable \u2212 needed \u2014 exactly the Homework 4 Q6 table.",
+          xpReward: 25
+        },
+        {
+          id: "q-ch4-hw11",
+          type: "calc",
+          question: "[Homework 4] In the VLSM plan, department D (40 hosts) is allocated a /26 subnet. How many UNUSED usable host addresses remain in D's subnet?",
+          setup: "/26 \u2192 host bits = 32 \u2212 26 = 6\nUsable hosts = 2\u2076 \u2212 2 = 62\nUnused = usable \u2212 needed = 62 \u2212 40",
+          answer: 22,
+          tolerance: 0,
+          unit: "hosts",
+          calcType: "numeric",
+          hint: "62 \u2212 40",
+          explanation: "62 \u2212 40 = 22 unused hosts. The 'unused hosts' column of the VLSM table quantifies allocation waste: 2\u02b0 \u2212 2 usable minus what the department actually needs. Repeat for all: B 44, A 26, C 46, D 22, E 4 unused. Homework 4 Q6(b) asks for exactly this per-subnet calculation.",
+          xpReward: 35
         }
       ]
     },
@@ -381,6 +528,48 @@ window.chapter4Data = {
           question: "The acronym that describes the four-step DHCP address-assignment process is ______ (Discover, Offer, Request, Acknowledge).",
           answer: "DORA",
           explanation: "DORA stands for Discover \u2192 Offer \u2192 Request \u2192 Acknowledge. The client broadcasts a Discover; one or more DHCP servers respond with an Offer; the client broadcasts a Request to accept one offer; the chosen server sends an Acknowledge confirming the lease. All four messages initially use broadcast addressing.",
+          xpReward: 25
+        },
+        {
+          id: "q-ch4-hw12",
+          type: "mcq",
+          question: "[Homework 4] When configuring DHCP, what portion of the subnetwork's address space is used for distribution to clients?",
+          options: [
+            "The network portion of the address",
+            "The HOST portion \u2014 a configured pool/range of host addresses within the subnet (excluding network, broadcast, and reserved static addresses)",
+            "The subnet mask bits",
+            "The MAC address range of the clients"
+          ],
+          answer: 1,
+          explanation: "DHCP hands out addresses from the HOST portion of the subnet \u2014 an administrator-defined pool (e.g. .100\u2013.200) that excludes the network address, the broadcast address, and statically assigned addresses (gateway, servers, printers). The network prefix is fixed for everyone on the subnet; only host bits vary. Homework 4 Q7(d).",
+          xpReward: 25
+        },
+        {
+          id: "q-ch4-hw13",
+          type: "mcq",
+          question: "[Homework 4] What happens when a DHCP lease expires \u2014 and what if it expires while the host is still actively using the address?",
+          options: [
+            "The address is permanent once assigned; leases never expire",
+            "The address returns to the pool; an active host normally RENEWS before expiry (at ~50% lease time) \u2014 if renewal fails, it must stop using the address and restart discovery",
+            "The host keeps the address forever as long as it stays powered on",
+            "The DHCP server immediately assigns the host a new MAC address"
+          ],
+          answer: 1,
+          explanation: "The lease is a timed rental. On expiry the address returns to the pool for reuse. Active hosts don't wait: at ~T/2 they unicast a renewal Request to the server, extending the lease invisibly. If renewal (and rebinding) fail and the lease truly lapses, the host must cease using the IP and restart DORA \u2014 otherwise it risks an address conflict. Homework 4 Q7(e), and a classic exam explanation question.",
+          xpReward: 25
+        },
+        {
+          id: "q-ch4-hw14",
+          type: "match",
+          question: "[Homework 4] NAT summary \u2014 match each aspect of Network Address Translation to its description.",
+          pairs: [
+            { term: "What NAT is",       definition: "Translation of private IP:port pairs to one public IP with unique ports" },
+            { term: "Purpose",           definition: "Conserve public IPv4 addresses; whole network shares one public IP" },
+            { term: "Outgoing packet",   definition: "Source private IP:port replaced by public IP:new port; mapping recorded" },
+            { term: "Incoming packet",   definition: "Destination port looked up in the NAT table; rewritten to private IP:port" }
+          ],
+          answer: [0, 1, 2, 3],
+          explanation: "Homework 4 Q8 in one table: NAT is address+port translation at the border router; its purpose is IPv4 conservation (plus hiding internal topology); mechanically, the translation table maps (private IP, port) \u2194 (public IP, port) per connection \u2014 rewrite on the way out, look up and rewrite back on the way in.",
           xpReward: 25
         }
       ]

@@ -3,1638 +3,389 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NetCore Academy — Mission Control</title>
+  <title>Study Hub — NetCore · MathCore · LogicCore</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/components.css">
+
   <style>
-    /* ============================================================
-       INLINE CRITICAL STYLES — SESSION 1 (index.html)
-       Will be distributed to css/ files in sessions 2–4.
-       Required here for standalone page functionality.
-       ============================================================ */
-
-    /* --- CSS Variables (→ css/style.css) --- */
-    :root {
-      --bg-primary:    #0a0e1a;
-      --bg-secondary:  #0f1526;
-      --bg-glass:      rgba(255, 255, 255, 0.04);
-
-      --accent-cyan:   #00f5ff;
-      --accent-green:  #00ff88;
-      --accent-purple: #a855f7;
-      --accent-orange: #ff6b35;
-      --accent-red:    #ff3366;
-
-      --text-primary:  #e2e8f0;
-      --text-muted:    #64748b;
-      --text-dim:      #334155;
-
-      --border-glass:  rgba(255, 255, 255, 0.08);
-      --border-accent: rgba(0, 245, 255, 0.3);
-
-      --font-display:  'JetBrains Mono', 'IBM Plex Mono', monospace;
-      --font-body:     'IBM Plex Sans', system-ui, sans-serif;
-
-      --radius-sm: 6px;
-      --radius-md: 12px;
-      --radius-lg: 20px;
-
-      --shadow-glow-cyan:   0 0 20px rgba(0, 245, 255, 0.15);
-      --shadow-glow-green:  0 0 20px rgba(0, 255, 136, 0.15);
-      --shadow-glow-purple: 0 0 20px rgba(168, 85, 247, 0.15);
+    /* ── Hub-specific layout ─────────────────────────────── */
+    .hub-hero {
+      text-align: center;
+      padding: 48px 24px 32px;
     }
-
-    /* --- Reset (→ css/style.css) --- */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      background-color: var(--bg-primary);
+    .hub-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      letter-spacing: 0.04em;
       color: var(--text-primary);
-      font-family: var(--font-body);
-      min-height: 100vh;
-      line-height: 1.6;
-      overflow-x: hidden;
+    }
+    .hub-hero__title .accent { color: var(--accent-cyan); }
+    .hub-hero__sub {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 640px;
+      margin: 10px auto 0;
     }
 
-    /* Grid background pattern (→ css/style.css) */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(0, 245, 255, 0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 245, 255, 0.025) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* Scan line (→ css/animations.css) */
-    @keyframes scanline {
-      0%   { transform: translateY(-100%); }
-      100% { transform: translateY(100vh); }
-    }
-    body::after {
-      content: '';
-      position: fixed;
-      left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.07), transparent);
-      animation: scanline 10s linear infinite;
-      pointer-events: none;
-      z-index: 999;
-    }
-
-    /* Page wrapper */
-    .page-wrapper {
-      position: relative;
-      z-index: 1;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
-    }
-
-    /* ============================================================
-       ANIMATIONS (→ css/animations.css)
-       ============================================================ */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0);    }
-    }
-
-    @keyframes pulse-glow {
-      0%, 100% { opacity: 0.7; }
-      50%       { opacity: 1;   }
-    }
-
-    @keyframes blink {
-      0%, 49% { opacity: 1; }
-      50%, 100% { opacity: 0; }
-    }
-
-    @keyframes ring-spin {
-      from { stroke-dashoffset: 251.3; }
-    }
-
-    /* ============================================================
-       HEADER
-       ============================================================ */
-    .site-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 28px 0 24px;
-      border-bottom: 1px solid var(--border-glass);
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-
-    .logo-block {
-      display: flex;
-      align-items: center;
+    /* Stat strip */
+    .hub-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 14px;
+      margin: 24px 0 34px;
     }
-
-    .logo-icon {
-      width: 44px;
-      height: 44px;
-      border: 2px solid var(--accent-cyan);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: var(--shadow-glow-cyan);
-      flex-shrink: 0;
+    .hub-stat {
+      padding: 18px 16px;
+      text-align: center;
     }
-
-    .logo-icon svg { width: 24px; height: 24px; }
-
-    .logo-text {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .logo-name {
-      font-family: var(--font-display);
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--accent-cyan);
-      letter-spacing: 0.06em;
-      text-shadow: 0 0 16px rgba(0, 245, 255, 0.45);
-      line-height: 1.2;
-      animation: pulse-glow 3.5s ease-in-out infinite;
-    }
-
-    .logo-name .cursor::after {
-      content: '_';
-      animation: blink 1s step-end infinite;
+    .hub-stat__value {
+      font: 700 1.7rem/1 var(--font-display);
       color: var(--accent-cyan);
     }
-
-    .logo-sub {
-      font-family: var(--font-display);
-      font-size: 0.6rem;
+    .hub-stat__label {
+      font: 500 0.65rem/1 var(--font-display);
+      letter-spacing: 0.12em;
       color: var(--text-muted);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
+      margin-top: 8px;
     }
 
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
+    /* Module cards */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+      margin-bottom: 40px;
     }
-
-    /* Rank */
-    .rank-block {
+    .module-card {
+      padding: 24px;
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
-      gap: 2px;
+      gap: 14px;
+      border-top: 3px solid var(--mod-accent, var(--accent-cyan));
     }
+    .module-card--net   { --mod-accent: var(--accent-cyan); }
+    .module-card--math  { --mod-accent: var(--accent-green); }
+    .module-card--logic { --mod-accent: var(--accent-purple); }
 
-    .rank-title {
-      font-family: var(--font-display);
-      font-size: 0.72rem;
-      color: var(--accent-purple);
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
+    .module-card__code {
+      font: 600 0.65rem/1 var(--font-display);
+      letter-spacing: 0.14em;
+      color: var(--mod-accent);
     }
-
-    .rank-label {
-      font-size: 0.62rem;
-      color: var(--text-muted);
-    }
-
-    /* Level badge */
-    .level-badge {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      border: 2px solid var(--accent-purple);
-      background: rgba(168, 85, 247, 0.1);
-      box-shadow: 0 0 18px rgba(168, 85, 247, 0.25);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .level-number {
+    .module-card__title {
       font-family: var(--font-display);
       font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--accent-purple);
-      line-height: 1;
-    }
-
-    .level-label {
-      font-family: var(--font-display);
-      font-size: 0.42rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-
-    /* XP bar */
-    .xp-bar-block {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      min-width: 180px;
-    }
-
-    .xp-bar-labels {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-    }
-
-    .xp-value {
-      font-family: var(--font-display);
-      font-size: 0.8rem;
-      color: var(--accent-cyan);
-    }
-
-    .xp-to-next {
-      font-size: 0.62rem;
-      color: var(--text-muted);
-    }
-
-    .xp-bar-track {
-      height: 6px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border-glass);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-
-    .xp-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
-      border-radius: 99px;
-      box-shadow: 0 0 8px rgba(0, 245, 255, 0.5);
-      transition: width 1.4s cubic-bezier(0.4, 0, 0.2, 1);
-      width: 0%;
-    }
-
-    /* ============================================================
-       STATUS BAR
-       ============================================================ */
-    .status-bar {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 10px 0 12px;
-      border-bottom: 1px solid var(--border-glass);
-      margin-bottom: 32px;
-      overflow-x: auto;
-    }
-
-    .status-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-      font-family: var(--font-display);
-      font-size: 0.6rem;
-      color: var(--text-muted);
-      letter-spacing: 0.1em;
-    }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent-green);
-      box-shadow: 0 0 6px var(--accent-green);
-      flex-shrink: 0;
-      animation: pulse-glow 2s ease-in-out infinite;
-    }
-
-    .status-dot.warn { background: var(--accent-orange); box-shadow: 0 0 6px var(--accent-orange); }
-    .status-dot.dim  { background: var(--text-dim); box-shadow: none; animation: none; }
-
-    .status-spacer { margin-left: auto; }
-
-    /* ============================================================
-       STATS ROW
-       ============================================================ */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-    .stat-card {
-      background: var(--bg-glass);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-md);
-      backdrop-filter: blur(12px);
-      padding: 20px 22px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      transition: border-color 0.3s, box-shadow 0.3s;
-      animation: fadeInUp 0.5s ease both;
-    }
-
-    .stat-card:nth-child(1) { animation-delay: 0.1s; }
-    .stat-card:nth-child(2) { animation-delay: 0.2s; }
-    .stat-card:nth-child(3) { animation-delay: 0.3s; }
-    .stat-card:nth-child(4) { animation-delay: 0.4s; }
-
-    .stat-card:hover {
-      border-color: var(--border-accent);
-      box-shadow: var(--shadow-glow-cyan);
-    }
-
-    .stat-label {
-      font-size: 0.6rem;
-      font-family: var(--font-display);
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
-    .stat-value {
-      font-family: var(--font-display);
-      font-size: 2.1rem;
-      font-weight: 700;
-      line-height: 1;
-    }
-
-    .stat-value.cyan   { color: var(--accent-cyan);   text-shadow: 0 0 14px rgba(0, 245, 255, 0.3);   }
-    .stat-value.green  { color: var(--accent-green);  text-shadow: 0 0 14px rgba(0, 255, 136, 0.3);  }
-    .stat-value.purple { color: var(--accent-purple); text-shadow: 0 0 14px rgba(168, 85, 247, 0.3); }
-    .stat-value.orange { color: var(--accent-orange); text-shadow: 0 0 14px rgba(255, 107, 53, 0.3); }
-
-    .stat-sub {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-    }
-
-    /* ============================================================
-       SECTION DIVIDER
-       ============================================================ */
-    .section-label {
-      font-family: var(--font-display);
-      font-size: 0.62rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border-glass);
-    }
-
-    /* ============================================================
-       CHAPTER CARDS
-       ============================================================ */
-    .chapter-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 32px;
-    }
-
-    .chapter-card {
-      background: var(--bg-glass);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-lg);
-      backdrop-filter: blur(12px);
-      padding: 28px;
-      cursor: pointer;
-      text-decoration: none;
-      color: inherit;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      transition: transform 0.25s ease, border-color 0.25s, box-shadow 0.25s;
-      position: relative;
-      overflow: hidden;
-      animation: fadeInUp 0.5s ease both;
-    }
-
-    .chapter-card:nth-child(1) { animation-delay: 0.5s; }
-    .chapter-card:nth-child(2) { animation-delay: 0.6s; }
-    .chapter-card:nth-child(3) { animation-delay: 0.7s; }
-    .chapter-card:nth-child(4) { animation-delay: 0.8s; }
-    .chapter-card:nth-child(5) { animation-delay: 0.9s; }
-    .chapter-card:nth-child(6) { animation-delay: 1.0s; }
-    .chapter-card:nth-child(7) { animation-delay: 1.1s; }
-    .chapter-card:nth-child(8) { animation-delay: 1.2s; }
-
-    /* Top accent line */
-    .chapter-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .chapter-card.ch1::before { background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green)); }
-    .chapter-card.ch2::before { background: linear-gradient(90deg, var(--accent-purple), var(--accent-orange)); }
-    .chapter-card.ch3::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); }
-    .chapter-card.ch4::before { background: linear-gradient(90deg, var(--accent-orange), var(--accent-red)); }
-    .chapter-card.ch5::before { background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)); }
-    .chapter-card.ch6::before { background: linear-gradient(90deg, var(--accent-cyan), var(--accent-orange)); }
-    .chapter-card.ch7::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); }
-    .chapter-card.ch8::before { background: linear-gradient(90deg, var(--accent-red), var(--accent-purple)); }
-
-    .chapter-card:hover { transform: translateY(-5px); }
-    .chapter-card:hover::before { opacity: 1; }
-    .chapter-card.ch1:hover { border-color: rgba(0, 245, 255, 0.25); box-shadow: 0 16px 48px rgba(0, 245, 255, 0.1); }
-    .chapter-card.ch2:hover { border-color: rgba(168, 85, 247, 0.25); box-shadow: 0 16px 48px rgba(168, 85, 247, 0.1); }
-    .chapter-card.ch3:hover { border-color: rgba(0,255,136,0.25); box-shadow: 0 16px 48px rgba(0,255,136,0.1); }
-    .chapter-card.ch4:hover { border-color: rgba(255,107,53,0.25); box-shadow: 0 16px 48px rgba(255,107,53,0.1); }
-    .chapter-card.ch5:hover { border-color: rgba(168,85,247,0.25); box-shadow: 0 16px 48px rgba(168,85,247,0.1); }
-    .chapter-card.ch6:hover { border-color: rgba(0,245,255,0.25); box-shadow: 0 16px 48px rgba(0,245,255,0.1); }
-    .chapter-card.ch7:hover { border-color: rgba(0,255,136,0.25); box-shadow: 0 16px 48px rgba(0,255,136,0.1); }
-    .chapter-card.ch8:hover { border-color: rgba(255,51,102,0.25); box-shadow: 0 16px 48px rgba(255,51,102,0.1); }
-
-    .chapter-card-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .chapter-info { flex: 1; }
-
-    .chapter-tag {
-      font-family: var(--font-display);
-      font-size: 0.58rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .ch1 .chapter-tag { color: var(--accent-cyan); }
-    .ch2 .chapter-tag { color: var(--accent-purple); }
-    .ch3 .chapter-tag { color: var(--accent-green); }
-    .ch4 .chapter-tag { color: var(--accent-orange); }
-    .ch5 .chapter-tag { color: var(--accent-purple); }
-    .ch6 .chapter-tag { color: var(--accent-cyan); }
-    .ch7 .chapter-tag { color: var(--accent-green); }
-    .ch8 .chapter-tag { color: var(--accent-red); }
-
-    .chapter-title {
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 600;
       color: var(--text-primary);
-      line-height: 1.35;
-      margin-bottom: 10px;
     }
-
-    .chapter-desc {
-      font-size: 0.76rem;
+    .module-card__desc {
+      font-size: 0.82rem;
       color: var(--text-muted);
-      line-height: 1.55;
-    }
-
-    /* Progress ring */
-    .progress-ring-wrap {
-      position: relative;
-      width: 88px;
-      height: 88px;
-      flex-shrink: 0;
-    }
-
-    .progress-ring-wrap svg { transform: rotate(-90deg); }
-
-    .ring-track {
-      fill: none;
-      stroke: var(--border-glass);
-      stroke-width: 5;
-    }
-
-    .ring-fill {
-      fill: none;
-      stroke-width: 5;
-      stroke-linecap: round;
-      stroke-dasharray: 251.3;
-      stroke-dashoffset: 251.3;
-      transition: stroke-dashoffset 1.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .ch1 .ring-fill { stroke: var(--accent-cyan);   filter: drop-shadow(0 0 4px rgba(0, 245, 255, 0.55));   }
-    .ch2 .ring-fill { stroke: var(--accent-purple); filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.55)); }
-    .ch3 .ring-fill { stroke: var(--accent-green);  filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.55));  }
-    .ch4 .ring-fill { stroke: var(--accent-orange); filter: drop-shadow(0 0 4px rgba(255, 107, 53, 0.55)); }
-    .ch5 .ring-fill { stroke: var(--accent-purple); filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.55)); }
-    .ch6 .ring-fill { stroke: var(--accent-cyan);   filter: drop-shadow(0 0 4px rgba(0, 245, 255, 0.55));   }
-    .ch7 .ring-fill { stroke: var(--accent-green);  filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.55));  }
-    .ch8 .ring-fill { stroke: var(--accent-red);    filter: drop-shadow(0 0 4px rgba(255, 51, 102, 0.55));  }
-
-    .ring-label {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .ring-pct {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      font-weight: 700;
-      line-height: 1;
-    }
-
-    .ch1 .ring-pct { color: var(--accent-cyan);   }
-    .ch2 .ring-pct { color: var(--accent-purple); }
-    .ch3 .ring-pct { color: var(--accent-green);  }
-    .ch4 .ring-pct { color: var(--accent-orange); }
-    .ch5 .ring-pct { color: var(--accent-purple); }
-    .ch6 .ring-pct { color: var(--accent-cyan);   }
-    .ch7 .ring-pct { color: var(--accent-green);  }
-    .ch8 .ring-pct { color: var(--accent-red);    }
-
-    .ring-done-label {
-      font-size: 0.5rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-top: 3px;
-    }
-
-    /* Topic pills */
-    .chapter-topics {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .topic-pill {
-      font-family: var(--font-display);
-      font-size: 0.58rem;
-      letter-spacing: 0.04em;
-      padding: 3px 9px;
-      border-radius: 99px;
-      border: 1px solid var(--border-glass);
-      color: var(--text-muted);
-      background: transparent;
-      transition: border-color 0.2s, color 0.2s, background 0.2s;
-      white-space: nowrap;
-    }
-
-    .topic-pill.done {
-      border-color: rgba(0, 255, 136, 0.4);
-      color: var(--accent-green);
-      background: rgba(0, 255, 136, 0.06);
-    }
-
-    /* ============================================================
-       BOTTOM GRID
-       ============================================================ */
-    .bottom-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 20px;
-    }
-
-    .panel {
-      background: var(--bg-glass);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-lg);
-      backdrop-filter: blur(12px);
-      padding: 24px;
-      animation: fadeInUp 0.5s ease both;
-    }
-
-    .panel:nth-child(1) { animation-delay: 0.7s; }
-    .panel:nth-child(2) { animation-delay: 0.8s; }
-    .panel:nth-child(3) { animation-delay: 0.9s; }
-
-    .panel-title {
-      font-family: var(--font-display);
-      font-size: 0.62rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 18px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-glass);
-    }
-
-    /* --- Achievements --- */
-    .achievements-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .achievement-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .achievement-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-glass);
-      background: rgba(168, 85, 247, 0.06);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-
-    .achievement-info { flex: 1; min-width: 0; }
-
-    .achievement-name {
-      font-family: var(--font-display);
-      font-size: 0.74rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .achievement-xp {
-      font-size: 0.64rem;
-      color: var(--accent-purple);
-    }
-
-    .empty-state {
-      font-family: var(--font-display);
-      font-size: 0.7rem;
-      color: var(--text-dim);
-      text-align: center;
-      padding: 24px 0;
-      line-height: 2;
-    }
-
-    /* --- Quick Actions --- */
-    .quick-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .btn-action {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 16px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-glass);
-      background: transparent;
-      color: var(--text-primary);
-      font-family: var(--font-display);
-      font-size: 0.76rem;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-      letter-spacing: 0.03em;
-    }
-
-    .btn-action:hover { transform: translateX(4px); }
-
-    .btn-action.primary {
-      border-color: rgba(0, 245, 255, 0.35);
-      background: rgba(0, 245, 255, 0.04);
-      color: var(--accent-cyan);
-    }
-    .btn-action.primary:hover {
-      background: rgba(0, 245, 255, 0.09);
-      box-shadow: var(--shadow-glow-cyan);
-    }
-
-    .btn-action.danger {
-      border-color: rgba(255, 51, 102, 0.3);
-      background: rgba(255, 51, 102, 0.04);
-      color: var(--accent-red);
-    }
-    .btn-action.danger:hover {
-      background: rgba(255, 51, 102, 0.08);
-      box-shadow: 0 0 18px rgba(255, 51, 102, 0.12);
-    }
-
-    .btn-action.warn {
-      border-color: rgba(255, 107, 53, 0.3);
-      background: rgba(255, 107, 53, 0.04);
-      color: var(--accent-orange);
-    }
-    .btn-action.warn:hover {
-      background: rgba(255, 107, 53, 0.08);
-      box-shadow: 0 0 18px rgba(255, 107, 53, 0.12);
-    }
-
-    .btn-icon {
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--radius-sm);
-      background: rgba(255, 255, 255, 0.04);
-      flex-shrink: 0;
-    }
-    .btn-icon svg { width: 14px; height: 14px; }
-
-    .btn-label { flex: 1; text-align: left; }
-    .btn-arrow { font-size: 0.75rem; opacity: 0.45; }
-
-    /* --- Streak Tracker --- */
-    .streak-tracker {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .streak-count-block {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .streak-fire { font-size: 1.6rem; line-height: 1; }
-
-    .streak-count {
-      font-family: var(--font-display);
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--accent-orange);
-      text-shadow: 0 0 14px rgba(255, 107, 53, 0.45);
-      line-height: 1;
-    }
-
-    .streak-days-label {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .streak-grid {
-      display: flex;
-      gap: 6px;
-      align-items: flex-end;
-    }
-
-    .streak-day {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .streak-dot {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      border: 1px solid var(--border-glass);
-      background: var(--bg-glass);
-      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
-    }
-
-    .streak-dot.active {
-      background: var(--accent-orange);
-      border-color: var(--accent-orange);
-      box-shadow: 0 0 10px rgba(255, 107, 53, 0.4);
-    }
-
-    .streak-dot.today {
-      border-color: rgba(0, 245, 255, 0.5);
-      box-shadow: 0 0 8px rgba(0, 245, 255, 0.2);
-    }
-
-    .streak-dot.today.active {
-      background: var(--accent-orange);
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 12px rgba(255, 107, 53, 0.5), 0 0 6px rgba(0, 245, 255, 0.3);
-    }
-
-    .streak-day-label {
-      font-family: var(--font-display);
-      font-size: 0.52rem;
-      letter-spacing: 0.08em;
-      color: var(--text-dim);
-      text-transform: uppercase;
-    }
-
-    .streak-day-label.today { color: var(--accent-cyan); }
-
-    .streak-motivator {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      font-style: italic;
-      text-align: center;
       line-height: 1.5;
     }
 
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
-    @media (max-width: 960px) {
-      .stats-row    { grid-template-columns: repeat(2, 1fr); }
-      .chapter-grid { grid-template-columns: 1fr; }
-      .bottom-grid  { grid-template-columns: 1fr; }
+    .module-progress {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .module-progress__track {
+      flex: 1;
+      height: 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .module-progress__fill {
+      height: 100%;
+      width: 0%;
+      background: var(--mod-accent);
+      border-radius: 4px;
+      transition: width 0.9s cubic-bezier(.4,0,.2,1);
+    }
+    .module-progress__pct {
+      font: 700 0.85rem/1 var(--font-display);
+      color: var(--mod-accent);
+      min-width: 42px;
+      text-align: right;
+    }
+    .module-card__topics {
+      font: 500 0.68rem/1 var(--font-display);
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
     }
 
-    @media (max-width: 560px) {
-      .site-header   { flex-direction: column; align-items: flex-start; }
-      .header-right  { width: 100%; justify-content: space-between; }
-      .xp-bar-block  { min-width: 120px; flex: 1; }
-      .stats-row     { grid-template-columns: repeat(2, 1fr); }
-      .chapter-card-top { flex-direction: column-reverse; align-items: flex-start; }
-      .progress-ring-wrap { width: 72px; height: 72px; }
+    .chapter-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chapter-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-sm);
+      font: 500 0.72rem/1 var(--font-display);
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: border-color .2s, background .2s;
+    }
+    .chapter-link:hover {
+      border-color: var(--mod-accent);
+      background: rgba(255,255,255,0.04);
+    }
+    .chapter-link--done {
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+    }
+    .chapter-link--done::after { content: ' ✓'; }
+    .chapter-link__pct {
+      color: var(--text-muted);
+      font-size: 0.62rem;
+    }
+
+    .module-card__actions {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+    }
+    .module-card__actions .btn { flex: 1; justify-content: center; }
+
+    /* Streak panel */
+    .hub-streak {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 720px) { .hub-streak { grid-template-columns: 1fr; } }
+    .hub-panel { padding: 22px 24px; }
+    .hub-panel__title {
+      font: 700 0.7rem/1 var(--font-display);
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
     }
   </style>
 </head>
-<body>
-<div class="page-wrapper">
 
-  <!-- ============================================================
-       SITE HEADER
-       ============================================================ -->
-  <header class="site-header">
+<body data-page="index">
 
-    <div class="logo-block">
-      <div class="logo-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round"
-             style="color: var(--accent-cyan);">
-          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-          <line x1="8" y1="21" x2="16" y2="21"/>
-          <line x1="12" y1="17" x2="12" y2="21"/>
-          <circle cx="7" cy="10" r="1" fill="currentColor"/>
-          <circle cx="12" cy="10" r="1" fill="currentColor"/>
-          <circle cx="17" cy="10" r="1" fill="currentColor"/>
+  <!-- ── Site Header ──────────────────────────────────────────────────── -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo" aria-label="Study hub home">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <circle cx="14" cy="14" r="13" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+          <circle cx="8"  cy="14" r="2.5" fill="var(--accent-cyan)"/>
+          <circle cx="14" cy="14" r="2.5" fill="var(--accent-green)"/>
+          <circle cx="20" cy="14" r="2.5" fill="var(--accent-purple)"/>
         </svg>
-      </div>
-      <div class="logo-text">
-        <span class="logo-name">NETCORE ACADEMY<span class="cursor"></span></span>
-        <span class="logo-sub">Network Training System v2.0</span>
-      </div>
-    </div>
+        <span class="logo-text">Study<span class="logo-accent">Hub</span></span>
+      </a>
 
-    <div class="header-right">
-      <div class="rank-block">
-        <span class="rank-title" id="rankTitle">Network Cadet</span>
-        <span class="rank-label">Current Rank</span>
-      </div>
+      <nav class="header-nav" aria-label="Module navigation">
+        <a href="chapter4.html" class="nav-link">NetCore</a>
+        <a href="math-chapter5.html" class="nav-link">MathCore</a>
+        <a href="logic-chapter5.html" class="nav-link">LogicCore</a>
+        <a href="exam-mode.html" class="nav-link">Exam</a>
+      </nav>
 
-      <div class="level-badge">
-        <span class="level-number" id="levelNumber">1</span>
-        <span class="level-label">LVL</span>
-      </div>
-
-      <div class="xp-bar-block">
-        <div class="xp-bar-labels">
-          <span class="xp-value" id="xpValue">0 XP</span>
-          <span class="xp-to-next" id="xpToNext">100 to next</span>
+      <div class="header-right">
+        <div class="rank-badge" id="header-rank">
+          <span class="rank-level" id="header-level">Lv.1</span>
+          <span class="rank-title" id="header-rank-title">Cadet</span>
         </div>
-        <div class="xp-bar-track">
-          <div class="xp-bar-fill" id="xpBarFill"></div>
+        <div class="xp-bar-wrap" title="XP progress to next level">
+          <div class="xp-bar-track">
+            <div class="xp-bar-fill" id="header-xp-fill" style="width:0%"></div>
+          </div>
+          <span class="xp-label" id="header-xp-label">0 XP</span>
         </div>
       </div>
     </div>
-
   </header>
 
-  <!-- ============================================================
-       SYSTEM STATUS BAR
-       ============================================================ -->
-  <div class="status-bar">
-    <div class="status-item">
-      <span class="status-dot"></span>
-      SYSTEM ONLINE
-    </div>
-    <div class="status-item">
-      <span class="status-dot"></span>
-      <span id="statusTopics">0/37 TOPICS LOADED</span>
-    </div>
-    <div class="status-item">
-      <span class="status-dot dim" id="weakDot"></span>
+  <!-- ── Status Bar ───────────────────────────────────────────────────── -->
+  <div class="status-bar" id="status-bar" role="status" aria-live="polite">
+    <span class="status-item">
+      <span class="status-dot status-dot--green"></span>
+      <span id="statusDate">—</span>
+    </span>
+    <span class="status-item">
+      <span class="status-dot status-dot--cyan"></span>
+      <span id="statusTopics">0/60 TOPICS</span>
+    </span>
+    <span class="status-item">
+      <span class="status-dot" id="weakDot"></span>
       <span id="statusWeak">0 WEAK TOPICS</span>
-    </div>
-    <div class="status-item">
-      <span class="status-dot dim"></span>
+    </span>
+    <span class="status-item status-item--right">
       <span id="statusExam">NO EXAM HISTORY</span>
-    </div>
-    <div class="status-item status-spacer">
-      <span class="status-dot dim"></span>
-      <span id="statusDate"></span>
-    </div>
+    </span>
   </div>
 
-  <!-- ============================================================
-       STATS ROW
-       ============================================================ -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <span class="stat-label">Total XP</span>
-      <span class="stat-value cyan"   id="statXP">0</span>
-      <span class="stat-sub">Experience Points</span>
+  <!-- ── Page Content ─────────────────────────────────────────────────── -->
+  <main class="page-wrapper" id="main-content">
+
+    <!-- Hero -->
+    <div class="hub-hero anim-fade-in-up">
+      <h1 class="hub-hero__title">SEMESTER 3 <span class="accent">STUDY HUB</span></h1>
+      <p class="hub-hero__sub">
+        Three courses. One gamified pipeline: learn each topic, pass its mini-quiz,
+        unlock the next — then prove it in per-module exam mode.
+      </p>
     </div>
-    <div class="stat-card">
-      <span class="stat-label">Day Streak</span>
-      <span class="stat-value orange" id="statStreak">0</span>
-      <span class="stat-sub" id="statStreakSub">Start studying today</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-label">Topics Done</span>
-      <span class="stat-value green"  id="statTopics">0</span>
-      <span class="stat-sub">of 37 total topics</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-label">Badges Earned</span>
-      <span class="stat-value purple" id="statBadges">0</span>
-      <span class="stat-sub">of 9 achievements</span>
-    </div>
-  </div>
 
-  <!-- ============================================================
-       CHAPTER CARDS
-       ============================================================ -->
-  <p class="section-label">Mission Modules</p>
-
-  <div class="chapter-grid">
-
-    <!-- Chapter 1 -->
-    <a href="chapter1.html" class="chapter-card ch1">
-      <div class="chapter-card-top">
-        <div class="chapter-info">
-          <div class="chapter-tag">Chapter 01 — Foundation</div>
-          <div class="chapter-title">Introduction to<br>Computer Networking</div>
-          <div class="chapter-desc">
-            Internet structure, protocols, network edge &amp; core, and access
-            networks. The foundation for every concept in this course.
-          </div>
-        </div>
-        <div class="progress-ring-wrap">
-          <svg width="88" height="88" viewBox="0 0 88 88">
-            <circle class="ring-track" cx="44" cy="44" r="40"/>
-            <circle class="ring-fill" id="ch1Ring" cx="44" cy="44" r="40"/>
-          </svg>
-          <div class="ring-label">
-            <span class="ring-pct" id="ch1Pct">0%</span>
-            <span class="ring-done-label">Done</span>
-          </div>
-        </div>
+    <!-- Stats -->
+    <div class="hub-stats">
+      <div class="hub-stat glass-card">
+        <div class="hub-stat__value" id="statXP">0</div>
+        <div class="hub-stat__label">TOTAL XP</div>
       </div>
-      <div class="chapter-topics" id="ch1Topics">
-        <span class="topic-pill" data-id="ch1-internet">Internet Basics</span>
-        <span class="topic-pill" data-id="ch1-protocols">Protocols</span>
-        <span class="topic-pill" data-id="ch1-structure">Net Structure</span>
-        <span class="topic-pill" data-id="ch1-access">Access Networks</span>
+      <div class="hub-stat glass-card">
+        <div class="hub-stat__value" id="statStreak">0</div>
+        <div class="hub-stat__label">DAY STREAK</div>
       </div>
-    </a>
-
-    <!-- Chapter 2 -->
-    <a href="chapter2.html" class="chapter-card ch2">
-      <div class="chapter-card-top">
-        <div class="chapter-info">
-          <div class="chapter-tag">Chapter 02 — Application Layer</div>
-          <div class="chapter-title">Application Layer<br>Architectures &amp; Protocols</div>
-          <div class="chapter-desc">
-            Client-server, P2P, sockets, HTTP request-response, TCP vs UDP,
-            and email (SMTP / IMAP / POP3). Concept to wire.
-          </div>
-        </div>
-        <div class="progress-ring-wrap">
-          <svg width="88" height="88" viewBox="0 0 88 88">
-            <circle class="ring-track" cx="44" cy="44" r="40"/>
-            <circle class="ring-fill" id="ch2Ring" cx="44" cy="44" r="40"/>
-          </svg>
-          <div class="ring-label">
-            <span class="ring-pct" id="ch2Pct">0%</span>
-            <span class="ring-done-label">Done</span>
-          </div>
-        </div>
+      <div class="hub-stat glass-card">
+        <div class="hub-stat__value" id="statTopics">0</div>
+        <div class="hub-stat__label">TOPICS DONE</div>
       </div>
-      <div class="chapter-topics" id="ch2Topics">
-        <span class="topic-pill" data-id="ch2-client-server">Client-Server</span>
-        <span class="topic-pill" data-id="ch2-p2p">P2P</span>
-        <span class="topic-pill" data-id="ch2-processes">Processes</span>
-        <span class="topic-pill" data-id="ch2-addressing">Addressing</span>
-        <span class="topic-pill" data-id="ch2-app-protocols">App Protocols</span>
-        <span class="topic-pill" data-id="ch2-transport-req">Transport Req.</span>
-        <span class="topic-pill" data-id="ch2-tcp-udp">TCP vs UDP</span>
-        <span class="topic-pill" data-id="ch2-http-intro">HTTP Basics</span>
-        <span class="topic-pill" data-id="ch2-http-char">HTTP Chars</span>
-        <span class="topic-pill" data-id="ch2-http-persistent">Persistent HTTP</span>
-        <span class="topic-pill" data-id="ch2-http-flow">HTTP Flow</span>
-        <span class="topic-pill" data-id="ch2-email">Email</span>
-      </div>
-    </a>
-
-    <!-- Chapter 3 -->
-    <a href="chapter3.html" class="chapter-card ch3">
-      <div class="chapter-card-top">
-        <div class="chapter-info">
-          <div class="chapter-tag" style="color:var(--accent-green);">CH.3 — TRANSPORT</div>
-          <div class="chapter-title">Transport Layer</div>
-          <div class="chapter-desc">
-            UDP, TCP, checksums, reliable data transfer, flow control, and congestion control.
-          </div>
-        </div>
-        <div class="progress-ring-wrap">
-          <svg width="88" height="88" viewBox="0 0 88 88">
-            <circle class="ring-track" cx="44" cy="44" r="40"/>
-            <circle class="ring-fill" id="ch3Ring" cx="44" cy="44" r="40"/>
-          </svg>
-          <div class="ring-label">
-            <span class="ring-pct" id="ch3Pct">0%</span>
-            <span class="ring-done-label">Done</span>
-          </div>
-        </div>
-      </div>
-      <div class="chapter-topics" id="ch3Topics">
-        <span class="topic-pill" data-id="ch3-transport-fundamentals">Transport Basics</span>
-        <span class="topic-pill" data-id="ch3-mux-demux">Mux/Demux</span>
-        <span class="topic-pill" data-id="ch3-udp">UDP</span>
-        <span class="topic-pill" data-id="ch3-checksum">Checksum</span>
-        <span class="topic-pill" data-id="ch3-rdt">Reliable Transfer</span>
-        <span class="topic-pill" data-id="ch3-sliding-window">Go-Back-N / SR</span>
-        <span class="topic-pill" data-id="ch3-tcp-segment">TCP Segment</span>
-        <span class="topic-pill" data-id="ch3-tcp-rtt">TCP RTT</span>
-        <span class="topic-pill" data-id="ch3-tcp-flow">Flow Control</span>
-        <span class="topic-pill" data-id="ch3-congestion">Congestion Ctrl</span>
-      </div>
-    </a>
-
-    <!-- Chapter 4 -->
-    <a href="chapter4.html" class="chapter-card ch4">
-      <div class="chapter-card-top">
-        <div class="chapter-info">
-          <div class="chapter-tag" style="color:var(--accent-orange);">CH.4 — NETWORK</div>
-          <div class="chapter-title">Network Layer:<br>Data Plane</div>
-          <div class="chapter-desc">
-            IP datagram format, fragmentation, IPv4 addressing, CIDR, DHCP, NAT, and IPv6.
-          </div>
-        </div>
-        <div class="progress-ring-wrap">
-          <svg width="88" height="88" viewBox="0 0 88 88">
-            <circle class="ring-track" cx="44" cy="44" r="40"/>
-            <circle class="ring-fill" id="ch4Ring" cx="44" cy="44" r="40"/>
-          </svg>
-          <div class="ring-label">
-            <span class="ring-pct" id="ch4Pct">0%</span>
-            <span class="ring-done-label">Done</span>
-          </div>
-        </div>
-      </div>
-      <div class="chapter-topics" id="ch4Topics">
-        <span class="topic-pill" data-id="ch4-planes">Data vs Control Plane</span>
-        <span class="topic-pill" data-id="ch4-ip-format">IP Format</span>
-        <span class="topic-pill" data-id="ch4-fragmentation">Fragmentation</span>
-        <span class="topic-pill" data-id="ch4-addressing">IPv4 &amp; CIDR</span>
-        <span class="topic-pill" data-id="ch4-dhcp-nat">DHCP &amp; NAT</span>
-        <span class="topic-pill" data-id="ch4-ipv6">IPv6</span>
-      </div>
-    </a>
-
-    <!-- Chapter 5 -->
-    <a href="chapter5.html" class="chapter-card ch5">
-      <div class="chapter-card-top">
-        <div class="chapter-info">
-          <div class="chapter-tag" style="color:var(--accent-purple);">CH.5 — ROUTING</div>
-          <div class="chapter-title">Network Layer:<br>Control Plane</div>
-          <div class="chapter-desc">
-            Dijkstra, Bellman-Ford, OSPF, BGP inter-AS routing, SDN, and ICMP.
-          </div>
-        </div>
-        <div class="progress-ring-wrap">
-          <svg width="88" height="88" viewBox="0 0 88 88">
-            <circle class="ring-track" cx="44" cy="44" r="40"/>
-            <circle class="ring-fill" id="ch5Ring" cx="44" cy="44" r="40"/>
-          </svg>
-          <div class="ring-label">
-            <span class="ring-pct" id="ch5Pct">0%</span>
-            <span class="ring-done-label">Done</span>
-          </div>
-        </div>
-      </div>
-      <div class="chapter-topics" id="ch5Topics">
-        <span class="topic-pill" data-id="ch5-link-state">Link-State / Dijkstra</span>
-        <span class="topic-pill" data-id="ch5-distance-vector">Distance-Vector</span>
-        <span class="topic-pill" data-id="ch5-ospf-bgp">OSPF &amp; BGP</span>
-        <span class="topic-pill" data-id="ch5-sdn">SDN</span>
-        <span class="topic-pill" data-id="ch5-icmp">ICMP</span>
-      </div>
-    </a>
-
-    <!-- Chapter 6 -->
-    <a href="chapter6.html" class="chapter-card ch6">
-      <div class="chapter-card-top">
-        <div class="chapter-info">
-          <div class="chapter-tag">CH.6 — LINK LAYER</div>
-          <div class="chapter-title">The Link Layer<br>and LANs</div>
-          <div class="chapter-desc">
-            Frames, error detection (CRC), multiple access protocols, Ethernet, ARP, and switches.
-          </div>
-        </div>
-        <div class="progress-ring-wrap">
-          <svg width="88" height="88" viewBox="0 0 88 88">
-            <circle class="ring-track" cx="44" cy="44" r="40"/>
-            <circle class="ring-fill" id="ch6Ring" cx="44" cy="44" r="40"/>
-          </svg>
-          <div class="ring-label">
-            <span class="ring-pct" id="ch6Pct">0%</span>
-            <span class="ring-done-label">Done</span>
-          </div>
-        </div>
-      </div>
-      <div class="chapter-topics" id="ch6Topics">
-        <span class="topic-pill" data-id="ch6-intro">Link Layer Intro</span>
-        <span class="topic-pill" data-id="ch6-error-detection">CRC Error Detection</span>
-        <span class="topic-pill" data-id="ch6-mac-protocols">Multiple Access</span>
-        <span class="topic-pill" data-id="ch6-ethernet-arp">Ethernet &amp; ARP</span>
-        <span class="topic-pill" data-id="ch6-switches-vlan">Switches &amp; VLANs</span>
-      </div>
-    </a>
-
-    <!-- Chapter 7 -->
-    <a href="chapter7.html" class="chapter-card ch7">
-      <div class="chapter-card-top">
-        <div class="chapter-info">
-          <div class="chapter-tag">CH.7 — WIRELESS</div>
-          <div class="chapter-title">Wireless and<br>Mobile Networks</div>
-          <div class="chapter-desc">
-            802.11 WiFi, CSMA/CA, RTS/CTS, 4G LTE, 5G, and Mobile IP mobility management.
-          </div>
-        </div>
-        <div class="progress-ring-wrap">
-          <svg width="88" height="88" viewBox="0 0 88 88">
-            <circle class="ring-track" cx="44" cy="44" r="40"/>
-            <circle class="ring-fill" id="ch7Ring" cx="44" cy="44" r="40"/>
-          </svg>
-          <div class="ring-label">
-            <span class="ring-pct" id="ch7Pct">0%</span>
-            <span class="ring-done-label">Done</span>
-          </div>
-        </div>
-      </div>
-      <div class="chapter-topics" id="ch7Topics">
-        <span class="topic-pill" data-id="ch7-wireless-intro">Wireless Characteristics</span>
-        <span class="topic-pill" data-id="ch7-wifi-arch">802.11 Architecture</span>
-        <span class="topic-pill" data-id="ch7-wifi-mac">CSMA/CA &amp; RTS/CTS</span>
-        <span class="topic-pill" data-id="ch7-cellular">4G LTE &amp; 5G</span>
-        <span class="topic-pill" data-id="ch7-mobility">Mobility Management</span>
-      </div>
-    </a>
-
-    <!-- Chapter 8 -->
-    <a href="chapter8.html" class="chapter-card ch8">
-      <div class="chapter-card-top">
-        <div class="chapter-info">
-          <div class="chapter-tag">CH.8 — SECURITY</div>
-          <div class="chapter-title">Security in<br>Computer Networks</div>
-          <div class="chapter-desc">
-            Cryptography, AES, RSA, Diffie-Hellman, TLS 1.3, firewalls, and intrusion detection.
-          </div>
-        </div>
-        <div class="progress-ring-wrap">
-          <svg width="88" height="88" viewBox="0 0 88 88">
-            <circle class="ring-track" cx="44" cy="44" r="40"/>
-            <circle class="ring-fill" id="ch8Ring" cx="44" cy="44" r="40"/>
-          </svg>
-          <div class="ring-label">
-            <span class="ring-pct" id="ch8Pct">0%</span>
-            <span class="ring-done-label">Done</span>
-          </div>
-        </div>
-      </div>
-      <div class="chapter-topics" id="ch8Topics">
-        <span class="topic-pill" data-id="ch8-intro">Security Goals</span>
-        <span class="topic-pill" data-id="ch8-symmetric">Symmetric Crypto</span>
-        <span class="topic-pill" data-id="ch8-public-key">Public Key &amp; Signatures</span>
-        <span class="topic-pill" data-id="ch8-tls">TLS / HTTPS</span>
-        <span class="topic-pill" data-id="ch8-firewalls">Firewalls &amp; IDS</span>
-      </div>
-    </a>
-
-  </div>
-
-  <!-- ============================================================
-       BOTTOM GRID: Achievements | Quick Actions | Streak
-       ============================================================ -->
-  <p class="section-label">Command Center</p>
-
-  <div class="bottom-grid">
-
-    <!-- Recent Achievements -->
-    <div class="panel">
-      <div class="panel-title">Recent Achievements</div>
-      <div class="achievements-list" id="achievementsList">
-        <div class="empty-state">
-          [ NO SIGNALS RECEIVED ]<br>
-          <span style="font-size:0.62rem; opacity:0.6;">Complete topics to earn badges</span>
-        </div>
+      <div class="hub-stat glass-card">
+        <div class="hub-stat__value" id="statBadges">0</div>
+        <div class="hub-stat__label">BADGES</div>
       </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="panel">
-      <div class="panel-title">Quick Actions</div>
-      <div class="quick-actions">
+    <!-- ── Module Cards ─────────────────────────────────────────────── -->
+    <div class="module-grid">
 
-        <a href="chapter1.html" class="btn-action primary" id="btnContinue">
-          <span class="btn-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
-          </span>
-          <span class="btn-label">Continue Studying</span>
-          <span class="btn-arrow">›</span>
-        </a>
+      <!-- Network Communication -->
+      <section class="module-card glass-card module-card--net anim-fade-in-up" aria-label="Network Communication module">
+        <span class="module-card__code">SCSR2213</span>
+        <h2 class="module-card__title">NetCore Academy</h2>
+        <p class="module-card__desc">
+          Network Communication — network layer (data &amp; control planes), link layer,
+          wireless &amp; mobile networks, and security. Interactive simulations included.
+        </p>
 
-        <a href="exam-mode.html" class="btn-action danger">
-          <span class="btn-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
-              <rect x="9" y="3" width="6" height="4" rx="2"/>
-              <line x1="9" y1="12" x2="15" y2="12"/>
-              <line x1="9" y1="16" x2="13" y2="16"/>
-            </svg>
-          </span>
-          <span class="btn-label">Enter Exam Mode</span>
-          <span class="btn-arrow">›</span>
-        </a>
-
-        <a href="#" class="btn-action warn" id="btnWeakTopics">
-          <span class="btn-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-              <line x1="12" y1="9" x2="12" y2="13"/>
-              <line x1="12" y1="17" x2="12.01" y2="17"/>
-            </svg>
-          </span>
-          <span class="btn-label" id="weakTopicsLabel">View Weak Topics</span>
-          <span class="btn-arrow">›</span>
-        </a>
-
-      </div>
-    </div>
-
-    <!-- Streak Tracker -->
-    <div class="panel">
-      <div class="panel-title">Study Streak</div>
-      <div class="streak-tracker">
-        <div class="streak-count-block">
-          <span class="streak-fire">🔥</span>
-          <div>
-            <div class="streak-count" id="streakCount">0</div>
-            <div class="streak-days-label">day streak</div>
+        <div class="module-progress">
+          <div class="module-progress__track">
+            <div class="module-progress__fill" id="mod-net-fill"></div>
           </div>
+          <span class="module-progress__pct" id="mod-net-pct">0%</span>
         </div>
-        <div class="streak-grid" id="streakGrid"></div>
-        <div class="streak-motivator" id="streakMotivator">
+        <span class="module-card__topics" id="mod-net-topics">0 / 26 topics</span>
+
+        <div class="chapter-links">
+          <a href="chapter4.html" class="chapter-link" data-chapter="ch4">Ch.4 Network Layer: Data <span class="chapter-link__pct"></span></a>
+          <a href="chapter5.html" class="chapter-link" data-chapter="ch5">Ch.5 Control Plane <span class="chapter-link__pct"></span></a>
+          <a href="chapter6.html" class="chapter-link" data-chapter="ch6">Ch.6 Link Layer <span class="chapter-link__pct"></span></a>
+          <a href="chapter7.html" class="chapter-link" data-chapter="ch7">Ch.7 Wireless <span class="chapter-link__pct"></span></a>
+          <a href="chapter8.html" class="chapter-link" data-chapter="ch8">Ch.8 Security <span class="chapter-link__pct"></span></a>
+          <a href="homework4-cheatsheet.html" class="chapter-link">📋 Homework 4 Cheat Sheet</a>
+        </div>
+
+        <div class="module-card__actions">
+          <a href="chapter4.html" class="btn btn--primary" id="btn-continue-net">Continue</a>
+          <a href="exam-mode.html?module=net" class="btn btn--ghost">Exam Mode</a>
+        </div>
+      </section>
+
+      <!-- Computational Mathematics -->
+      <section class="module-card glass-card module-card--math anim-fade-in-up" aria-label="Computational Mathematics module">
+        <span class="module-card__code">SECI1113</span>
+        <h2 class="module-card__title">MathCore Academy</h2>
+        <p class="module-card__desc">
+          Computational Mathematics — error analysis, root-finding, eigenvalues,
+          interpolation, numerical differentiation &amp; integration. Worked examples + hand-calculation drills.
+        </p>
+
+        <div class="module-progress">
+          <div class="module-progress__track">
+            <div class="module-progress__fill" id="mod-math-fill"></div>
+          </div>
+          <span class="module-progress__pct" id="mod-math-pct">0%</span>
+        </div>
+        <span class="module-card__topics" id="mod-math-topics">0 / 18 topics</span>
+
+        <div class="chapter-links">
+          <a href="math-chapter5.html" class="chapter-link" data-chapter="math5">Ch.5 Errors <span class="chapter-link__pct"></span></a>
+          <a href="math-chapter6.html" class="chapter-link" data-chapter="math6">Ch.6 Root-Finding <span class="chapter-link__pct"></span></a>
+          <a href="math-chapter7.html" class="chapter-link" data-chapter="math7">Ch.7 Eigenvalues <span class="chapter-link__pct"></span></a>
+          <a href="math-chapter8.html" class="chapter-link" data-chapter="math8">Ch.8 Interpolation <span class="chapter-link__pct"></span></a>
+          <a href="math-chapter9.html" class="chapter-link" data-chapter="math9">Ch.9 Differentiation <span class="chapter-link__pct"></span></a>
+          <a href="math-chapter10.html" class="chapter-link" data-chapter="math10">Ch.10 Integration <span class="chapter-link__pct"></span></a>
+        </div>
+
+        <div class="module-card__actions">
+          <a href="math-chapter5.html" class="btn btn--primary" id="btn-continue-math">Continue</a>
+          <a href="exam-mode.html?module=math" class="btn btn--ghost">Exam Mode</a>
+        </div>
+      </section>
+
+      <!-- Digital Logic -->
+      <section class="module-card glass-card module-card--logic anim-fade-in-up" aria-label="Digital Logic module">
+        <span class="module-card__code">SECR1013</span>
+        <h2 class="module-card__title">LogicCore Academy</h2>
+        <p class="module-card__desc">
+          Digital Logic — combinational circuits &amp; universal gates, adders/decoders/MUX,
+          latches &amp; flip-flops, and counter design. Truth tables, timing traces &amp; design drills.
+        </p>
+
+        <div class="module-progress">
+          <div class="module-progress__track">
+            <div class="module-progress__fill" id="mod-logic-fill"></div>
+          </div>
+          <span class="module-progress__pct" id="mod-logic-pct">0%</span>
+        </div>
+        <span class="module-card__topics" id="mod-logic-topics">0 / 16 topics</span>
+
+        <div class="chapter-links">
+          <a href="logic-chapter5.html" class="chapter-link" data-chapter="dl5">Ch.5 Combinational <span class="chapter-link__pct"></span></a>
+          <a href="logic-chapter6.html" class="chapter-link" data-chapter="dl6">Ch.6 Functions <span class="chapter-link__pct"></span></a>
+          <a href="logic-chapter7.html" class="chapter-link" data-chapter="dl7">Ch.7 Flip-Flops <span class="chapter-link__pct"></span></a>
+          <a href="logic-chapter8.html" class="chapter-link" data-chapter="dl8">Ch.8 Counters <span class="chapter-link__pct"></span></a>
+        </div>
+
+        <div class="module-card__actions">
+          <a href="logic-chapter5.html" class="btn btn--primary" id="btn-continue-logic">Continue</a>
+          <a href="exam-mode.html?module=logic" class="btn btn--ghost">Exam Mode</a>
+        </div>
+      </section>
+
+    </div><!-- /.module-grid -->
+
+    <!-- ── Streak + Achievements ────────────────────────────────────── -->
+    <div class="hub-streak">
+      <div class="hub-panel glass-card">
+        <div class="hub-panel__title">STUDY STREAK</div>
+        <div id="streakGrid" aria-label="14-day study streak grid"></div>
+        <p id="streakMotivator" style="margin-top:12px;font-size:0.78rem;color:var(--text-muted);">
           Begin your first session to start the streak.
-        </div>
+        </p>
+      </div>
+      <div class="hub-panel glass-card">
+        <div class="hub-panel__title">RECENT ACHIEVEMENTS</div>
+        <div id="achievementsList" aria-label="Recently earned badges"></div>
       </div>
     </div>
 
-  </div><!-- /bottom-grid -->
+  </main>
 
-</div><!-- /page-wrapper -->
+  <!-- ── Gamification shells ─────────────────────────────────────────── -->
+  <div id="xp-toast-container" aria-live="assertive" aria-atomic="true"></div>
+  <div id="level-up-overlay" class="level-up-overlay" aria-hidden="true" role="dialog" aria-label="Level up notification"></div>
 
-<!-- ============================================================
-     DASHBOARD INIT SCRIPT
-     Reads localStorage state and renders all dynamic content.
-     ============================================================ -->
-<script>
-  /* --- Constants --- */
-  const STATE_KEY = 'netcore_state';
+  <!-- ── Scripts ─────────────────────────────────────────────────────── -->
+  <script src="js/progress.js"></script>
+  <script src="js/gamification.js"></script>
+  <script src="js/app.js"></script>
 
-  const DEFAULT_STATE = {
-    xp: 0,
-    level: 1,
-    streak: 0,
-    lastStudied: null,
-    unlockedSections: ['ch1-intro'],
-    completedTopics: [],
-    achievements: [],
-    weakTopics: [],
-    examHistory: []
-  };
-
-  const XP_THRESHOLDS = [0, 100, 250, 500, 900, 1400, 2000, 2750, 3750, 5000];
-
-  const RANK_TITLES = [
-    'Network Cadet',     'Packet Scout',       'Protocol Initiate',
-    'Socket Engineer',   'Routing Specialist',  'TCP Veteran',
-    'HTTP Architect',    'Network Operator',    'Infrastructure Lead',
-    'NetCore Master'
-  ];
-
-  const BADGE_DEFS = {
-    first_quiz:    { name: 'First Signal',     icon: '⚡', color: 'var(--accent-cyan)'   },
-    streak_3:      { name: 'Consistent Node',  icon: '🔗', color: 'var(--accent-green)'  },
-    streak_7:      { name: 'Uptime Champion',  icon: '🏆', color: 'var(--accent-purple)' },
-    ch1_complete:  { name: 'Layer 1 Cleared',  icon: '✓',  color: 'var(--accent-green)'  },
-    ch2_complete:  { name: 'App Layer Expert', icon: '★',  color: 'var(--accent-purple)' },
-    exam_pass:     { name: 'Exam Ready',       icon: '📋', color: 'var(--accent-cyan)'   },
-    perfect_score: { name: 'Zero Loss Packet', icon: '💎', color: 'var(--accent-orange)' },
-    speed_run:     { name: 'Low Latency',      icon: '⚡', color: 'var(--accent-red)'    },
-    weak_cleared:  { name: 'Self-Correcting',  icon: '↺',  color: 'var(--accent-green)'  }
-  };
-
-  const CH1_TOPICS = ['ch1-internet', 'ch1-protocols', 'ch1-structure', 'ch1-access'];
-  const CH2_TOPICS = [
-    'ch2-client-server', 'ch2-p2p', 'ch2-processes', 'ch2-addressing',
-    'ch2-app-protocols', 'ch2-transport-req', 'ch2-tcp-udp',
-    'ch2-http-intro', 'ch2-http-char', 'ch2-http-persistent',
-    'ch2-http-flow', 'ch2-email'
-  ];
-  const CH3_TOPICS = [
-    'ch3-transport-fundamentals', 'ch3-mux-demux', 'ch3-udp', 'ch3-checksum',
-    'ch3-rdt', 'ch3-sliding-window', 'ch3-tcp-segment', 'ch3-tcp-rtt',
-    'ch3-tcp-flow', 'ch3-congestion'
-  ];
-  const CH4_TOPICS = [
-    'ch4-planes', 'ch4-ip-format', 'ch4-fragmentation',
-    'ch4-addressing', 'ch4-dhcp-nat', 'ch4-ipv6'
-  ];
-  const CH5_TOPICS = [
-    'ch5-link-state', 'ch5-distance-vector', 'ch5-ospf-bgp', 'ch5-sdn', 'ch5-icmp'
-  ];
-  const CH6_TOPICS = [
-    'ch6-intro', 'ch6-error-detection', 'ch6-mac-protocols', 'ch6-ethernet-arp', 'ch6-switches-vlan'
-  ];
-  const CH7_TOPICS = [
-    'ch7-wireless-intro', 'ch7-wifi-arch', 'ch7-wifi-mac', 'ch7-cellular', 'ch7-mobility'
-  ];
-  const CH8_TOPICS = [
-    'ch8-intro', 'ch8-symmetric', 'ch8-public-key', 'ch8-tls', 'ch8-firewalls'
-  ];
-  const TOTAL_TOPICS = CH1_TOPICS.length + CH2_TOPICS.length + CH3_TOPICS.length + CH4_TOPICS.length + CH5_TOPICS.length + CH6_TOPICS.length + CH7_TOPICS.length + CH8_TOPICS.length;
-
-  const DAY_LABELS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
-
-  const STREAK_MESSAGES = [
-    'Begin your first session to start the streak.',
-    'First session logged. Come back tomorrow!',
-    'Two days strong — keep the signal alive.',
-    '3-day streak! Consistency is power.',
-    'Four days — momentum is building.',
-    'Five days of solid uptime. Impressive.',
-    'Six days straight — one more for the badge!',
-    '7-day streak! Uptime Champion unlocked! 🏆'
-  ];
-
-  const RING_CIRCUMFERENCE = 2 * Math.PI * 40; // r=40 → ~251.3
-
-  /* --- Load state from localStorage --- */
-  function loadState() {
-    try {
-      const raw = localStorage.getItem(STATE_KEY);
-      return raw ? { ...DEFAULT_STATE, ...JSON.parse(raw) } : { ...DEFAULT_STATE };
-    } catch {
-      return { ...DEFAULT_STATE };
-    }
-  }
-
-  /* --- Derive current level from XP --- */
-  function getLevelFromXP(xp) {
-    let level = 1;
-    for (let i = XP_THRESHOLDS.length - 1; i >= 0; i--) {
-      if (xp >= XP_THRESHOLDS[i]) { level = i + 1; break; }
-    }
-    return Math.min(level, 10);
-  }
-
-  /* --- XP progress within current level (0–100) --- */
-  function getXPProgress(xp, level) {
-    if (level >= 10) return 100;
-    const curr = XP_THRESHOLDS[level - 1];
-    const next = XP_THRESHOLDS[level];
-    return Math.round(((xp - curr) / (next - curr)) * 100);
-  }
-
-  /* --- Convert progress percent to SVG ring offset --- */
-  function ringOffset(pct) {
-    return RING_CIRCUMFERENCE * (1 - pct / 100);
-  }
-
-  /* --- Build last-7-days streak grid data --- */
-  function buildStreakGrid(lastStudied, streakCount) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const days = [];
-
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(today.getDate() - i);
-      const dow = d.getDay(); // 0=Sun … 6=Sat
-      days.push({
-        label: DAY_LABELS[dow === 0 ? 6 : dow - 1],
-        isToday: i === 0,
-        date: new Date(d)
-      });
-    }
-
-    // Mark active days based on streak count, anchored to lastStudied
-    const last = lastStudied ? new Date(lastStudied) : null;
-    if (last) last.setHours(0, 0, 0, 0);
-
-    days.forEach(day => {
-      if (!last || streakCount === 0) { day.active = false; return; }
-      const diffMs   = last.getTime() - day.date.getTime();
-      const diffDays = Math.round(diffMs / 86400000);
-      day.active = diffDays >= 0 && diffDays < streakCount;
-    });
-
-    return days;
-  }
-
-  /* --- Render: header (rank, level badge, XP bar) --- */
-  function renderHeader(state) {
-    const level = getLevelFromXP(state.xp);
-    const pct   = getXPProgress(state.xp, level);
-    const next  = level < 10 ? XP_THRESHOLDS[level] : XP_THRESHOLDS[9];
-
-    document.getElementById('rankTitle').textContent   = RANK_TITLES[level - 1];
-    document.getElementById('levelNumber').textContent = level;
-    document.getElementById('xpValue').textContent     = `${state.xp.toLocaleString()} XP`;
-    document.getElementById('xpToNext').textContent    =
-      level < 10
-        ? `${(next - state.xp).toLocaleString()} to next`
-        : 'MAX LEVEL';
-
-    // Deferred so CSS transition fires
-    setTimeout(() => {
-      document.getElementById('xpBarFill').style.width = `${pct}%`;
-    }, 200);
-  }
-
-  /* --- Render: stats row cards --- */
-  function renderStats(state) {
-    document.getElementById('statXP').textContent     = state.xp.toLocaleString();
-    document.getElementById('statStreak').textContent = state.streak;
-    document.getElementById('statTopics').textContent = state.completedTopics.length;
-    document.getElementById('statBadges').textContent = state.achievements.length;
-    document.getElementById('streakCount').textContent = state.streak;
-    document.getElementById('statStreakSub').textContent =
-      state.streak > 0
-        ? `${state.streak} day${state.streak !== 1 ? 's' : ''} in a row`
-        : 'Start studying today';
-  }
-
-  /* --- Render: chapter progress rings and topic pills --- */
-  function renderChapterCards(state) {
-    const chDefs = [
-      { topics: CH1_TOPICS, pctId: 'ch1Pct', ringId: 'ch1Ring', topicsId: 'ch1Topics' },
-      { topics: CH2_TOPICS, pctId: 'ch2Pct', ringId: 'ch2Ring', topicsId: 'ch2Topics' },
-      { topics: CH3_TOPICS, pctId: 'ch3Pct', ringId: 'ch3Ring', topicsId: 'ch3Topics' },
-      { topics: CH4_TOPICS, pctId: 'ch4Pct', ringId: 'ch4Ring', topicsId: 'ch4Topics' },
-      { topics: CH5_TOPICS, pctId: 'ch5Pct', ringId: 'ch5Ring', topicsId: 'ch5Topics' },
-      { topics: CH6_TOPICS, pctId: 'ch6Pct', ringId: 'ch6Ring', topicsId: 'ch6Topics' },
-      { topics: CH7_TOPICS, pctId: 'ch7Pct', ringId: 'ch7Ring', topicsId: 'ch7Topics' },
-      { topics: CH8_TOPICS, pctId: 'ch8Pct', ringId: 'ch8Ring', topicsId: 'ch8Topics' }
-    ];
-
-    chDefs.forEach(function (ch) {
-      const done = ch.topics.filter(id => state.completedTopics.includes(id)).length;
-      const pct  = Math.round((done / ch.topics.length) * 100);
-      const pctEl  = document.getElementById(ch.pctId);
-      const ringEl = document.getElementById(ch.ringId);
-      if (pctEl) pctEl.textContent = `${pct}%`;
-      if (ringEl) setTimeout(() => { ringEl.style.strokeDashoffset = ringOffset(pct); }, 350);
-      const container = document.getElementById(ch.topicsId);
-      if (container) {
-        container.querySelectorAll('.topic-pill').forEach(pill => {
-          if (state.completedTopics.includes(pill.dataset.id)) pill.classList.add('done');
-        });
-      }
-    });
-  }
-
-  /* --- Render: last 3 earned achievement badges --- */
-  function renderAchievements(state) {
-    const list = document.getElementById('achievementsList');
-    if (!state.achievements.length) return;
-
-    const recent = state.achievements.slice(-3).reverse();
-    list.innerHTML = recent.map(id => {
-      const def = BADGE_DEFS[id] || { name: id, icon: '?', color: 'var(--text-muted)' };
-      return `
-        <div class="achievement-item">
-          <div class="achievement-icon"
-               style="border-color:${def.color}40; background:${def.color}10; box-shadow:0 0 10px ${def.color}20;">
-            ${def.icon}
-          </div>
-          <div class="achievement-info">
-            <div class="achievement-name">${def.name}</div>
-            <div class="achievement-xp" style="color:${def.color};">+30 XP</div>
-          </div>
-        </div>`;
-    }).join('');
-  }
-
-  /* --- Render: quick-action button targets and labels --- */
-  function renderQuickActions(state) {
-    const weakCount = state.weakTopics.length;
-
-    // "Continue Studying" — go to first chapter that isn't fully complete
-    const ch1AllDone = CH1_TOPICS.every(id => state.completedTopics.includes(id));
-    const ch2AllDone = CH2_TOPICS.every(id => state.completedTopics.includes(id));
-    const ch3AllDone = CH3_TOPICS.every(id => state.completedTopics.includes(id));
-    const ch4AllDone = CH4_TOPICS.every(id => state.completedTopics.includes(id));
-    let continueHref = 'chapter1.html';
-    if (ch1AllDone) continueHref = 'chapter2.html';
-    if (ch1AllDone && ch2AllDone) continueHref = 'chapter3.html';
-    if (ch1AllDone && ch2AllDone && ch3AllDone) continueHref = 'chapter4.html';
-    const ch5AllDone = CH5_TOPICS.every(id => state.completedTopics.includes(id));
-    const ch6AllDone = CH6_TOPICS.every(id => state.completedTopics.includes(id));
-    const ch7AllDone = CH7_TOPICS.every(id => state.completedTopics.includes(id));
-    if (ch1AllDone && ch2AllDone && ch3AllDone && ch4AllDone) continueHref = 'chapter5.html';
-    if (ch1AllDone && ch2AllDone && ch3AllDone && ch4AllDone && ch5AllDone) continueHref = 'chapter6.html';
-    if (ch1AllDone && ch2AllDone && ch3AllDone && ch4AllDone && ch5AllDone && ch6AllDone) continueHref = 'chapter7.html';
-    if (ch1AllDone && ch2AllDone && ch3AllDone && ch4AllDone && ch5AllDone && ch6AllDone && ch7AllDone) continueHref = 'chapter8.html';
-    document.getElementById('btnContinue').href = continueHref;
-
-    // "Weak Topics" button
-    document.getElementById('weakTopicsLabel').textContent =
-      weakCount > 0
-        ? `Retry ${weakCount} Weak Topic${weakCount !== 1 ? 's' : ''}`
-        : 'View Weak Topics';
-    document.getElementById('btnWeakTopics').href =
-      weakCount > 0 ? 'exam-mode.html?mode=retry' : '#';
-  }
-
-  /* --- Render: 7-day streak grid --- */
-  function renderStreak(state) {
-    const grid = document.getElementById('streakGrid');
-    const days = buildStreakGrid(state.lastStudied, state.streak);
-
-    grid.innerHTML = days.map(d => `
-      <div class="streak-day">
-        <div class="streak-dot${d.active ? ' active' : ''}${d.isToday ? ' today' : ''}"></div>
-        <span class="streak-day-label${d.isToday ? ' today' : ''}">${d.label}</span>
-      </div>`
-    ).join('');
-
-    const msg = STREAK_MESSAGES[Math.min(state.streak, STREAK_MESSAGES.length - 1)];
-    document.getElementById('streakMotivator').textContent = msg;
-  }
-
-  /* --- Render: system status bar --- */
-  function renderStatusBar(state) {
-    const done      = state.completedTopics.length;
-    const weakCount = state.weakTopics.length;
-    const examCount = state.examHistory.length;
-
-    document.getElementById('statusTopics').textContent =
-      `${done}/${TOTAL_TOPICS} TOPICS LOADED`;
-
-    document.getElementById('statusWeak').textContent =
-      `${weakCount} WEAK TOPIC${weakCount !== 1 ? 'S' : ''}`;
-
-    document.getElementById('weakDot').className =
-      weakCount > 0 ? 'status-dot warn' : 'status-dot';
-
-    document.getElementById('statusExam').textContent =
-      examCount > 0
-        ? `${examCount} EXAM${examCount !== 1 ? 'S' : ''} TAKEN`
-        : 'NO EXAM HISTORY';
-
-    document.getElementById('statusDate').textContent = new Date()
-      .toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
-      .toUpperCase();
-  }
-
-  /* --- Bootstrap dashboard --- */
-  function init() {
-    const state = loadState();
-    renderHeader(state);
-    renderStats(state);
-    renderChapterCards(state);
-    renderAchievements(state);
-    renderQuickActions(state);
-    renderStreak(state);
-    renderStatusBar(state);
-  }
-
-  document.addEventListener('DOMContentLoaded', init);
-</script>
 </body>
 </html>

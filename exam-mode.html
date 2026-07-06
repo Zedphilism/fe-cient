@@ -321,16 +321,11 @@
       </a>
 
       <nav class="header-nav" aria-label="Site navigation">
-        <a href="index.html"     class="nav-link">Dashboard</a>
-        <a href="chapter1.html"  class="nav-link">Ch.1</a>
-        <a href="chapter2.html"  class="nav-link">Ch.2</a>
-        <a href="chapter3.html"  class="nav-link">Ch.3</a>
-        <a href="chapter4.html"  class="nav-link">Ch.4</a>
-        <a href="chapter5.html"  class="nav-link">Ch.5</a>
-        <a href="chapter6.html"  class="nav-link">Ch.6</a>
-        <a href="chapter7.html"  class="nav-link">Ch.7</a>
-        <a href="chapter8.html"  class="nav-link">Ch.8</a>
-        <a href="exam-mode.html" class="nav-link nav-link--active" aria-current="page">Exam</a>
+        <a href="index.html" class="nav-link">Hub</a>
+        <a href="exam-mode.html?module=net"   class="nav-link" data-exam-module="net">Network</a>
+        <a href="exam-mode.html?module=math"  class="nav-link" data-exam-module="math">Maths</a>
+        <a href="exam-mode.html?module=logic" class="nav-link" data-exam-module="logic">Logic</a>
+        <a href="exam-mode.html" class="nav-link" data-exam-module="">All</a>
       </nav>
 
       <div class="header-right">
@@ -382,9 +377,10 @@
           </svg>
         </div>
 
-        <h1 class="exam-landing-hero__title">Exam Mode</h1>
+        <p class="section-label" id="exam-module-scope" style="margin-bottom:8px;">ALL MODULES — COMBINED EXAM</p>
+        <h1 class="exam-landing-hero__title" id="exam-landing-title">Exam Mode</h1>
         <p class="exam-landing-hero__sub">
-          Prove your mastery. 20 random questions drawn from all topics.
+          Prove your mastery. 20 random questions drawn from this module's topics.
           30 minutes. No going back. Score ≥ 80% to pass.
         </p>
 
@@ -406,7 +402,7 @@
 
         <!-- Rules -->
         <ul class="exam-rule-list" aria-label="Exam rules">
-          <li>Questions are randomly sampled from both Chapter 1 and Chapter 2</li>
+          <li>Questions are randomly sampled from every chapter of the selected module</li>
           <li>Answer one question at a time — you cannot go back</li>
           <li>Timer counts down from 30:00 — auto-submits when it hits 0:00</li>
           <li>Score breakdown is shown immediately on completion</li>
@@ -587,15 +583,22 @@
     You are offline. Progress is saved locally and will sync when reconnected.
   </div>
 
-  <!-- ── Scripts — load order matters ─────────────────────────────────── -->
-  <script src="data/chapter1-data.js"></script>
-  <script src="data/chapter2-data.js"></script>
-  <script src="data/chapter3-data.js"></script>
+  <!-- ── Scripts — load order matters (all module data before quiz-data) ── -->
   <script src="data/chapter4-data.js"></script>
   <script src="data/chapter5-data.js"></script>
   <script src="data/chapter6-data.js"></script>
   <script src="data/chapter7-data.js"></script>
   <script src="data/chapter8-data.js"></script>
+  <script src="data/math-chapter5-data.js"></script>
+  <script src="data/math-chapter6-data.js"></script>
+  <script src="data/math-chapter7-data.js"></script>
+  <script src="data/math-chapter8-data.js"></script>
+  <script src="data/math-chapter9-data.js"></script>
+  <script src="data/math-chapter10-data.js"></script>
+  <script src="data/logic-chapter5-data.js"></script>
+  <script src="data/logic-chapter6-data.js"></script>
+  <script src="data/logic-chapter7-data.js"></script>
+  <script src="data/logic-chapter8-data.js"></script>
   <script src="data/quiz-data.js"></script>
   <script src="js/progress.js"></script>
   <script src="js/gamification.js"></script>
