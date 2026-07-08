@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Problem-Solving Steps — MathCore Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/components.css" />
+
+  <style>
+    .cheat-hero { padding: 32px 24px 24px; text-align: center; }
+    .cheat-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3.6vw, 2.1rem);
+      letter-spacing: 0.03em;
+      color: var(--text-primary);
+    }
+    .cheat-hero__title .accent { color: var(--accent-green); }
+    .cheat-hero__sub {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      max-width: 720px;
+      margin: 10px auto 0;
+      line-height: 1.6;
+    }
+    .cheat-note {
+      max-width: 820px;
+      margin: 18px auto 0;
+      padding: 12px 16px;
+      border-left: 3px solid var(--accent-green);
+      background: rgba(57,255,20,0.06);
+      border-radius: 4px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      text-align: left;
+    }
+    .cheat-note strong { color: var(--accent-green); }
+
+    .cheat-toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin: 24px auto 8px;
+      max-width: 960px;
+    }
+    .cheat-toc a {
+      font: 600 0.68rem/1 var(--font-display);
+      letter-spacing: 0.03em;
+      color: var(--text-primary);
+      text-decoration: none;
+      padding: 6px 11px;
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-sm);
+      transition: border-color .2s, color .2s;
+      white-space: nowrap;
+    }
+    .cheat-toc a:hover { border-color: var(--accent-green); color: var(--accent-green); }
+
+    .section-divider { display: flex; align-items: center; gap: 14px; margin: 40px 0 8px; }
+    .section-divider__label {
+      font: 700 0.75rem/1 var(--font-display);
+      letter-spacing: 0.14em;
+      color: var(--accent-green);
+      white-space: nowrap;
+    }
+    .section-divider__line { flex: 1; height: 1px; background: var(--border-glass); }
+
+    /* ── Method card ─────────────────────────────────────────── */
+    .method-card {
+      margin: 22px 0;
+      padding: 22px 26px;
+      border-left: 3px solid var(--accent-green);
+    }
+    .method-card__num {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font: 700 0.68rem/1 var(--font-display);
+      letter-spacing: 0.1em;
+      color: var(--accent-green);
+      margin-bottom: 6px;
+    }
+    .method-card__title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .method-card__when {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      font-style: italic;
+    }
+
+    .proc-steps { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .proc-step { display: flex; gap: 10px; align-items: flex-start; }
+    .proc-step__badge {
+      flex-shrink: 0;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: rgba(57,255,20,0.1);
+      border: 1px solid rgba(57,255,20,0.3);
+      color: var(--accent-green);
+      font: 700 0.7rem/22px var(--font-display);
+      text-align: center;
+    }
+    .proc-step__text { font-size: 0.85rem; line-height: 1.55; color: var(--text-primary); padding-top: 1px; }
+    .proc-step__text strong { color: var(--accent-cyan); }
+    .proc-step__text .mono { font-family: var(--font-display); font-size: 0.82rem; }
+
+    .mini-example {
+      background: rgba(0,245,255,0.05);
+      border: 1px solid rgba(0,245,255,0.15);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+    .mini-example__label {
+      font: 700 0.62rem/1 var(--font-display);
+      letter-spacing: 0.1em;
+      color: var(--accent-cyan);
+      margin-bottom: 7px;
+      display: block;
+    }
+    .mini-example p { margin: 0 0 6px; font-size: 0.82rem; line-height: 1.6; color: var(--text-primary); }
+    .mini-example p:last-child { margin-bottom: 0; }
+    .mini-example strong { color: var(--accent-cyan); }
+
+    .remember-box {
+      background: rgba(255,215,0,0.06);
+      border: 1px solid rgba(255,215,0,0.28);
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+    }
+    .remember-box__label {
+      display: flex; align-items: center; gap: 6px;
+      font: 700 0.6rem/1 var(--font-display);
+      letter-spacing: 0.1em;
+      color: var(--accent-gold, #ffd700);
+      margin-bottom: 6px;
+    }
+    .remember-box p { font-size: 0.76rem; line-height: 1.5; color: var(--text-primary); margin: 0; }
+    .remember-box strong { color: var(--accent-gold, #ffd700); }
+  </style>
+</head>
+
+<body data-page="cheatsheet">
+
+  <!-- ── Site Header ──────────────────────────────────────────────────── -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo" aria-label="Study hub home">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <circle cx="14" cy="14" r="13" stroke="var(--accent-green)" stroke-width="1.5"/>
+          <text x="14" y="19" text-anchor="middle" fill="var(--accent-green)" font-size="12" font-weight="bold">&#8747;</text>
+        </svg>
+        <span class="logo-text">MathCore<span class="logo-accent" style="color:var(--accent-green)">Academy</span></span>
+      </a>
+
+      <nav class="header-nav" aria-label="Chapter navigation">
+        <a href="index.html" class="nav-link">Hub</a>
+        <a href="math-chapter5.html" class="nav-link">Ch.5</a>
+        <a href="math-chapter6.html" class="nav-link">Ch.6</a>
+        <a href="math-chapter7.html" class="nav-link">Ch.7</a>
+        <a href="math-chapter8.html" class="nav-link">Ch.8</a>
+        <a href="math-chapter9.html" class="nav-link">Ch.9</a>
+        <a href="math-chapter10.html" class="nav-link">Ch.10</a>
+        <a href="mathcore-problem-solving.html" class="nav-link nav-link--active" aria-current="page">Steps</a>
+        <a href="exam-mode.html?module=math" class="nav-link">Exam</a>
+      </nav>
+
+      <div class="header-right">
+        <div class="rank-badge" id="header-rank">
+          <span class="rank-level" id="header-level">Lv.1</span>
+          <span class="rank-title" id="header-rank-title"></span>
+        </div>
+        <div class="xp-bar-wrap" title="XP progress to next level">
+          <div class="xp-bar-track">
+            <div class="xp-bar-fill" id="header-xp-fill" style="width:0%"></div>
+          </div>
+          <span class="xp-label" id="header-xp-label">0 XP</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-wrapper" id="main-content">
+
+    <div class="cheat-hero glass-card anim-fade-in-up">
+      <span class="section-label">SECI1113 — PROBLEM-SOLVING REFERENCE</span>
+      <h1 class="cheat-hero__title">Step-by-Step <span class="accent">Solving Guide</span></h1>
+      <p class="cheat-hero__sub">
+        Every numerical method in Chapters 5–10, broken into a fixed, repeatable procedure you can apply
+        to ANY problem of that type — not just the one example shown. Follow the numbered steps in order;
+        skipping a step is the most common way marks are lost.
+      </p>
+      <div class="cheat-note">
+        <strong>How to use this page:</strong> when you meet a new problem in the exam, first identify
+        WHICH method it's asking for (the question usually names it, or the data shape gives it away —
+        e.g. a sign-change bracket → bisection; equally-spaced table → interpolation). Then follow that
+        method's steps mechanically. The steps never change — only the numbers do.
+      </div>
+    </div>
+
+    <div class="cheat-toc">
+      <a href="#m1">Abs/Rel Error</a><a href="#m2">Error Propagation</a><a href="#m3">IVT</a>
+      <a href="#m4">Bisection</a><a href="#m5">Newton-Raphson</a><a href="#m6">Secant</a>
+      <a href="#m7">Eigenvalues</a><a href="#m8">Eigenvectors</a><a href="#m9">Power Method</a>
+      <a href="#m10">Forward Interp.</a><a href="#m11">Backward Interp.</a>
+      <a href="#m12">Forward/Backward Diff.</a><a href="#m13">Central Diff.</a>
+      <a href="#m14">Trapezoidal</a><a href="#m15">Simpson's</a>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">CHAPTER 5 — ACCURACY &amp; ERROR</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- METHOD 1 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m1">
+      <span class="method-card__num">METHOD 1</span>
+      <div class="method-card__title">Absolute &amp; Relative Error</div>
+      <p class="method-card__when">Use when: you're given (or can find) a true value and an approximation, and asked "how accurate is this?"</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">Identify the true value <strong>N</strong> and the approximation <strong>n</strong>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text">Absolute error: <span class="mono">|e| = |N − n|</span>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">Relative error: <span class="mono">e_rel = |N − n| / |N|</span> (use |n| in the denominator if N is unknown).</span></div>
+        <div class="proc-step"><span class="proc-step__badge">4</span><span class="proc-step__text">Percentage error (if asked): <span class="mono">e_rel × 100%</span>.</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>N = π ≈ 3.14159265, n = 3.14. |e| = 0.00159. e_rel = 0.00159/3.14159 ≈ 0.00051 ≈ <strong>0.05%</strong>.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Same absolute error can mean <strong>excellent</strong> or <strong>terrible</strong> accuracy —
+        it depends on the size of N. Always check relative error when comparing two approximations.</p>
+      </div>
+    </div>
+
+    <!-- METHOD 2 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m2">
+      <span class="method-card__num">METHOD 2</span>
+      <div class="method-card__title">Rounding Error Propagation</div>
+      <p class="method-card__when">Use when: several rounded numbers are added/subtracted and you must state how many decimal places the final answer can be trusted to.</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">For each term rounded to <strong>n</strong> decimal places, its error bound is <span class="mono">0.5 × 10⁻ⁿ</span>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text">Add ALL the bounds together (triangle inequality) — this works for both addition AND subtraction.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">Compute the arithmetic result normally.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">4</span><span class="proc-step__text">Report the answer only to the decimal place where (result − total bound) and (result + total bound) still <strong>agree</strong>.</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>3.69(2dp) + 5.432(3dp) − 2.37(2dp) − 3.5214(4dp) = 3.2306. Bounds: 0.005+0.0005+0.005+0.00005 = 0.01055.
+        Range 3.220–3.241 → both agree only to 1dp → report <strong>3.2</strong>.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>The <strong>least precise term</strong> (fewest decimal places) dominates the final answer's precision —
+        adding more precise terms doesn't rescue it.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">CHAPTER 6 — NON-LINEAR EQUATIONS</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- METHOD 3 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m3">
+      <span class="method-card__num">METHOD 3</span>
+      <div class="method-card__title">Intermediate Value Theorem (IVT) Check</div>
+      <p class="method-card__when">Use when: you must verify a root exists in an interval BEFORE running bisection (always the first step of any bisection question).</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">Confirm f is <strong>continuous</strong> on [a, b] (polynomials always are).</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text">Compute f(a) and f(b).</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">Compute the product f(a) · f(b).</span></div>
+        <div class="proc-step"><span class="proc-step__badge">4</span><span class="proc-step__text">Product &lt; 0 → root guaranteed in (a,b). Product &gt; 0 → no conclusion. Product = 0 → an endpoint IS the root.</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>f(x)=x³−x−1 on [1,2]: f(1)=−1, f(2)=5. Product = −5 &lt; 0 → <strong>root exists in (1,2)</strong>.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>IVT only proves a root <strong>exists</strong> — it never says how many, or where. "No conclusion"
+        (product &gt; 0) does NOT mean "no root".</p>
+      </div>
+    </div>
+
+    <!-- METHOD 4 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m4">
+      <span class="method-card__num">METHOD 4</span>
+      <div class="method-card__title">Bisection Method</div>
+      <p class="method-card__when">Use when: you have a sign-change bracket [a,b] and need a guaranteed (if slow) root-finding method.</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">Verify IVT: f(a)·f(b) &lt; 0 (Method 3).</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text"><em>(If asked)</em> plan iterations: <span class="mono">n ≥ log₂((b−a)/ε)</span>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">Compute midpoint <span class="mono">c = (a+b)/2</span> and evaluate f(c).</span></div>
+        <div class="proc-step"><span class="proc-step__badge">4</span><span class="proc-step__text">If f(a)·f(c) &lt; 0 → new bracket [a, c]. Otherwise → new bracket [c, b].</span></div>
+        <div class="proc-step"><span class="proc-step__badge">5</span><span class="proc-step__text">Repeat steps 3–4 until the interval width &lt; ε (or f(c) ≈ 0).</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>f(x)=x²−3 on [1,2]. c=1.5, f(1.5)=−0.75 (same sign as f(1)) → new bracket <strong>[1.5, 2]</strong>. Repeat.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Always tabulate <strong>a, b, c, f(c), new bracket</strong> at every iteration — markers award the
+        table, not just the final number.</p>
+      </div>
+    </div>
+
+    <!-- METHOD 5 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m5">
+      <span class="method-card__num">METHOD 5</span>
+      <div class="method-card__title">Newton-Raphson Method</div>
+      <p class="method-card__when">Use when: f′(x) is easy to compute and you have one good starting guess close to the root — fastest convergence.</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">Write f(x) and derive <strong>f′(x)</strong>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text">Choose starting guess x₀.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">Apply <span class="mono">xₙ₊₁ = xₙ − f(xₙ)/f′(xₙ)</span>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">4</span><span class="proc-step__text">Check <span class="mono">|xₙ₊₁ − xₙ| &lt; ε</span> — if not satisfied, repeat step 3 with the new x.</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>f(x)=x³−2x²−5, x₀=2: f(2)=−5, f′(2)=4. x₁ = 2−(−5/4) = <strong>3.25</strong>. Repeat until convergence.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Fails if f′(xₙ)=0 (horizontal tangent) or if x₀ is far from the root. No guarantee like bisection —
+        but roughly <strong>doubles correct digits</strong> every step.</p>
+      </div>
+    </div>
+
+    <!-- METHOD 6 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m6">
+      <span class="method-card__num">METHOD 6</span>
+      <div class="method-card__title">Secant Method</div>
+      <p class="method-card__when">Use when: the derivative is hard/impossible to compute, but you have two starting guesses.</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">Choose two starting guesses x₀, x₁ (no sign-change bracket required).</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text">Compute f(x₀) and f(x₁).</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">Apply <span class="mono">x₂ = x₁ − f(x₁)(x₁−x₀) / (f(x₁)−f(x₀))</span>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">4</span><span class="proc-step__text">Shift the window: old x₁ becomes new x₀, new x₂ becomes new x₁. Repeat until <span class="mono">|xₙ₊₁−xₙ| &lt; ε</span>.</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>f(x)=x³−2, x₀=1, x₁=2: f(1)=−1, f(2)=6. x₂ = 2 − 6(1)/7 ≈ <strong>1.1429</strong>. Repeat with (x₁,x₂).</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Always use the <strong>TWO MOST RECENT</strong> points — the oldest point is discarded every step.
+        Speed order: bisection &lt; secant &lt; Newton.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">CHAPTER 7 — EIGENVALUES &amp; EIGENVECTORS</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- METHOD 7 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m7">
+      <span class="method-card__num">METHOD 7</span>
+      <div class="method-card__title">Eigenvalues via Characteristic Polynomial</div>
+      <p class="method-card__when">Use when: asked to find ALL eigenvalues of a small (2×2 or 3×3) matrix exactly.</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">Form <span class="mono">A − λI</span> (subtract λ from every diagonal entry).</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text">Compute <span class="mono">det(A − λI) = 0</span> — this is the characteristic polynomial.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">For 2×2: shortcut is <span class="mono">λ² − (trace)λ + det = 0</span>. Solve by factoring or the quadratic formula.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">4</span><span class="proc-step__text">Each root λᵢ is an eigenvalue. Check: sum of roots = trace(A), product of roots = det(A).</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>A=[[3,6],[1,4]]: λ²−7λ+6=(λ−6)(λ−1)=0 → <strong>λ=6, λ=1</strong>. Check: 6+1=7=trace ✓, 6×1=6=det ✓.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>An n×n matrix ALWAYS has exactly <strong>n eigenvalues</strong> (counting repeats/complex ones).
+        Trace+det shortcut solves any 2×2 in one line.</p>
+      </div>
+    </div>
+
+    <!-- METHOD 8 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m8">
+      <span class="method-card__num">METHOD 8</span>
+      <div class="method-card__title">Eigenvectors (given an eigenvalue)</div>
+      <p class="method-card__when">Use when: you already have λ (from Method 7) and need its corresponding eigenvector.</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">Substitute λᵢ into <span class="mono">(A − λᵢI)v = 0</span>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text">Row-reduce (Gaussian elimination) the resulting matrix.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">Express the solution in terms of a free parameter t.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">4</span><span class="proc-step__text">Verify: <span class="mono">Av = λv</span> using your found vector.</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>λ=6 for A=[[3,6],[1,4]]: (A−6I)v=0 → [[-3,6],[1,-2]]v=0 → row-reduce → v=t(2,1). <strong>Eigenvector: (2,1)</strong>.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Eigenvectors are reported <strong>"up to scale"</strong> — any nonzero multiple is equally correct.
+        Always verify with Av=λv before moving on.</p>
+      </div>
+    </div>
+
+    <!-- METHOD 9 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m9">
+      <span class="method-card__num">METHOD 9</span>
+      <div class="method-card__title">Power Method</div>
+      <p class="method-card__when">Use when: you only need the DOMINANT (largest) eigenvalue, especially for a large matrix.</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">Choose any nonzero starting vector v⁽⁰⁾.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text">Compute <span class="mono">u⁽¹⁾ = A v⁽⁰⁾</span>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">m₁ = the largest-magnitude component of u⁽¹⁾ — this IS the current eigenvalue estimate.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">4</span><span class="proc-step__text">Normalise: <span class="mono">v⁽¹⁾ = u⁽¹⁾ / m₁</span>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">5</span><span class="proc-step__text">Repeat steps 2–4 until <span class="mono">|mₖ₊₁ − mₖ| &lt; ε</span>.</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>A=[[2,1],[1,2]], v⁽⁰⁾=(1,0): u⁽¹⁾=(2,1), m₁=<strong>2</strong>, v⁽¹⁾=(1,0.5). Repeat — converges toward λ=3.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Fails if two eigenvalues TIE for largest magnitude. Normalising does two jobs at once: prevents
+        overflow AND gives you mₖ (the eigenvalue estimate).</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">CHAPTER 8 — INTERPOLATION</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- METHOD 10 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m10">
+      <span class="method-card__num">METHOD 10</span>
+      <div class="method-card__title">Newton Forward-Difference Interpolation</div>
+      <p class="method-card__when">Use when: estimating a value near the BEGINNING of an equally-spaced table.</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">Confirm the x-values are equally spaced with step h.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text">Build the forward-difference table: <span class="mono">Δyₖ = yₖ₊₁−yₖ</span>, then Δ², Δ³…</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">Compute <span class="mono">r = (x − x₀) / h</span>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">4</span><span class="proc-step__text">Apply <span class="mono">pₙ(x) = y₀ + rΔy₀ + [r(r−1)/2!]Δ²y₀ + …</span> using the TOP row of the table.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">5</span><span class="proc-step__text">Add terms until they become negligible (usually 3–4 terms).</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>y₀=0.5, Δy₀=−0.0455, r=0.5: p≈0.5+(0.5)(−0.0455)=<strong>0.4773</strong> (2-term estimate).</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Forward formula coefficients use <strong>(r−1), (r−2)…</strong> — minus signs. Best accuracy needs
+        r between 0 and 1.</p>
+      </div>
+    </div>
+
+    <!-- METHOD 11 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m11">
+      <span class="method-card__num">METHOD 11</span>
+      <div class="method-card__title">Newton Backward-Difference Interpolation</div>
+      <p class="method-card__when">Use when: estimating a value near the END of an equally-spaced table.</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">Confirm equal spacing; identify xₙ (the LAST point in the table).</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text">Build the backward-difference table: <span class="mono">∇yₖ = yₖ−yₖ₋₁</span>, then ∇², ∇³…</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">Compute <span class="mono">r = (x − xₙ) / h</span> (typically negative).</span></div>
+        <div class="proc-step"><span class="proc-step__badge">4</span><span class="proc-step__text">Apply <span class="mono">pₙ(x) = yₙ + r∇yₙ + [r(r+1)/2!]∇²yₙ + …</span> using the BOTTOM row of the table.</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>yₙ=0.3333, ∇yₙ=−0.0238, r=−0.5: p≈0.3333+(−0.5)(−0.0238)=<strong>0.3452</strong>.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Backward formula coefficients use <strong>(r+1), (r+2)…</strong> — PLUS signs (opposite of forward).
+        Mixing the two sign patterns is the #1 exam slip.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">CHAPTER 9 — NUMERICAL DIFFERENTIATION</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- METHOD 12 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m12">
+      <span class="method-card__num">METHOD 12</span>
+      <div class="method-card__title">Forward &amp; Backward Difference (2-point)</div>
+      <p class="method-card__when">Use when: estimating f′(x) at a BOUNDARY point (only one neighbour available).</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">Identify h and whether x sits at the left edge (only a "next" point) or right edge (only a "previous" point) of the data.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text">Left edge → forward: <span class="mono">f′(x) ≈ [f(x+h) − f(x)] / h</span>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">Right edge → backward: <span class="mono">f′(x) ≈ [f(x) − f(x−h)] / h</span>.</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>f(2.0)=0.693, f(2.1)=0.742, h=0.1: forward f′(2.0)≈(0.742−0.693)/0.1=<strong>0.49</strong>.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Both are <strong>O(h)</strong> — halving h only halves the error. Use central difference (Method 13)
+        whenever both neighbours exist.</p>
+      </div>
+    </div>
+
+    <!-- METHOD 13 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m13">
+      <span class="method-card__num">METHOD 13</span>
+      <div class="method-card__title">Central Difference (3-point)</div>
+      <p class="method-card__when">Use when: x is an INTERIOR point (both neighbours x−h and x+h exist) — always preferred over one-sided formulas.</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">Confirm both f(x−h) and f(x+h) are available in the table.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text">Apply <span class="mono">f′(x) ≈ [f(x+h) − f(x−h)] / (2h)</span>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">Note: f(x) itself is NOT used in the formula.</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>f(2.0)=0.693, f(2.2)=0.788, h=0.1: f′(2.1)≈(0.788−0.693)/0.2=<strong>0.475</strong> (more accurate than forward/backward).</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p><strong>O(h²)</strong> — halving h QUARTERS the error (vs only halving for one-sided). But h too small
+        → rounding error takes over. There's an optimal h, not "smaller is always better".</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">CHAPTER 10 — NUMERICAL INTEGRATION</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- METHOD 14 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m14">
+      <span class="method-card__num">METHOD 14</span>
+      <div class="method-card__title">Trapezoidal Rule</div>
+      <p class="method-card__when">Use when: approximating ∫f(x)dx and N can be ANY value (odd or even).</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">Compute <span class="mono">h = (b−a)/N</span>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text">List nodes x₀…xₙ and compute f at each node.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">Apply <span class="mono">(h/2)[f₀ + 2(f₁+f₂+…+fₙ₋₁) + fₙ]</span> — endpoints ×1, interior nodes ×2.</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>∫₀² x² dx, N=4, h=0.5: (0.5/2)[0 + 2(0.25+1+2.25) + 4] = <strong>2.75</strong> (exact ≈2.667).</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p><strong>O(h²)</strong> error — halving h quarters the error. Works for ANY N, no parity constraint
+        (unlike Simpson's).</p>
+      </div>
+    </div>
+
+    <!-- METHOD 15 -->
+    <div class="method-card glass-card anim-fade-in-up" id="m15">
+      <span class="method-card__num">METHOD 15</span>
+      <div class="method-card__title">Simpson's 1/3 Rule</div>
+      <p class="method-card__when">Use when: N is EVEN and you want much higher accuracy than trapezoidal at the same step size.</p>
+
+      <div class="proc-steps">
+        <div class="proc-step"><span class="proc-step__badge">1</span><span class="proc-step__text">Confirm N is <strong>even</strong> (required — parabolas span pairs of subintervals).</span></div>
+        <div class="proc-step"><span class="proc-step__badge">2</span><span class="proc-step__text">Compute <span class="mono">h = (b−a)/N</span>.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">3</span><span class="proc-step__text">List nodes and f-values.</span></div>
+        <div class="proc-step"><span class="proc-step__badge">4</span><span class="proc-step__text">Apply <span class="mono">(h/3)[f₀ + 4f₁ + 2f₂ + 4f₃ + … + 4fₙ₋₁ + fₙ]</span> — pattern 1,4,2,4,2,…,4,1.</span></div>
+      </div>
+
+      <div class="mini-example">
+        <span class="mini-example__label">MINI EXAMPLE</span>
+        <p>∫₀¹ eˣ dx, N=4, h=0.25: (0.25/3)[1+4(1.284)+2(1.6487)+4(2.117)+2.7183] ≈ <strong>1.7183</strong> (exact e−1≈1.71828).</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p><strong>O(h⁴)</strong> error — halving h shrinks error by <strong>16×</strong> (vs 4× for trapezoidal).
+        If N given is odd, you cannot use Simpson's directly.</p>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin: 36px 0 12px;">
+      <a href="math-chapter5.html" class="btn btn--primary">← Back to Chapter 5</a>
+      <a href="index.html" class="btn btn--ghost">Hub</a>
+    </div>
+
+  </main>
+
+  <script src="js/progress.js"></script>
+  <script src="js/gamification.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

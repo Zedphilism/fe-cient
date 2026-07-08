@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Final Exam 2025 — Full Solutions — MathCore Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/components.css" />
+
+  <style>
+    .cheat-hero { padding: 32px 24px 24px; text-align: center; }
+    .cheat-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 3.4vw, 2rem);
+      letter-spacing: 0.02em;
+      color: var(--text-primary);
+    }
+    .cheat-hero__title .accent { color: var(--accent-green); }
+    .cheat-hero__sub {
+      color: var(--text-muted);
+      font-size: 0.86rem;
+      max-width: 740px;
+      margin: 10px auto 0;
+      line-height: 1.6;
+    }
+    .cheat-note {
+      max-width: 820px;
+      margin: 16px auto 0;
+      padding: 12px 16px;
+      border-left: 3px solid var(--accent-orange);
+      background: rgba(255,107,53,0.06);
+      border-radius: 4px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      text-align: left;
+    }
+    .cheat-note strong { color: var(--accent-orange); }
+    .cheat-note--green { border-left-color: var(--accent-green); background: rgba(57,255,20,0.06); }
+    .cheat-note--green strong { color: var(--accent-green); }
+
+    .cheat-toc {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+      margin: 22px auto 8px; max-width: 900px;
+    }
+    .cheat-toc a {
+      font: 600 0.72rem/1 var(--font-display);
+      color: var(--text-primary); text-decoration: none;
+      padding: 7px 13px; border: 1px solid var(--border-glass); border-radius: var(--radius-sm);
+      transition: border-color .2s, color .2s;
+    }
+    .cheat-toc a:hover { border-color: var(--accent-green); color: var(--accent-green); }
+
+    .section-divider { display: flex; align-items: center; gap: 14px; margin: 38px 0 8px; }
+    .section-divider__label { font: 700 0.72rem/1 var(--font-display); letter-spacing: 0.13em; color: var(--accent-green); white-space: nowrap; }
+    .section-divider__line { flex: 1; height: 1px; background: var(--border-glass); }
+
+    /* ── Question card ─────────────────────────────────────────── */
+    .qx-card { margin: 22px 0; padding: 22px 26px; border-left: 3px solid var(--accent-green); }
+    .qx-card__num {
+      display: inline-flex; align-items: center; gap: 8px;
+      font: 700 0.68rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-green);
+      margin-bottom: 6px;
+    }
+    .qx-card__marks {
+      font-size: 0.65rem; color: var(--text-muted); font-weight: 400; letter-spacing: 0.04em;
+    }
+    .qx-card__question {
+      font-size: 0.92rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 14px;
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);
+      border-radius: var(--radius-sm); padding: 12px 16px;
+    }
+    .qx-card__question .mono { font-family: var(--font-display); }
+
+    .strategy-box {
+      background: rgba(0,245,255,0.05); border: 1px solid rgba(0,245,255,0.15);
+      border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 12px;
+    }
+    .strategy-box__label {
+      font: 700 0.62rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-cyan);
+      margin-bottom: 7px; display: block;
+    }
+    .strategy-box p { font-size: 0.82rem; line-height: 1.6; color: var(--text-primary); margin: 0 0 6px; }
+    .strategy-box p:last-child { margin-bottom: 0; }
+    .strategy-box strong { color: var(--accent-cyan); }
+
+    /* Native details/summary styled as a toggle button */
+    .working-toggle { margin-top: 4px; }
+    .working-toggle summary {
+      cursor: pointer;
+      list-style: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font: 700 0.72rem/1 var(--font-display);
+      letter-spacing: 0.06em;
+      color: var(--accent-green);
+      background: rgba(57,255,20,0.08);
+      border: 1px solid rgba(57,255,20,0.3);
+      border-radius: var(--radius-sm);
+      padding: 9px 16px;
+      transition: background .2s;
+      user-select: none;
+    }
+    .working-toggle summary::-webkit-details-marker { display: none; }
+    .working-toggle summary:hover { background: rgba(57,255,20,0.15); }
+    .working-toggle summary::before { content: '▶'; font-size: 0.6rem; transition: transform .2s; }
+    .working-toggle[open] summary::before { transform: rotate(90deg); }
+    .working-toggle[open] summary { margin-bottom: 12px; }
+    .working-toggle summary .show-label { display: inline; }
+    .working-toggle summary .hide-label { display: none; }
+    .working-toggle[open] summary .show-label { display: none; }
+    .working-toggle[open] summary .hide-label { display: inline; }
+
+    .working-body { padding: 2px 2px 4px; }
+
+    .step-block { margin-bottom: 14px; }
+    .step-block__label {
+      font: 700 0.64rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-purple);
+      margin-bottom: 8px; display: block;
+    }
+    .step-block p { font-size: 0.83rem; line-height: 1.65; color: var(--text-primary); margin: 0 0 8px; }
+    .step-block p:last-child { margin-bottom: 0; }
+    .step-block strong { color: var(--accent-purple); }
+    .step-block .mono { font-family: var(--font-display); font-size: 0.8rem; }
+
+    .final-answer {
+      background: rgba(57,255,20,0.08); border: 1px solid rgba(57,255,20,0.3);
+      border-radius: var(--radius-sm); padding: 12px 16px; margin-top: 10px;
+    }
+    .final-answer__label {
+      font: 700 0.62rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-green);
+      margin-bottom: 6px; display: block;
+    }
+    .final-answer p { font-size: 0.86rem; color: var(--text-primary); margin: 0; font-weight: 600; }
+    .final-answer strong { color: var(--accent-green); }
+
+    .work-table {
+      width: 100%; border-collapse: collapse; margin: 10px 0;
+      font-size: 0.76rem; font-family: var(--font-display);
+    }
+    .work-table th, .work-table td { border: 1px solid rgba(255,255,255,0.09); padding: 5px 8px; text-align: center; }
+    .work-table th { background: rgba(255,255,255,0.03); color: var(--text-muted); font-size: 0.64rem; letter-spacing: 0.04em; }
+    .work-table td { color: var(--text-primary); }
+    .work-table .hl { color: var(--accent-green); font-weight: 700; }
+    .table-wrap { overflow-x: auto; margin: 10px 0; }
+
+    .remember-box {
+      background: rgba(255,215,0,0.06); border: 1px solid rgba(255,215,0,0.28);
+      border-radius: var(--radius-sm); padding: 11px 14px; margin-top: 10px;
+    }
+    .remember-box__label {
+      display: flex; align-items: center; gap: 6px;
+      font: 700 0.6rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-gold, #ffd700);
+      margin-bottom: 6px;
+    }
+    .remember-box p { font-size: 0.78rem; line-height: 1.5; color: var(--text-primary); margin: 0; }
+    .remember-box strong { color: var(--accent-gold, #ffd700); }
+
+    /* ── Prediction cards ─────────────────────────────────────── */
+    .predict-card {
+      margin: 16px 0; padding: 18px 22px; border-left: 3px solid var(--accent-purple);
+    }
+    .predict-card__title { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+    .predict-card__why { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
+    .predict-card__why strong { color: var(--accent-purple); }
+    .predict-tag {
+      display: inline-block; font: 700 0.6rem/1 var(--font-display); letter-spacing: 0.08em;
+      color: var(--accent-purple); background: rgba(191,95,255,0.1); border: 1px solid rgba(191,95,255,0.3);
+      padding: 3px 9px; border-radius: 20px; margin-bottom: 8px;
+    }
+  </style>
+</head>
+
+<body data-page="cheatsheet">
+
+  <!-- ── Site Header ──────────────────────────────────────────────────── -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo" aria-label="Study hub home">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <circle cx="14" cy="14" r="13" stroke="var(--accent-green)" stroke-width="1.5"/>
+          <text x="14" y="19" text-anchor="middle" fill="var(--accent-green)" font-size="12" font-weight="bold">&#8747;</text>
+        </svg>
+        <span class="logo-text">MathCore<span class="logo-accent" style="color:var(--accent-green)">Academy</span></span>
+      </a>
+
+      <nav class="header-nav" aria-label="Chapter navigation">
+        <a href="index.html" class="nav-link">Hub</a>
+        <a href="math-chapter5.html" class="nav-link">Ch.5</a>
+        <a href="math-chapter6.html" class="nav-link">Ch.6</a>
+        <a href="math-chapter7.html" class="nav-link">Ch.7</a>
+        <a href="math-chapter8.html" class="nav-link">Ch.8</a>
+        <a href="math-chapter9.html" class="nav-link">Ch.9</a>
+        <a href="math-chapter10.html" class="nav-link">Ch.10</a>
+        <a href="mathcore-problem-solving.html" class="nav-link">Steps</a>
+        <a href="math-final-2025-solutions.html" class="nav-link nav-link--active" aria-current="page">2025 Exam</a>
+        <a href="exam-mode.html?module=math" class="nav-link">Exam Mode</a>
+      </nav>
+
+      <div class="header-right">
+        <div class="rank-badge" id="header-rank">
+          <span class="rank-level" id="header-level">Lv.1</span>
+          <span class="rank-title" id="header-rank-title"></span>
+        </div>
+        <div class="xp-bar-wrap" title="XP progress to next level">
+          <div class="xp-bar-track"><div class="xp-bar-fill" id="header-xp-fill" style="width:0%"></div></div>
+          <span class="xp-label" id="header-xp-label">0 XP</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-wrapper" id="main-content">
+
+    <div class="cheat-hero glass-card anim-fade-in-up">
+      <span class="section-label">SECI1113 — FINAL EXAM SEMESTER II 2024/2025</span>
+      <h1 class="cheat-hero__title">Final Exam <span class="accent">Full Solutions</span></h1>
+      <p class="cheat-hero__sub">
+        Every question from the real 2025 final exam, fully worked through. Each question shows
+        a quick "how to approach it" strategy first, then a <strong>Show Full Working</strong> button
+        that reveals every calculation step — click to expand only when you want to check your own attempt.
+      </p>
+      <div class="cheat-note">
+        <strong>How I verified this:</strong> every number on this page was computed independently with
+        a calculator script and cross-checked at least two ways where possible (e.g. Q3's Newton and
+        Lagrange methods are DIFFERENT techniques that must produce the SAME interpolated value — they do,
+        both giving 16.66, which confirms both are correct). This is <em>not</em> an official answer key —
+        if your lecturer's marking scheme differs on a rounding convention or stopping rule, trust your
+        lecturer, but the method and final values here are mathematically sound.
+      </div>
+      <div class="cheat-note cheat-note--green">
+        <strong>Note on Q4:</strong> Table 2's printed f(x) values match ln(x²+1) exactly only at x=1.0 —
+        the other rows differ slightly from the true closed-form (common in printed exam tables). The
+        correct approach — and what's used below — is to compute directly from the <em>given table</em>,
+        exactly as you would with real measured data where you don't have the closed form. The closed form
+        in part (b) is only used to get the "exact" derivative for the error comparison it explicitly asks for.
+      </div>
+    </div>
+
+    <div class="cheat-toc">
+      <a href="#q1">Q1 — Error &amp; Root-Finding</a>
+      <a href="#q2">Q2 — Eigenvalues</a>
+      <a href="#q3">Q3 — Interpolation &amp; Regression</a>
+      <a href="#q4">Q4 — Differentiation</a>
+      <a href="#q5">Q5 — Integration</a>
+      <a href="#predictions">🔮 Predictions</a>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">QUESTION 1 — ACCURACY &amp; NON-LINEAR EQUATIONS</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- Q1 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="q1">
+      <span class="qx-card__num">QUESTION 1 <span class="qx-card__marks">[20 MARKS]</span></span>
+      <div class="qx-card__question">
+        <p><strong>a)</strong> Given f(x) = 4x³ − 2x² + 1: <strong>(i)</strong> find the exact value of f(2.13).
+        <strong>(ii)</strong> find the absolute and relative error if f(2.13) is rounded to 3 decimal points.</p>
+        <p><strong>b)</strong> Find the root of f(x) = x³ − 4x + 1 to 1 decimal point accuracy in [1, 3] using
+        the Bisection method. Calculate to 3 decimal points.</p>
+        <p><strong>c)</strong> Find the root to 2 decimal points for f(x) = cos(x) − x using the Secant method,
+        where x₀ = 1 and x₁ = 1.5. Calculate to 4 decimal points.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p><strong>(a)</strong> Straight substitution, then apply the absolute/relative error formulas from
+        Chapter 5 — no iteration needed.</p>
+        <p><strong>(b)</strong> Verify IVT first (always), then bisect using x_c=(a+b)/2, tracking a, b, f(a), f(c)
+        every round. Stop once the digit at the target decimal place stabilises across consecutive iterates.</p>
+        <p><strong>(c)</strong> Secant needs no sign-change bracket — just two starting points and the formula
+        from the sheet. Always slide the window forward (drop the oldest point) each round.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">(a)(i) EXACT VALUE</span>
+            <p>f(2.13) = 4(2.13)³ − 2(2.13)² + 1</p>
+            <p>2.13² = 4.5369 &nbsp;·&nbsp; 2.13³ = 2.13 × 4.5369 = 9.663597</p>
+            <p>f(2.13) = 4(9.663597) − 2(4.5369) + 1 = 38.654388 − 9.0738 + 1 = <strong>30.580588</strong></p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(a)(ii) ABSOLUTE &amp; RELATIVE ERROR</span>
+            <p>Rounded to 3 d.p.: f(2.13) ≈ <span class="mono">30.581</span> (the 4th decimal, 5, rounds the 3rd decimal 0→1)</p>
+            <p><strong>Absolute error</strong> = |true − approx| = |30.580588 − 30.581| = <strong>0.000412</strong></p>
+            <p><strong>Relative error</strong> = 0.000412 / 30.580588 ≈ <strong>0.0000135</strong> (≈ 0.00135%)</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(b) BISECTION — IVT CHECK</span>
+            <p>f(1) = 1−4+1 = −2 &nbsp;·&nbsp; f(3) = 27−12+1 = 16 &nbsp;·&nbsp; product = −32 &lt; 0 → root confirmed in (1,3)</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(b) BISECTION — ITERATION TABLE (3 d.p.)</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Iter</th><th>a</th><th>b</th><th>c=(a+b)/2</th><th>f(a)</th><th>f(c)</th><th>New bracket</th></tr>
+                <tr><td>1</td><td>1.000</td><td>3.000</td><td>2.000</td><td>−2.000</td><td>1.000</td><td>[1.000, 2.000]</td></tr>
+                <tr><td>2</td><td>1.000</td><td>2.000</td><td>1.500</td><td>−2.000</td><td>−1.625</td><td>[1.500, 2.000]</td></tr>
+                <tr><td>3</td><td>1.500</td><td>2.000</td><td>1.750</td><td>−1.625</td><td>−0.641</td><td>[1.750, 2.000]</td></tr>
+                <tr><td>4</td><td>1.750</td><td>2.000</td><td>1.875</td><td>−0.641</td><td>0.092</td><td>[1.750, 1.875]</td></tr>
+                <tr><td>5</td><td>1.750</td><td>1.875</td><td>1.812</td><td>−0.641</td><td>−0.296</td><td>[1.812, 1.875]</td></tr>
+                <tr><td>6</td><td>1.812</td><td>1.875</td><td>1.844</td><td>−0.296</td><td>−0.107</td><td>[1.844, 1.875]</td></tr>
+                <tr><td>7</td><td>1.844</td><td>1.875</td><td class="hl">1.859</td><td>−0.107</td><td>−0.009</td><td>[1.859, 1.875]</td></tr>
+                <tr><td>8</td><td>1.859</td><td>1.875</td><td class="hl">1.867</td><td>−0.009</td><td>0.041</td><td>[1.859, 1.867]</td></tr>
+              </table>
+            </div>
+            <p>Iterations 7 and 8 both round to <strong>1.9</strong> at 1 decimal place — two consecutive
+            agreements confirm convergence.</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (b)</span>
+            <p>Root ≈ <strong>1.9</strong> (to 1 d.p.) — more precisely ≈ 1.860–1.867</p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">(c) SECANT — SETUP</span>
+            <p>f(x) = cos(x) − x (radians). f(x₀)=f(1)= cos(1)−1 = <strong>−0.4597</strong>.
+            f(x₁)=f(1.5)= cos(1.5)−1.5 = <strong>−1.4293</strong>.</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(c) SECANT — ITERATION TABLE (4 d.p.)</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Iter</th><th>xᵢ</th><th>xᵢ₊₁</th><th>f(xᵢ)</th><th>f(xᵢ₊₁)</th><th>xᵢ₊₂ (new)</th></tr>
+                <tr><td>1</td><td>1.0000</td><td>1.5000</td><td>−0.4597</td><td>−1.4293</td><td>0.7629</td></tr>
+                <tr><td>2</td><td>1.5000</td><td>0.7629</td><td>−1.4293</td><td>−0.0401</td><td>0.7416</td></tr>
+                <tr><td>3</td><td>0.7629</td><td>0.7416</td><td>−0.0401</td><td>−0.0043</td><td class="hl">0.7391</td></tr>
+              </table>
+            </div>
+            <p>|x₃ − x₂| = |0.7391 − 0.7416| = 0.0025 &lt; 0.005 (tolerance for 2 d.p.) → <strong>converged</strong></p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (c)</span>
+            <p>Root ≈ <strong>0.74</strong> (to 2 d.p.) — the well-known fixed point of cos(x)=x, ≈ 0.7391</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Bisection always needs the IVT check first. Secant needs NO sign-change bracket — just two
+        starting guesses, and you always discard the OLDEST point each round.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">QUESTION 2 — EIGENVALUES &amp; EIGENVECTORS</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- Q2 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="q2">
+      <span class="qx-card__num">QUESTION 2 <span class="qx-card__marks">[20 MARKS]</span></span>
+      <div class="qx-card__question">
+        <p><strong>a)</strong> Given A = [[4,1],[2,3]]: <strong>(i)</strong> use the characteristic polynomial to
+        find the eigenvalues and eigenvectors. <strong>(ii)</strong> show Σλᵢ = Σaᵢᵢ (trace).</p>
+        <p><strong>b)</strong> Given B = [[4,1,−1],[2,3,1],[−1,1,2]]: <strong>(i)</strong> find the smallest-magnitude
+        eigenvalue λ₃ and its eigenvector using the <strong>shifted power method</strong>, given the largest
+        eigenvalue λ₁ = 5, starting v₀ = [0.5, −0.4, 0.5]ᵀ, iterate until ε = 0.05.
+        <strong>(ii)</strong> find the intermediate eigenvalue λ₂.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p><strong>(a)</strong> For a 2×2 matrix, use the fast shortcut λ² − (trace)λ + det = 0 instead of
+        expanding the full determinant — much less room for error.</p>
+        <p><strong>(b)(i)</strong> "Shifted power method" here means: form A_shifted = B − λ₁I (subtract the
+        GIVEN largest eigenvalue from the diagonal), then run the ORDINARY power method on A_shifted. Its
+        dominant eigenvalue m corresponds to (λ₃ − λ₁), so recover λ₃ = m + λ₁ at the end.</p>
+        <p><strong>(b)(ii)</strong> Don't re-run another iteration — use <span class="mono">Σλᵢ = trace(B)</span>:
+        λ₂ = trace(B) − λ₁ − λ₃.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">(a)(i) CHARACTERISTIC POLYNOMIAL</span>
+            <p>trace(A) = 4+3 = 7 &nbsp;·&nbsp; det(A) = 4(3)−1(2) = 10</p>
+            <p>λ² − 7λ + 10 = 0 → (λ−5)(λ−2) = 0 → <strong>λ₁ = 5, λ₂ = 2</strong></p>
+            <p><strong>Eigenvector for λ=5:</strong> (A−5I)v=0 → [[−1,1],[2,−2]]v=0 → −v₁+v₂=0 → v=t(1,1)</p>
+            <p><strong>Eigenvector for λ=2:</strong> (A−2I)v=0 → [[2,1],[2,1]]v=0 → 2v₁+v₂=0 → v=t(1,−2)</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (a)(i)</span>
+            <p>λ=5 with eigenvector (1,1) &nbsp;·&nbsp; λ=2 with eigenvector (1,−2)</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(a)(ii) TRACE THEOREM CHECK</span>
+            <p>Σλᵢ = 5+2 = 7 &nbsp;·&nbsp; Σaᵢᵢ = trace(A) = 4+3 = 7 &nbsp;·&nbsp; <strong>7 = 7 ✓ theorem holds</strong></p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">(b)(i) SET UP THE SHIFT</span>
+            <p>A_shifted = B − 5I = [[−1,1,−1],[2,−2,1],[−1,1,−3]]</p>
+            <p>Now apply the ORDINARY power method (largest-magnitude component each round) to this shifted matrix.</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(b)(i) SHIFTED POWER METHOD ITERATIONS</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>k</th><th>u = A_shifted·v</th><th>m (largest |·|)</th><th>v (normalised)</th></tr>
+                <tr><td>1</td><td>(−1.400, 2.300, −2.400)</td><td>−2.400</td><td>(0.583, −0.958, 1.000)</td></tr>
+                <tr><td>2</td><td>(−2.542, 4.083, −4.542)</td><td>−4.542</td><td>(0.560, −0.899, 1.000)</td></tr>
+                <tr><td>3</td><td>(−2.459, 3.917, −4.459)</td><td>−4.459</td><td>(0.551, −0.879, 1.000)</td></tr>
+                <tr><td>4</td><td>(−2.430, 3.860, −4.430)</td><td class="hl">−4.430</td><td>(0.549, −0.871, 1.000)</td></tr>
+              </table>
+            </div>
+            <p>|m₄ − m₃| = |−4.430 − (−4.459)| = 0.029 &lt; 0.05 → <strong>converged</strong></p>
+            <p>Undo the shift: <span class="mono">λ₃ = m + λ₁ = −4.430 + 5 = 0.570</span></p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (b)(i)</span>
+            <p>λ₃ ≈ <strong>0.57</strong>, eigenvector v₃ ≈ <strong>(0.549, −0.871, 1.000)</strong></p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">(b)(ii) INTERMEDIATE EIGENVALUE via TRACE</span>
+            <p>trace(B) = 4+3+2 = 9. &nbsp; λ₂ = trace(B) − λ₁ − λ₃ = 9 − 5 − 0.570 = <strong>3.430</strong></p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (b)(ii)</span>
+            <p>λ₂ ≈ <strong>3.43</strong></p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>"Shifted power method for the smallest eigenvalue" = power method on <strong>(A − λ_largest·I)</strong>,
+        then <strong>add λ_largest back</strong> at the end. Never solve for the middle eigenvalue by iterating —
+        use <strong>Σλᵢ = trace</strong> instead, it's instant.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">QUESTION 3 — INTERPOLATION &amp; LEAST SQUARES</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- Q3 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="q3">
+      <span class="qx-card__num">QUESTION 3 <span class="qx-card__marks">[20 MARKS]</span></span>
+      <div class="qx-card__question">
+        <p>An object's position is recorded: t = 1,2,3,4,5 → position = 2.0, 3.5, 7.8, 13.9, 21.0 (metres).</p>
+        <p><strong>a)</strong> Estimate the position at t = 4.4 using <strong>(i)</strong> the appropriate Newton
+        method, and <strong>(ii)</strong> the Lagrange interpolating polynomial (L₀=−0.03, L₁=−0.19, L₂=−0.49 given).</p>
+        <p><strong>b)</strong> Find p(x) = a₀ + a₁x using Least Squares Approximation. <em>(All calculations to 2 d.p.)</em></p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p><strong>(a)(i)</strong> t=4.4 sits near the END of the table (closest to t=5) → backward difference
+        is the "appropriate" Newton method here (forward would need many terms to converge from the far end).</p>
+        <p><strong>(a)(ii)</strong> With 5 data points, Lagrange uses ALL FIVE (degree 4) — the 3 L-values given
+        are a hint/check, not the full set; you must derive L₃ and L₄ yourself. <strong>Sanity check: all
+        Lᵢ(x) must always sum to exactly 1</strong> — use this to catch arithmetic slips.</p>
+        <p><strong>(b)</strong> Standard linear least-squares normal equations using all 5 (t, position) pairs.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">(a)(i) NEWTON BACKWARD-DIFFERENCE — DIFFERENCE TABLE</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Order</th><th colspan="5">Values</th></tr>
+                <tr><td>y (order 0)</td><td>2.00</td><td>3.50</td><td>7.80</td><td>13.90</td><td>21.00</td></tr>
+                <tr><td>Δ¹</td><td>1.50</td><td>4.30</td><td>6.10</td><td>7.10</td><td></td></tr>
+                <tr><td>Δ²</td><td>2.80</td><td>1.80</td><td>1.00</td><td></td><td></td></tr>
+                <tr><td>Δ³</td><td>−1.00</td><td>−0.80</td><td></td><td></td><td></td></tr>
+                <tr><td>Δ⁴</td><td>0.20</td><td></td><td></td><td></td><td></td></tr>
+              </table>
+            </div>
+            <p>Reading the LAST anchor (x₄=5, y=21.0): ∇y=7.10, ∇²y=1.00, ∇³y=−0.80, ∇⁴y=0.20</p>
+            <p>r = (4.4 − 5) / 1 = <strong>−0.6</strong></p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(a)(i) APPLY THE FORMULA</span>
+            <p>p(4.4) = 21.0 + (−0.6)(7.10) + [(−0.6)(0.4)/2](1.00) + [(−0.6)(0.4)(1.4)/6](−0.80) + [(−0.6)(0.4)(1.4)(2.4)/24](0.20)</p>
+            <p>= 21.0 − 4.26 − 0.12 + 0.0448 − 0.0067 = <strong>16.66</strong></p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (a)(i)</span>
+            <p>Position at t=4.4 ≈ <strong>16.66 m</strong></p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">(a)(ii) LAGRANGE — ALL FIVE BASIS POLYNOMIALS</span>
+            <p>Using x₀..x₄ = 1,2,3,4,5 and evaluating each Lᵢ(4.4):</p>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>L₀(4.4)</th><th>L₁(4.4)</th><th>L₂(4.4)</th><th>L₃(4.4)</th><th>L₄(4.4)</th><th>Sum</th></tr>
+                <tr><td>−0.03</td><td>0.19</td><td>−0.49</td><td class="hl">1.14</td><td class="hl">0.19</td><td>1.00 ✓</td></tr>
+              </table>
+            </div>
+            <p>L₃ and L₄ are the two values you must compute yourself (not given). <strong>Note:</strong> the given
+            L₁ is a positive 0.19 by direct calculation — the sum-to-1 check confirms this (−0.03+0.19−0.49+1.14+0.19 = 1.00 exactly).</p>
+            <p>p(4.4) = ΣLᵢ·yᵢ = (−0.03)(2.0)+(0.19)(3.5)+(−0.49)(7.8)+(1.14)(13.9)+(0.19)(21.0) = <strong>16.66</strong></p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (a)(ii)</span>
+            <p>Position at t=4.4 ≈ <strong>16.66 m</strong> — identical to (a)(i) ✓ (two different methods, same
+            unique interpolating polynomial, confirming both are correct)</p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">(b) LEAST SQUARES — NORMAL EQUATIONS</span>
+            <p>Σt = 15.00, Σy = 48.20, Σty = 193.00, Σt² = 55.00, n=5</p>
+            <p>a₁ = (nΣty − ΣtΣy) / (nΣt² − (Σt)²) = (5×193.00 − 15×48.20) / (5×55.00 − 225) = 242.00/50 = <strong>4.84</strong></p>
+            <p>a₀ = (Σy − a₁Σt)/n = (48.20 − 4.84×15.00)/5 = −24.40/5 = <strong>−4.88</strong></p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (b)</span>
+            <p>p(x) = <strong>−4.88 + 4.84x</strong></p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>All Lagrange basis values at ANY x must sum to exactly <strong>1.0</strong> — use this to check your
+        arithmetic before submitting. Near table END → backward difference; near table START → forward.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">QUESTION 4 — NUMERICAL DIFFERENTIATION</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- Q4 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="q4">
+      <span class="qx-card__num">QUESTION 4 <span class="qx-card__marks">[20 MARKS]</span></span>
+      <div class="qx-card__question">
+        <p>Table 2 gives f(x) = ln(x²+1) at x = 0.9 to 1.4 (step 0.1): f = 0.58779, 0.69315, 0.78846, 0.87547,
+        0.95551, 1.02962.</p>
+        <p><strong>a)</strong> Estimate f′(1.0) with h=0.1 using <strong>(i)</strong> two-point forward,
+        <strong>(ii)</strong> three-point forward, <strong>(iii)</strong> five-point forward.</p>
+        <p><strong>b)</strong> Given f′(x) = 2x/(x²+1) exactly, find the absolute error for each estimate in
+        (a) and explain what more data points do to accuracy.</p>
+        <p><strong>c)</strong> Estimate f″(1.1) using the five-point central difference formula, h=0.1.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>All the data you need (x=1.0 to 1.4 for part a/b, x=0.9 to 1.3 for part c) already exists in Table 2 —
+        no extra values need computing here. Just plug straight into each named formula from the formula sheet.</p>
+        <p><strong>(b)</strong> Compare each estimate against the exact f′(1.0)=2(1)/(1+1)=1.0 — expect the error
+        to shrink noticeably as you use more points (higher-order formula).</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">(a)(i) TWO-POINT FORWARD</span>
+            <p>f′(1.0) ≈ [f(1.1) − f(1.0)] / h = [0.78846 − 0.69315] / 0.1 = <strong>0.9531</strong></p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(a)(ii) THREE-POINT FORWARD</span>
+            <p>f′(1.0) ≈ [−3f(1.0) + 4f(1.1) − f(1.2)] / (2h) = [−2.07945 + 3.15384 − 0.87547] / 0.2 = <strong>0.9946</strong></p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(a)(iii) FIVE-POINT FORWARD</span>
+            <p>f′(1.0) ≈ (1/12h)[−25f(1.0)+48f(1.1)−36f(1.2)+16f(1.3)−3f(1.4)]</p>
+            <p>= (1/1.2)[−17.32875+37.84608−31.51692+15.28816−3.08886] = <strong>0.9998</strong></p>
+          </div>
+
+          <div class="table-wrap">
+            <table class="work-table">
+              <tr><th>Method</th><th>Estimate</th><th>Exact</th><th>Absolute Error</th></tr>
+              <tr><td>2-point forward</td><td>0.9531</td><td>1.0000</td><td class="hl">0.0469</td></tr>
+              <tr><td>3-point forward</td><td>0.9946</td><td>1.0000</td><td class="hl">0.0054</td></tr>
+              <tr><td>5-point forward</td><td>0.9998</td><td>1.0000</td><td class="hl">0.0002</td></tr>
+            </table>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(b) OBSERVATION</span>
+            <p>Error shrinks dramatically: 0.0469 → 0.0054 → 0.0002 as more points are used. Each formula has a
+            higher truncation-error order (O(h) → O(h²) → O(h⁴)), so <strong>more data points → higher-order
+            formula → smaller truncation error → more accurate derivative estimate</strong> — provided the
+            underlying data itself is precise.</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (a, b)</span>
+            <p>f′(1.0) ≈ 0.9531 / 0.9946 / 0.9998 (2/3/5-point) — errors 0.0469 / 0.0054 / 0.0002</p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">(c) FIVE-POINT CENTRAL DIFFERENCE for f″(1.1)</span>
+            <p>f″(1.1) ≈ (1/12h²)[−f(0.9)+16f(1.0)−30f(1.1)+16f(1.2)−f(1.3)]</p>
+            <p>= (1/0.12)[−0.58779+11.0904−23.6538+14.00752−0.95551] = (1/0.12)(−0.09918) = <strong>−0.8265</strong></p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (c)</span>
+            <p>f″(1.1) ≈ <strong>−0.8265</strong> (computed directly from Table 2's given values)</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Central difference is ALWAYS preferred when both neighbours exist — it's one order more accurate
+        than the one-sided version at the same point count. Forward-only formulas exist for boundary points
+        where you can't look backward.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">QUESTION 5 — NUMERICAL INTEGRATION</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- Q5 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="q5">
+      <span class="qx-card__num">QUESTION 5 <span class="qx-card__marks">[20 MARKS]</span></span>
+      <div class="qx-card__question">
+        <p>Approximate ∫₁⁴ [(x²−x+1)/x³] dx using: <strong>a)</strong> Trapezoidal, N=6. <strong>b)</strong>
+        Simpson's 1/3, N=6. <strong>c)</strong> Romberg integration, calculate until R₃,₃.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>Same integral, three methods — compute the node values ONCE (h=(4−1)/6=0.5, 7 nodes) and reuse them
+        for (a) and (b). For (c), Romberg needs its OWN doubling sequence starting from N=1 (h₁=3), NOT the
+        N=6 nodes from parts (a)/(b) — build R₁,₁ → R₂,₁ → R₃,₁ first (trapezoidal at N=1,2,4), then
+        Richardson-extrapolate across to R₃,₃.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">NODE VALUES (h=0.5, x=1 to 4)</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>x</th><td>1.0</td><td>1.5</td><td>2.0</td><td>2.5</td><td>3.0</td><td>3.5</td><td>4.0</td></tr>
+                <tr><th>f(x)</th><td>1.0000</td><td>0.5185</td><td>0.3750</td><td>0.3040</td><td>0.2593</td><td>0.2274</td><td>0.2031</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(a) TRAPEZOIDAL, N=6</span>
+            <p>(h/2)[f₀+f₆ + 2(f₁+f₂+f₃+f₄+f₅)] = (0.5/2)[1.2031 + 2(1.6842)] = <strong>1.1429</strong></p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(b) SIMPSON'S 1/3, N=6</span>
+            <p>(h/3)[(f₀+f₆) + 4(f₁+f₃+f₅) + 2(f₂+f₄)] = (0.5/3)[1.2031 + 4(1.0499) + 2(0.6343)] = <strong>1.1119</strong></p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (a, b)</span>
+            <p>Trapezoidal (N=6) ≈ <strong>1.1429</strong> &nbsp;·&nbsp; Simpson's (N=6) ≈ <strong>1.1119</strong></p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">(c) ROMBERG — BUILD R₁,₁, R₂,₁, R₃,₁ (own doubling sequence)</span>
+            <p>h₁ = b−a = 3 (N=1): R₁,₁ = (h₁/2)[f(1)+f(4)] = 1.5(1.2031) = <strong>1.8047</strong></p>
+            <p>h₂ = 1.5 (N=2): R₂,₁ = ½[R₁,₁ + h₁·f(2.5)] = ½[1.8047 + 3(0.3040)] = <strong>1.3583</strong></p>
+            <p>h₃ = 0.75 (N=4): R₃,₁ = ½[R₂,₁ + h₂·(f(1.75)+f(3.25))] = ½[1.3583 + 1.5(0.4315+0.2421)] = <strong>1.1844</strong></p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(c) RICHARDSON EXTRAPOLATION</span>
+            <p>R₂,₂ = (4R₂,₁−R₁,₁)/3 = (4×1.3583−1.8047)/3 = <strong>1.2096</strong> (= Simpson's at N=2)</p>
+            <p>R₃,₂ = (4R₃,₁−R₂,₁)/3 = (4×1.1844−1.3583)/3 = <strong>1.1264</strong> (= Simpson's at N=4)</p>
+            <p>R₃,₃ = (16R₃,₂−R₂,₂)/15 = (16×1.1264−1.2096)/15 = <strong>1.1209</strong></p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (c)</span>
+            <p>R₃,₃ ≈ <strong>1.1209</strong> (true value ≈ 1.1050 — Romberg's own N=1,2,4 sequence is coarser
+            than the N=6 used in parts a/b, which is why R₃,₃ isn't automatically more accurate than Simpson's
+            N=6 here; it IS the best estimate obtainable from just 5 function evaluations though)</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Romberg's R_{i,2} column always equals Simpson's 1/3 at that same refinement level — a great
+        self-check. R₃,₂ = (4R₃,₁−R₂,₁)/3 uses 4¹; R₃,₃ = (16R₃,₂−R₂,₂)/15 uses 4²=16 — the power always
+        matches the column index j via 4^(j−1).</p>
+      </div>
+    </div>
+
+    <div class="section-divider" id="predictions">
+      <span class="section-divider__label">🔮 PREDICTED UPCOMING QUESTIONS</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <div class="cheat-note cheat-note--green" style="margin: 8px auto 20px;">
+      <strong>How these predictions were built:</strong> this exam follows a fixed blueprint — one question per
+      chapter (5→9), each worth 20 marks, each question pairing 2–3 related techniques from that chapter. The
+      predictions below spot which techniques from the syllabus were <em>not</em> used this year but are
+      standard content, and are therefore likely candidates to appear (or reappear in a different combination)
+      next sitting.
+    </div>
+
+    <div class="predict-card glass-card anim-fade-in-up">
+      <span class="predict-tag">CH.6 — NON-LINEAR EQUATIONS</span>
+      <div class="predict-card__title">Newton-Raphson Method (untested this year)</div>
+      <p class="predict-card__why"><strong>Why:</strong> Q1 tested Bisection + Secant but skipped
+      <strong>Newton-Raphson</strong> — the third pillar of Chapter 6 and normally the fastest method. It's
+      very likely to replace either Bisection or Secant next sitting, paired with an IVT-check sub-question.
+      Practice: derive f′(x) cleanly and watch for f′(xₙ)=0 traps.</p>
+    </div>
+
+    <div class="predict-card glass-card anim-fade-in-up">
+      <span class="predict-tag">CH.7 — EIGENVALUES</span>
+      <div class="predict-card__title">Plain (unshifted) Power Method for the DOMINANT eigenvalue</div>
+      <p class="predict-card__why"><strong>Why:</strong> this year's Q2(b) tested the shifted variant (for the
+      smallest eigenvalue). The plain power method — finding the LARGEST eigenvalue directly, without any
+      shift — is the more fundamental technique and a natural complement/alternative question next time,
+      likely on a fresh 3×3 matrix with a clearly dominant eigenvalue.</p>
+    </div>
+
+    <div class="predict-card glass-card anim-fade-in-up">
+      <span class="predict-tag">CH.8 — INTERPOLATION</span>
+      <div class="predict-card__title">Newton FORWARD-difference (this year's table favoured backward)</div>
+      <p class="predict-card__why"><strong>Why:</strong> Q3 asked for the "appropriate" Newton method, which
+      turned out to be backward (target near the table's end). A future paper could easily flip this — place
+      the target near the table's START — forcing you to demonstrate the FORWARD formula and its opposite-sign
+      coefficient pattern (r−1) instead of (r+1). Also watch for a straight "estimate using forward-difference"
+      question with no ambiguity about which to choose.</p>
+    </div>
+
+    <div class="predict-card glass-card anim-fade-in-up">
+      <span class="predict-tag">CH.9 — NUMERICAL DIFFERENTIATION</span>
+      <div class="predict-card__title">Backward-difference formulas (only forward variants tested this year)</div>
+      <p class="predict-card__why"><strong>Why:</strong> Q4 used two-, three-, and five-point FORWARD formulas
+      exclusively. The backward-difference counterparts (used when the target point is at the END of a table
+      rather than the start) are equally examinable and were skipped this year — a strong candidate for
+      direct testing, or for a "which formula is appropriate here" judgment question like Q3(a) used for
+      interpolation.</p>
+    </div>
+
+    <div class="predict-card glass-card anim-fade-in-up">
+      <span class="predict-tag">CH.10 — NUMERICAL INTEGRATION</span>
+      <div class="predict-card__title">Simpson's 3/8 Rule (present on the formula sheet, unused this year)</div>
+      <p class="predict-card__why"><strong>Why:</strong> the exam's own formula sheet lists a SECOND Simpson
+      formula — the 3/8 rule (∫≈(3h/8)[(f₀+fN)+3Σ(f₃ᵢ₋₂+f₃ᵢ₋₁)+2Σf₃ᵢ]), required when N is a multiple of 3 but
+      not usable with the 1/3 rule pattern. It appeared on the formula sheet but was never actually asked —
+      a strong sign it's "due" to appear, likely requiring N divisible by 3 (e.g. N=6 or N=9) to force the
+      3/8 pattern instead of 1/3.</p>
+    </div>
+
+    <div class="predict-card glass-card anim-fade-in-up">
+      <span class="predict-tag">CROSS-CHAPTER PATTERN</span>
+      <div class="predict-card__title">"Compare methods" discussion sub-questions (small mark, high value)</div>
+      <p class="predict-card__why"><strong>Why:</strong> every question this year ends with an implicit
+      "which is more accurate/appropriate and why" moment (Q3's Newton-vs-Lagrange agreement, Q4(b)'s explicit
+      "what do you observe" ask). Expect at least one explicit 2–3 mark discussion question per paper asking
+      you to explain a trade-off in words (e.g. bisection's guaranteed-but-slow convergence vs Newton's
+      fast-but-conditional convergence) — these are easy marks if you know the concept, easy to lose if you
+      only practised the arithmetic.</p>
+    </div>
+
+    <div style="text-align:center; margin: 36px 0 12px;">
+      <a href="mathcore-problem-solving.html" class="btn btn--primary">📐 Problem-Solving Steps</a>
+      <a href="index.html" class="btn btn--ghost">Hub</a>
+    </div>
+
+  </main>
+
+  <script src="js/progress.js"></script>
+  <script src="js/gamification.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
