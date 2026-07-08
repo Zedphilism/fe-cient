@@ -310,16 +310,43 @@
       </div>
 
       <div class="concept-box">
-        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
-        <p><strong>(a)</strong> is really asking: <em>how much do we lose when we round?</em> Every number a
-        computer or calculator stores is truncated somewhere — error analysis is just the honest bookkeeping
-        of that loss, split into a raw amount (absolute) and a size-adjusted amount (relative).</p>
-        <p><strong>(b, c)</strong> are both really the SAME problem — "where does this curve cross zero?" —
-        solved two different ways. Bisection treats it as a <em>search</em> problem: repeatedly ask "is the
-        root in the left half or the right half?" (this only works because a continuous function can't skip
-        over zero — the Intermediate Value Theorem). Secant treats it as a <em>local-slope</em> problem: draw
-        a straight line through your two best guesses and jump to where THAT line crosses zero, using the
-        slope between two points as a stand-in for the derivative.</p>
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT — start here if any of this is new to you</span>
+        <p><strong>What "error" actually means (part a):</strong> a calculator can only store a finite number of
+        digits, so the instant you round 30.580588 down to 30.581 you've thrown information away — that
+        thrown-away sliver IS the error. Two ways to describe it: <strong>absolute error</strong> is just "how
+        far off is my rounded number, in raw units" (you literally subtract). <strong>Relative error</strong>
+        asks the same question but scaled against the size of the true answer — being off by 1 is catastrophic
+        if the true answer is 2, but meaningless if the true answer is 2,000,000. Dividing the absolute error
+        by the true value puts every error "in proportion", which is why it's usually read as a percentage.</p>
+        <p><strong>What a "root" is (parts b &amp; c):</strong> the root of f(x) is simply an x-value where the
+        graph of f touches or crosses the x-axis — i.e. where f(x)=0. For a straight line you can solve this in
+        one algebra step. For a cubic like x³−4x+1, a closed-form formula exists but it's long, ugly, and easy
+        to botch by hand — so instead of solving exactly, we <em>hunt</em> for the root numerically: start with
+        a rough guess (or two), and repeatedly refine it until we land close enough.</p>
+        <p><strong>Why the sign-check trick actually works (the Intermediate Value Theorem, "IVT"):</strong>
+        picture walking along the graph of f from x=a to x=b, pen never leaving the paper (that no-jumps,
+        no-teleporting property is exactly what "continuous" means). If you start below the x-axis
+        (f(a) &lt; 0 — imagine you're standing in a valley, underwater) and finish above it (f(b) &gt; 0 —
+        now you're on a hilltop), your pen was FORCED to cross the x-axis at least once somewhere along the
+        way — there's no way to get from underwater to a hilltop without passing through sea level at some
+        point. That's the whole theorem. It's the reason Bisection is allowed to say "a root exists somewhere
+        in (a,b)" the moment it sees f(a) and f(b) have opposite signs — no further proof needed.</p>
+        <p><strong>Bisection = the "higher or lower?" guessing game:</strong> exactly like guessing a number
+        between 1 and 100 by always asking "higher or lower than 50?", Bisection takes the current bracket
+        [a,b], calculates the midpoint c, and asks "does the sign-change (and therefore the root) live in the
+        left half [a,c] or the right half [c,b]?" — then throws away the half that CAN'T contain it. Every
+        round the search space is cut exactly in half, which is why it's slow but never fails: it's a brute-force
+        search, not a clever guess.</p>
+        <p><strong>Secant = "pretend the curve is a straight line for a moment":</strong> computing the TRUE
+        instantaneous slope of cos(x)−x at a point requires calculus (differentiation) redone by hand every
+        single iteration — tedious and easy to get wrong under exam pressure. Secant sidesteps this entirely:
+        it takes your two most recent guesses, draws a straight line through the two points (x₀,f(x₀)) and
+        (x₁,f(x₁)) — this straight line is called a "secant line", literally meaning a line that cuts through
+        two points of a curve — and then asks "if the curve really WERE this straight line, where would it cross
+        zero?" That crossing point (simple algebra for a straight line) becomes your new, sharper guess. Right
+        near the actual root, a smooth curve looks almost exactly like a straight line anyway, which is why this
+        crude-sounding trick converges faster than Bisection in practice — though, unlike Bisection, nothing
+        guarantees it will converge at all (a badly-chosen starting pair can make it wander off or even diverge).</p>
       </div>
 
       <div class="strategy-box">
@@ -348,6 +375,22 @@
             <p>Rounded to 3 d.p.: f(2.13) ≈ <span class="mono">30.581</span> (the 4th decimal, 5, rounds the 3rd decimal 0→1)</p>
             <p><strong>Absolute error</strong> = |true − approx| = |30.580588 − 30.581| = <strong>0.000412</strong></p>
             <p><strong>Relative error</strong> = 0.000412 / 30.580588 ≈ <strong>0.0000135</strong> (≈ 0.00135%)</p>
+          </div>
+
+          <div class="explain-box">
+            <span class="explain-box__label">🔍 A TINY EXAMPLE — same idea, easier numbers</span>
+            <p>Suppose the true value was π = 3.14159265… and you round it to 3.14 (2 d.p.). The
+            <strong>absolute error</strong> is just true − approx = 3.14159265 − 3.14 = <strong>0.00159265</strong>
+            — literally the size of the gap between the two numbers on a number line, no scaling involved.</p>
+            <p>The <strong>relative error</strong> asks "how big is that gap COMPARED to the true value?":
+            0.00159265 / 3.14159265 ≈ <strong>0.000507</strong> (about 0.05%). Notice the absolute error
+            (0.0016) looks tiny either way here — but relative error is what lets you compare fairly across
+            wildly different scales: an absolute error of 0.0016 is fine if you're measuring in kilometres, but
+            enormous if you're measuring in nanometres. That's the entire reason both numbers get asked for.</p>
+            <p>Back in the actual question: 30.580588 rounded to 3 d.p. means look at the 4th decimal digit
+            (5) to decide whether the 3rd decimal rounds up — 30.5805|88 → the digit right after the cut is
+            8 (≥5) so the 5 in front rounds up: 30.580 → <strong>30.581</strong>. Same subtract-then-divide
+            process as above gives the two error values shown.</p>
           </div>
 
           <div class="step-block">
@@ -468,16 +511,44 @@
       </div>
 
       <div class="concept-box">
-        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
-        <p>Most directions get twisted AND stretched when a matrix acts on them. An eigenvector is a special
-        direction that only gets <strong>stretched</strong> (never rotated) — the eigenvalue is simply how
-        much. The characteristic polynomial is the algebraic trick for finding these directions exactly: it
-        asks "for which λ does (A−λI) collapse a whole direction to zero?" (i.e. becomes singular).</p>
-        <p>The <strong>power method</strong> exploits a different idea entirely — repeated multiplication by A
-        stretches the DOMINANT eigenvector's direction exponentially faster than every other direction, so
-        ANY starting vector eventually "forgets" every direction except the dominant one. Shifting first
-        (subtracting λ₁I) temporarily makes a DIFFERENT eigenvalue the dominant one, letting the same trick
-        find the smallest instead of the largest.</p>
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT — start here if any of this is new to you</span>
+        <p><strong>What a matrix actually DOES:</strong> think of any vector as an arrow starting at the origin.
+        When you multiply that vector by a matrix A, you get a NEW arrow out — the matrix has transformed it,
+        usually both rotating it (changing its direction) AND stretching or squashing it (changing its length).
+        Try it on almost any vector and it comes out pointing somewhere completely different.</p>
+        <p><strong>What an eigenvector is:</strong> for most matrices, a handful of very special directions
+        exist where the matrix does NOT rotate the vector at all — it only stretches or shrinks it (or flips it
+        to point the exact opposite way), leaving it pointing along the SAME line it started on. Those special
+        directions are the <strong>eigenvectors</strong>, and the stretch/shrink factor for each one is its
+        <strong>eigenvalue</strong> (λ). In symbols: Av = λv means "A acting on v gives back the same v, just
+        scaled by λ" — no rotation whatsoever.</p>
+        <p><strong>Where the characteristic polynomial comes from:</strong> we want to find v (nonzero) and λ
+        satisfying Av = λv, i.e. (A − λI)v = 0. A matrix equation Mv=0 has a NONZERO solution v only when M
+        "collapses" some direction down to zero-length — geometrically, when M squashes space so hard it loses
+        a whole dimension. The determinant of a matrix measures exactly this: det(M) is the factor by which M
+        scales areas/volumes, and det(M)=0 means M crushes at least one direction flat to nothing. So setting
+        det(A − λI) = 0 and expanding it gives a polynomial equation in λ (the characteristic polynomial) — its
+        roots are precisely the λ values for which such a collapsing, zero-sending direction exists. Those roots
+        ARE the eigenvalues.</p>
+        <p><strong>Why repeated multiplication finds the BIGGEST eigenvalue (the power method):</strong> here's
+        a number analogy first — if you repeatedly multiply 3ⁿ against 2ⁿ, the ratio 3ⁿ/2ⁿ = 1.5ⁿ grows without
+        bound as n increases, so 3ⁿ utterly dominates 2ⁿ for large n even though 3 and 2 aren't that different to
+        start with. The exact same thing happens to vectors: almost ANY starting vector v₀ can be described as a
+        mixture ("blend") of all the matrix's eigen-directions. Every time you multiply by A, the component
+        lying along the eigenvector with the LARGEST |λ| gets amplified more than every other component (because
+        it's being multiplied by a bigger number, over and over, compounding exponentially like 3ⁿ vs 2ⁿ above).
+        After enough rounds, that one dominant direction completely swamps all the others, and your vector ends
+        up pointing (almost) exactly along the dominant eigenvector — regardless of which random-ish vector you
+        started with. Dividing by the largest entry each round ("normalising") is just housekeeping — it stops
+        the numbers exploding to infinity (or shrinking to zero) so you can clearly watch the scaling factor m
+        settle down to the eigenvalue.</p>
+        <p><strong>The "shift" trick, in plain terms:</strong> subtracting λ₁ from every diagonal entry of A
+        (forming A − λ₁I) shifts EVERY eigenvalue down by exactly λ₁, while leaving all the eigenVECTORS
+        completely unchanged. If λ₁ was the largest eigenvalue of A, then after the shift it becomes λ₁−λ₁ = 0,
+        which is no longer the biggest in absolute value — whichever eigenvalue was originally SMALLEST is now
+        often the largest in magnitude (especially if it was negative). Running the exact same power-method
+        trick on this shifted matrix therefore homes in on that eigenvalue instead — you just have to remember
+        to add λ₁ back at the very end to undo the shift.</p>
       </div>
 
       <div class="strategy-box">
@@ -498,8 +569,21 @@
         <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
         <div class="working-body">
 
+          <div class="explain-box">
+            <span class="explain-box__label">🔍 THE LONG WAY FIRST — where λ²−7λ+10=0 actually comes from</span>
+            <p>Before using the shortcut, see the raw derivation once: A − λI subtracts λ from each diagonal
+            entry: A − λI = [[4−λ, 1], [2, 3−λ]]. Setting det(A−λI)=0 for a 2×2 matrix [[p,q],[r,s]] means
+            ps − qr = 0:</p>
+            <p class="mono">(4−λ)(3−λ) − (1)(2) = 0</p>
+            <p class="mono">12 − 4λ − 3λ + λ² − 2 = 0 → λ² − 7λ + 10 = 0</p>
+            <p>Notice the λ coefficient (−7) is just −(4+3) = −trace(A), and the constant (+10) is exactly
+            det(A) = 4×3 − 1×2. That's not a coincidence — for ANY 2×2 matrix, expanding det(A−λI) always
+            produces exactly λ² − (trace)λ + det, which is why the shortcut below is always safe to use
+            instead of re-deriving this expansion every time.</p>
+          </div>
+
           <div class="step-block">
-            <span class="step-block__label">(a)(i) CHARACTERISTIC POLYNOMIAL</span>
+            <span class="step-block__label">(a)(i) CHARACTERISTIC POLYNOMIAL (using the shortcut)</span>
             <p>trace(A) = 4+3 = 7 &nbsp;·&nbsp; det(A) = 4(3)−1(2) = 10</p>
             <p>λ² − 7λ + 10 = 0 → (λ−5)(λ−2) = 0 → <strong>λ₁ = 5, λ₂ = 2</strong></p>
             <p><strong>Eigenvector for λ=5:</strong> (A−5I)v=0 → [[−1,1],[2,−2]]v=0 → −v₁+v₂=0 → v=t(1,1)</p>
@@ -604,16 +688,43 @@
       </div>
 
       <div class="concept-box">
-        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
-        <p>Give a mathematician n+1 points, and there is exactly ONE polynomial of degree ≤n that threads
-        through all of them exactly — <strong>interpolation</strong> is the art of finding that one polynomial
-        without solving a huge system of equations directly. Newton's difference formulas and Lagrange's
-        formula are two completely different arithmetic ROUTES to the SAME destination (which is exactly why
-        they agreed at 16.66 above).</p>
-        <p><strong>Least squares</strong> is solving a DIFFERENT problem: when your data doesn't lie on a
-        clean polynomial at all (it's noisy/measured), don't force a curve through every point — instead find
-        the line that minimises the TOTAL squared vertical distance to all points. It's a best compromise, not
-        an exact fit.</p>
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT — start here if any of this is new to you</span>
+        <p><strong>What "interpolation" means:</strong> you have a table of measurements taken at specific
+        moments (t=1,2,3,4,5) but you want to know the value at a moment you DIDN'T measure (t=4.4, which sits
+        BETWEEN two known points). Interpolation means estimating that in-between value using a smooth curve
+        drawn through the known points — as opposed to "extrapolation", which means guessing OUTSIDE the range
+        you measured (much riskier, since you have no evidence the pattern continues).</p>
+        <p><strong>Why there's exactly one "right" polynomial:</strong> a remarkable fact from algebra — give
+        any n+1 points with distinct x-values, and there is exactly ONE polynomial of degree ≤ n that passes
+        through every single one of them exactly. With 5 points here, that's exactly one degree-4 polynomial.
+        Newton's difference formulas and Lagrange's formula are simply two different sets of arithmetic
+        bookkeeping for CONSTRUCTING/EVALUATING that one same polynomial — like two different routes to the
+        same destination on a map. Because it's the same underlying curve, both methods are mathematically
+        guaranteed to output the identical number if done correctly (which is exactly why 16.66 showed up both
+        times above — that agreement isn't a coincidence, it's a proof neither calculation has an arithmetic
+        error).</p>
+        <p><strong>Why Newton needs a "difference table" at all:</strong> instead of solving a messy system of
+        5 equations in 5 unknowns (the brute-force way to fit a degree-4 polynomial), Newton's method builds the
+        polynomial one small, simple piece at a time using only SUBTRACTIONS of neighbouring table values — far
+        less arithmetic, and it naturally tells you which few points matter most for your specific target x
+        (the ones nearest it).</p>
+        <p><strong>Least squares solves a completely different problem.</strong> Real, measured data (think:
+        readings from a wobbly instrument, or noisy experimental results) almost never lies EXACTLY on any clean
+        polynomial — there's random scatter. Forcing an exact-fit curve through every noisy point would produce
+        a wild, wiggly curve that just chases the noise (this is called "overfitting") and is useless for
+        predicting anything. Instead, least squares asks a more modest, more useful question: "what's the
+        SIMPLEST shape (here, a straight line p(x)=a₀+a₁x) that sits closest, on average, to ALL the points at
+        once?" It's a best compromise, not an exact fit — and it deliberately does NOT pass through most of the
+        actual data points.</p>
+        <p><strong>Why "squared" distance specifically (and not just distance):</strong> for each point, the
+        "residual" is the vertical gap between the real y-value and the line's predicted value. If you just
+        added up the plain gaps, positive gaps (line too low) and negative gaps (line too high) could cancel
+        each other out, hiding a genuinely bad fit that happens to average to zero. Squaring every residual
+        before adding (1) makes every term positive so nothing cancels, and (2) punishes big misses far more
+        than small ones (a gap of 4 contributes 16, not 4) — pushing the line to avoid any single wildly-wrong
+        point. Squaring also happens to make the minimisation solvable cleanly with calculus (set the derivative
+        of the total squared error to zero), which is exactly where the "normal equations" formulas for a₀
+        and a₁ below come from.</p>
       </div>
 
       <div class="strategy-box">
@@ -703,6 +814,17 @@
             unique interpolating polynomial, confirming both are correct)</p>
           </div>
 
+          <div class="explain-box">
+            <span class="explain-box__label">🔍 WHAT a₀ AND a₁ ARE ACTUALLY SOLVING FOR</span>
+            <p>We're picking the line p(x)=a₀+a₁x to minimise S = Σ(yᵢ − a₀ − a₁xᵢ)² — the sum of every point's
+            squared vertical gap to the line. S is a smooth bowl-shaped function of a₀ and a₁ (a paraboloid) —
+            it has exactly one lowest point. Calculus finds it by setting BOTH partial derivatives ∂S/∂a₀=0 and
+            ∂S/∂a₁=0 (the bottom of a bowl is flat in every direction) and solving the resulting pair of linear
+            equations — those are the "normal equations", and their solution is the a₀, a₁ formulas below. You
+            don't need to re-derive this in the exam; just collect the five sums (Σt, Σy, Σty, Σt²) and drop
+            them straight into the two boxed formulas.</p>
+          </div>
+
           <div class="step-block" style="margin-top:16px;">
             <span class="step-block__label">(b) LEAST SQUARES — NORMAL EQUATIONS</span>
             <p>Σt = 15.00, Σy = 48.20, Σty = 193.00, Σt² = 55.00, n=5</p>
@@ -751,13 +873,33 @@
       </div>
 
       <div class="concept-box">
-        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
-        <p>A derivative is technically a LIMIT as h→0 — but with only tabulated data, you can never actually
-        take h to zero. Numerical differentiation approximates that limit using a small but finite h, by
-        writing a Taylor series around the point and solving for f′(x) in terms of nearby f-values. Using MORE
-        nearby points lets you cancel out more of the leftover (truncation) terms, which is exactly why 2-point
-        → 3-point → 5-point gets progressively more accurate — you are literally cancelling more of the
-        Taylor-series error with each extra point.</p>
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT — start here if any of this is new to you</span>
+        <p><strong>What a derivative actually is:</strong> f′(x) is the SLOPE of the curve at exactly the point
+        x — how steeply, and in which direction, f is rising or falling right there. Physically it's a rate of
+        change (e.g. speed is the derivative of position: how fast position is changing at this instant).
+        Formally, it's defined as a LIMIT: f′(x) = lim(h→0) [f(x+h) − f(x)] / h — take a nearby point a tiny
+        distance h away, measure the slope of the straight line to it, then imagine squeezing h down to
+        literally zero.</p>
+        <p><strong>Why we can't just "use the definition":</strong> the definition needs h→0, but here we only
+        have a TABLE of f-values measured at fixed spacing (h=0.1 apart) — there's no way to make h smaller than
+        the gap between rows, because no data exists in between. So instead of taking a true limit, we accept a
+        small but FINITE h (0.1) and get an APPROXIMATE slope — this is the entire idea of "numerical"
+        differentiation: trade perfect accuracy for something computable from real, finite data.</p>
+        <p><strong>Taylor series, in plain words:</strong> this is the key tool that makes the approximation
+        possible. It says any smooth function's value a little further along, f(x+h), can be rebuilt from
+        everything you know AT x: f(x+h) = f(x) + h·f′(x) + (h²/2)·f″(x) + (h³/6)·f‴(x) + … — the further terms
+        matter less and less because h is small and h², h³, h⁴ shrink fast. This is just a more precise version
+        of "if I know my current position and speed, I can predict roughly where I'll be a moment later" — and
+        the extra terms are corrections for acceleration, and corrections-to-the-corrections, and so on.</p>
+        <p><strong>Where the finite-difference formulas come from:</strong> write out the Taylor expansion for
+        f(x+h), f(x+2h), f(x+3h), f(x+4h) (four separate equations, all in terms of the unknowns f′(x), f″(x),
+        f‴(x), …). Then find the specific combination of these four equations that makes the f″, f‴, and f⁗
+        terms all cancel out, leaving an equation you can solve cleanly for f′(x) alone in terms of ONLY the
+        table's f-values. That combination is exactly the "2-point", "3-point", "5-point" formulas — the
+        coefficients (−25, 48, −36, 16, −3, etc.) are simply the numbers that make that cancellation work out.
+        The terms that DON'T fully cancel (because you stopped combining after using only 2, 3, or 5 points)
+        are the leftover "truncation error" — and using MORE points cancels MORE of those leftover terms, which
+        is precisely why 2-point → 3-point → 5-point gets dramatically more accurate.</p>
       </div>
 
       <div class="strategy-box">
@@ -866,14 +1008,39 @@
       </div>
 
       <div class="concept-box">
-        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
-        <p>An integral is the exact area under a curve — but for most functions you cannot find that area with
-        a clean formula. So instead, replace the curve with simpler SHAPES whose area you CAN compute exactly,
-        and add those up. Trapezoidal replaces each slice with a straight-line (linear) top; Simpson's replaces
-        pairs of slices with a parabola (quadratic) — a better-fitting shape, hence more accuracy for free.
-        Romberg is cleverer still: it runs the crude trapezoidal rule at a few different step sizes, then
-        mathematically CANCELS OUT the leading error term between them (Richardson extrapolation) — squeezing
-        a much better estimate out of the same "unsophisticated" trapezoidal building block.</p>
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT — start here if any of this is new to you</span>
+        <p><strong>What an integral actually means:</strong> ∫f(x)dx over [1,4] is the exact AREA trapped
+        between the curve y=f(x) and the x-axis, from x=1 to x=4. For some functions you can find an exact
+        "antiderivative" formula and evaluate it at the two endpoints to get this area precisely, in one line.
+        For many real functions — including this one — that clean formula either doesn't exist in elementary
+        form or is impractical to use, so instead we APPROXIMATE the area using shapes we already know how to
+        measure exactly.</p>
+        <p><strong>The core trick — replace the curve with simple shapes:</strong> chop the interval [1,4] into
+        N narrow vertical strips of equal width h. Each strip is almost a rectangle, except its top edge follows
+        the curve, not a flat line. If we swap that curvy top for something simpler — whose area formula we
+        already know — we get a usable estimate. Add up all N strip-areas and that total approximates the whole
+        integral.</p>
+        <p><strong>Trapezoidal rule:</strong> replace each strip's curvy top with a straight line connecting its
+        two corner heights — turning every strip into a trapezoid. A trapezoid's area is just (average of its
+        two parallel side heights) × width — simple, exact geometry for that shape. The only error left over is
+        however much the TRUE curve bulges away from that straight line within the strip.</p>
+        <p><strong>Simpson's 1/3 rule — a better-fitting shape:</strong> a straight line is a crude approximation
+        to a smooth curve. A PARABOLA (a curved "U" or "∩" shape, i.e. a degree-2 polynomial) hugs a general
+        smooth curve far more closely over a short interval. Simpson's rule takes two neighbouring strips at a
+        time (3 points: left, middle, right), fits the ONE parabola that passes through all three exactly, and
+        uses ITS area instead of the trapezoid's — same amount of data, noticeably less error, because a
+        parabola simply resembles a real curve better than a straight line does.</p>
+        <p><strong>Romberg integration — squeezing more accuracy out of the CRUDE method, for free:</strong>
+        run the (comparatively inaccurate) trapezoidal rule at a coarse resolution and again at a finer one
+        (double the strips). It turns out the ERROR in the trapezoidal rule shrinks in a very predictable,
+        provable mathematical pattern as h halves (roughly by a factor of 4 each time you halve h). Because that
+        pattern is known in advance, you can combine the coarse and fine trapezoidal estimates with a specific
+        weighted formula that mathematically CANCELS the leading error term between them almost entirely — a
+        technique called Richardson extrapolation. The remarkable result: combining two cheap, individually-poor
+        trapezoidal estimates the right way produces an answer as good as (often exactly equal to) Simpson's
+        rule, without ever fitting a parabola directly. Repeat the cancellation trick one level deeper (combining
+        two already-improved estimates) and you squeeze out even more accuracy — that's what building up to
+        R₃,₃ below is doing.</p>
       </div>
 
       <div class="strategy-box">
@@ -906,6 +1073,19 @@
           <div class="step-block">
             <span class="step-block__label">(b) SIMPSON'S 1/3, N=6</span>
             <p>(h/3)[(f₀+f₆) + 4(f₁+f₃+f₅) + 2(f₂+f₄)] = (0.5/3)[1.2031 + 4(1.0499) + 2(0.6343)] = <strong>1.1119</strong></p>
+          </div>
+
+          <div class="explain-box">
+            <span class="explain-box__label">🔍 WHY THE WEIGHTS ARE 1, 4, 2, 4, 2, 4, 1</span>
+            <p>Simpson's rule works on PAIRS of strips at a time (needs an ODD number of points / EVEN number
+            of strips, which is why N must be even). With 7 nodes (f₀…f₆) that's 3 pairs: (f₀,f₁,f₂),
+            (f₂,f₃,f₄), (f₄,f₅,f₆) — each triple gets its own parabola fitted through it. f₂ and f₄ are each the
+            SHARED endpoint between two neighbouring parabolas, so they get counted once by each — that's why
+            they end up weighted ×2. Every ODD-indexed point (f₁, f₃, f₅) sits in the MIDDLE of its own pair and
+            is weighted ×4 (a property of how the parabola's exact area formula distributes weight to its
+            midpoint). The two true endpoints f₀ and f₆ belong to only one parabola each, so they stay at ×1.
+            You don't need to re-derive this pattern — just alternate 4,2,4,2,…,4 between the two endpoints,
+            always ending on a 4 right before the last ×1.</p>
           </div>
 
           <div class="final-answer">
