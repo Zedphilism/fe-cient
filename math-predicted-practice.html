@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Predicted Practice Questions — MathCore Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/components.css" />
+
+  <style>
+    .cheat-hero { padding: 32px 24px 24px; text-align: center; }
+    .cheat-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 3.4vw, 2rem);
+      letter-spacing: 0.02em;
+      color: var(--text-primary);
+    }
+    .cheat-hero__title .accent { color: var(--accent-purple); }
+    .cheat-hero__sub {
+      color: var(--text-muted);
+      font-size: 0.86rem;
+      max-width: 740px;
+      margin: 10px auto 0;
+      line-height: 1.6;
+    }
+    .cheat-note {
+      max-width: 820px;
+      margin: 16px auto 0;
+      padding: 12px 16px;
+      border-left: 3px solid var(--accent-purple);
+      background: rgba(191,95,255,0.06);
+      border-radius: 4px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      text-align: left;
+    }
+    .cheat-note strong { color: var(--accent-purple); }
+
+    .cheat-toc {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+      margin: 22px auto 8px; max-width: 900px;
+    }
+    .cheat-toc a {
+      font: 600 0.7rem/1 var(--font-display);
+      color: var(--text-primary); text-decoration: none;
+      padding: 7px 13px; border: 1px solid var(--border-glass); border-radius: var(--radius-sm);
+      transition: border-color .2s, color .2s;
+    }
+    .cheat-toc a:hover { border-color: var(--accent-purple); color: var(--accent-purple); }
+
+    .section-divider { display: flex; align-items: center; gap: 14px; margin: 38px 0 8px; }
+    .section-divider__label { font: 700 0.72rem/1 var(--font-display); letter-spacing: 0.13em; color: var(--accent-purple); white-space: nowrap; }
+    .section-divider__line { flex: 1; height: 1px; background: var(--border-glass); }
+
+    /* ── Question card ─────────────────────────────────────────── */
+    .qx-card { margin: 22px 0; padding: 22px 26px; border-left: 3px solid var(--accent-purple); }
+    .qx-card__num {
+      display: inline-flex; align-items: center; gap: 8px;
+      font: 700 0.68rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-purple);
+      margin-bottom: 6px;
+    }
+    .qx-card__origin {
+      font-size: 0.62rem; color: var(--text-muted); font-weight: 400; letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .qx-card__question {
+      font-size: 0.92rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 14px;
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);
+      border-radius: var(--radius-sm); padding: 12px 16px;
+    }
+    .qx-card__question .mono { font-family: var(--font-display); }
+
+    /* Fundamental concept box */
+    .concept-box {
+      background: rgba(255,107,53,0.05); border: 1px solid rgba(255,107,53,0.18);
+      border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 12px;
+    }
+    .concept-box__label {
+      font: 700 0.62rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-orange);
+      margin-bottom: 7px; display: block;
+    }
+    .concept-box p { font-size: 0.82rem; line-height: 1.65; color: var(--text-primary); margin: 0 0 6px; }
+    .concept-box p:last-child { margin-bottom: 0; }
+    .concept-box strong { color: var(--accent-orange); }
+
+    .strategy-box {
+      background: rgba(0,245,255,0.05); border: 1px solid rgba(0,245,255,0.15);
+      border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 12px;
+    }
+    .strategy-box__label {
+      font: 700 0.62rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-cyan);
+      margin-bottom: 7px; display: block;
+    }
+    .strategy-box p { font-size: 0.82rem; line-height: 1.6; color: var(--text-primary); margin: 0 0 6px; }
+    .strategy-box p:last-child { margin-bottom: 0; }
+    .strategy-box strong { color: var(--accent-cyan); }
+
+    /* Native details/summary toggle */
+    .working-toggle { margin-top: 4px; }
+    .working-toggle summary {
+      cursor: pointer; list-style: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      font: 700 0.72rem/1 var(--font-display); letter-spacing: 0.06em;
+      color: var(--accent-purple);
+      background: rgba(191,95,255,0.08); border: 1px solid rgba(191,95,255,0.3);
+      border-radius: var(--radius-sm); padding: 9px 16px;
+      transition: background .2s; user-select: none;
+    }
+    .working-toggle summary::-webkit-details-marker { display: none; }
+    .working-toggle summary:hover { background: rgba(191,95,255,0.15); }
+    .working-toggle summary::before { content: '▶'; font-size: 0.6rem; transition: transform .2s; }
+    .working-toggle[open] summary::before { transform: rotate(90deg); }
+    .working-toggle[open] summary { margin-bottom: 12px; }
+    .working-toggle summary .show-label { display: inline; }
+    .working-toggle summary .hide-label { display: none; }
+    .working-toggle[open] summary .show-label { display: none; }
+    .working-toggle[open] summary .hide-label { display: inline; }
+    .working-body { padding: 2px 2px 4px; }
+
+    .step-block { margin-bottom: 14px; }
+    .step-block__label {
+      font: 700 0.64rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-cyan);
+      margin-bottom: 8px; display: block;
+    }
+    .step-block p { font-size: 0.83rem; line-height: 1.65; color: var(--text-primary); margin: 0 0 8px; }
+    .step-block p:last-child { margin-bottom: 0; }
+    .step-block strong { color: var(--accent-cyan); }
+    .step-block .mono { font-family: var(--font-display); font-size: 0.8rem; }
+
+    .final-answer {
+      background: rgba(57,255,20,0.08); border: 1px solid rgba(57,255,20,0.3);
+      border-radius: var(--radius-sm); padding: 12px 16px; margin-top: 10px;
+    }
+    .final-answer__label {
+      font: 700 0.62rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-green);
+      margin-bottom: 6px; display: block;
+    }
+    .final-answer p { font-size: 0.86rem; color: var(--text-primary); margin: 0; font-weight: 600; }
+    .final-answer strong { color: var(--accent-green); }
+
+    .work-table {
+      width: 100%; border-collapse: collapse; margin: 10px 0;
+      font-size: 0.76rem; font-family: var(--font-display);
+    }
+    .work-table th, .work-table td { border: 1px solid rgba(255,255,255,0.09); padding: 5px 8px; text-align: center; }
+    .work-table th { background: rgba(255,255,255,0.03); color: var(--text-muted); font-size: 0.64rem; letter-spacing: 0.04em; }
+    .work-table td { color: var(--text-primary); }
+    .work-table .hl { color: var(--accent-green); font-weight: 700; }
+    .table-wrap { overflow-x: auto; margin: 10px 0; }
+
+    .trick-box {
+      background: rgba(255,51,102,0.05); border: 1px solid rgba(255,51,102,0.22);
+      border-radius: var(--radius-sm); padding: 11px 14px; margin-top: 10px;
+    }
+    .trick-box__label {
+      display: flex; align-items: center; gap: 6px;
+      font: 700 0.6rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-red);
+      margin-bottom: 6px;
+    }
+    .trick-box p { font-size: 0.79rem; line-height: 1.55; color: var(--text-primary); margin: 0; }
+    .trick-box strong { color: var(--accent-red); }
+
+    .remember-box {
+      background: rgba(255,215,0,0.06); border: 1px solid rgba(255,215,0,0.28);
+      border-radius: var(--radius-sm); padding: 11px 14px; margin-top: 10px;
+    }
+    .remember-box__label {
+      display: flex; align-items: center; gap: 6px;
+      font: 700 0.6rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-gold, #ffd700);
+      margin-bottom: 6px;
+    }
+    .remember-box p { font-size: 0.78rem; line-height: 1.5; color: var(--text-primary); margin: 0; }
+    .remember-box strong { color: var(--accent-gold, #ffd700); }
+  </style>
+</head>
+
+<body data-page="cheatsheet">
+
+  <!-- ── Site Header ──────────────────────────────────────────────────── -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo" aria-label="Study hub home">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <circle cx="14" cy="14" r="13" stroke="var(--accent-green)" stroke-width="1.5"/>
+          <text x="14" y="19" text-anchor="middle" fill="var(--accent-green)" font-size="12" font-weight="bold">&#8747;</text>
+        </svg>
+        <span class="logo-text">MathCore<span class="logo-accent" style="color:var(--accent-green)">Academy</span></span>
+      </a>
+
+      <nav class="header-nav" aria-label="Chapter navigation">
+        <a href="index.html" class="nav-link">Hub</a>
+        <a href="math-chapter5.html" class="nav-link">Ch.5</a>
+        <a href="math-chapter6.html" class="nav-link">Ch.6</a>
+        <a href="math-chapter7.html" class="nav-link">Ch.7</a>
+        <a href="math-chapter8.html" class="nav-link">Ch.8</a>
+        <a href="math-chapter9.html" class="nav-link">Ch.9</a>
+        <a href="math-chapter10.html" class="nav-link">Ch.10</a>
+        <a href="mathcore-problem-solving.html" class="nav-link">Steps</a>
+        <a href="math-final-2025-solutions.html" class="nav-link">2025 Exam</a>
+        <a href="math-predicted-practice.html" class="nav-link nav-link--active" aria-current="page">🔮 Practice</a>
+      </nav>
+
+      <div class="header-right">
+        <div class="rank-badge" id="header-rank">
+          <span class="rank-level" id="header-level">Lv.1</span>
+          <span class="rank-title" id="header-rank-title"></span>
+        </div>
+        <div class="xp-bar-wrap" title="XP progress to next level">
+          <div class="xp-bar-track"><div class="xp-bar-fill" id="header-xp-fill" style="width:0%"></div></div>
+          <span class="xp-label" id="header-xp-label">0 XP</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-wrapper" id="main-content">
+
+    <div class="cheat-hero glass-card anim-fade-in-up">
+      <span class="section-label">SECI1113 — PREDICTED PRACTICE SET</span>
+      <h1 class="cheat-hero__title">6 Practice Questions — <span class="accent">Built From the Predictions</span></h1>
+      <p class="cheat-hero__sub">
+        Each question below targets one of the 6 predictions from the 2025 Final Exam review — the
+        techniques the syllabus covers but that particular paper didn't test. Same format as the exam
+        solutions: concept first, then strategy, then a hide/show full working, then the trick to remember.
+      </p>
+      <div class="cheat-note">
+        <strong>Why these specific 6:</strong> real exams rotate which technique from each chapter gets
+        tested — Newton-Raphson, plain power method, forward interpolation, backward differentiation, and
+        Simpson's 3/8 all sat out the 2025 paper despite being standard syllabus content. Drilling exactly
+        these gaps is the highest-value use of remaining study time.
+      </div>
+    </div>
+
+    <div class="cheat-toc">
+      <a href="#p1">1. Newton-Raphson</a>
+      <a href="#p2">2. Power Method</a>
+      <a href="#p3">3. Forward Interpolation</a>
+      <a href="#p4">4. Backward Differentiation</a>
+      <a href="#p5">5. Simpson's 3/8</a>
+      <a href="#p6">6. Compare Methods</a>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">PREDICTION 1 — CH.6 NON-LINEAR EQUATIONS</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- P1: Newton-Raphson -->
+    <div class="qx-card glass-card anim-fade-in-up" id="p1">
+      <span class="qx-card__num">PRACTICE QUESTION 1 <span class="qx-card__origin">— predicted: Newton-Raphson untested in 2025</span></span>
+      <div class="qx-card__question">
+        <p>Find the root of f(x) = x³ − 2x − 5 to 3 decimal points using the <strong>Newton-Raphson method</strong>,
+        starting from x₀ = 2. Show all iterations.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>At any point on a curve, the tangent line is the BEST local straight-line approximation of that
+        curve. Newton-Raphson's whole idea: if you're standing near a root, don't search blindly — follow the
+        tangent line down to where IT crosses zero, and that's usually a much better guess than where you
+        started. Repeat, and the tangent gets more and more accurate as you approach the true root — which is
+        why it converges so much faster than bisection (each step roughly DOUBLES your correct digits).</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>Differentiate f(x) once, up front. Then it's pure repetition: plug xₙ into both f and f′, apply the
+        formula, check whether consecutive x-values have stopped changing (to the required decimal places),
+        and stop.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">STEP 1 — DIFFERENTIATE</span>
+            <p>f(x) = x³ − 2x − 5 &nbsp;→&nbsp; f′(x) = 3x² − 2</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">STEP 2 — ITERATE: xₙ₊₁ = xₙ − f(xₙ)/f′(xₙ)</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>i</th><th>xᵢ</th><th>f(xᵢ)</th><th>f′(xᵢ)</th><th>xᵢ₊₁</th></tr>
+                <tr><td>1</td><td>2.0000</td><td>−1.0000</td><td>10.0000</td><td>2.1000</td></tr>
+                <tr><td>2</td><td>2.1000</td><td>0.0610</td><td>11.2300</td><td>2.0946</td></tr>
+                <tr><td>3</td><td>2.0946</td><td>0.0002</td><td>11.1616</td><td class="hl">2.0946</td></tr>
+              </table>
+            </div>
+            <p>|x₃ − x₂| = |2.0946 − 2.0946| ≈ 0.0000 &lt; 0.0005 (tolerance for 3 d.p.) → <strong>converged</strong>
+            in just 3 iterations.</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER</span>
+            <p>Root ≈ <strong>2.095</strong> (to 3 d.p.)</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>Before you start, glance at f′(x₀) — if it's close to zero, the tangent is nearly flat and the
+        method can shoot off wildly. If f(x₀) and f′(x₀) are both reasonable-sized numbers (like here: −1 and
+        10), you're safe. Also: Newton-Raphson needs NO sign-change bracket, unlike bisection — only one
+        starting point.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Newton-Raphson roughly DOUBLES correct digits every iteration (quadratic convergence) — that's why
+        it converged here in only 3 steps versus bisection's 8. The trade-off: it needs f′(x) and a decent x₀,
+        with no convergence guarantee.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">PREDICTION 2 — CH.7 EIGENVALUES</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- P2: Plain Power Method -->
+    <div class="qx-card glass-card anim-fade-in-up" id="p2">
+      <span class="qx-card__num">PRACTICE QUESTION 2 <span class="qx-card__origin">— predicted: plain (unshifted) power method</span></span>
+      <div class="qx-card__question">
+        <p>Given matrix A = [[4,1,1],[1,3,0],[1,0,2]], find the <strong>dominant eigenvalue</strong> and its
+        eigenvector using the <strong>power method</strong>. Start with v₀ = [1, 0, 0]ᵀ and iterate until
+        ε = 0.05.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>Any starting vector is secretly a MIX of all the matrix's eigenvector directions blended together.
+        Multiplying by A stretches each direction by its own eigenvalue — and the direction with the BIGGEST
+        eigenvalue gets stretched the most, every single time you multiply. Do it enough times, and that
+        dominant direction completely swamps all the others — the mixture effectively "forgets" every
+        direction except the strongest one. That survivor IS the dominant eigenvector, and the amount it grew
+        by each step IS the dominant eigenvalue.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>This is the SAME mechanical loop as the shifted power method from the real exam — just skip the
+        shift step entirely. Multiply, find the largest-magnitude component (that's your eigenvalue estimate),
+        divide the whole vector by it (normalise), repeat.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">ITERATE: u = Av, m = largest |component|, v_new = u/m</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>k</th><th>u = Av</th><th>m</th><th>v (normalised)</th></tr>
+                <tr><td>1</td><td>(4.000, 1.000, 1.000)</td><td>4.000</td><td>(1.000, 0.250, 0.250)</td></tr>
+                <tr><td>2</td><td>(4.500, 1.750, 1.500)</td><td>4.500</td><td>(1.000, 0.389, 0.333)</td></tr>
+                <tr><td>3</td><td>(4.722, 2.167, 1.667)</td><td>4.722</td><td>(1.000, 0.459, 0.353)</td></tr>
+                <tr><td>4</td><td>(4.812, 2.377, 1.706)</td><td>4.812</td><td>(1.000, 0.494, 0.355)</td></tr>
+                <tr><td>5</td><td>(4.848, 2.482, 1.709)</td><td class="hl">4.848</td><td>(1.000, 0.512, 0.353)</td></tr>
+              </table>
+            </div>
+            <p>|m₅ − m₄| = |4.848 − 4.812| = 0.036 &lt; 0.05 → <strong>converged</strong></p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER</span>
+            <p>Dominant eigenvalue ≈ <strong>4.85</strong>, eigenvector ≈ <strong>(1.000, 0.512, 0.353)</strong>
+            (true value ≈ 4.87 — a couple more iterations would tighten this further)</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>Starting from a simple vector like (1,0,0) is completely fine — the power method self-corrects
+        toward the dominant direction regardless of where you start, AS LONG AS your start isn't perfectly
+        perpendicular to the true dominant eigenvector (astronomically unlikely by accident). Never shift
+        unless the question specifically asks for the smallest or an intermediate eigenvalue.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Plain power method → largest eigenvalue directly. Shifted (A−λ₁I) power method → smallest eigenvalue
+        (then add λ₁ back). If two eigenvalues TIE for largest magnitude, the method fails to converge to a
+        single eigenvector.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">PREDICTION 3 — CH.8 INTERPOLATION</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- P3: Forward Difference Interpolation -->
+    <div class="qx-card glass-card anim-fade-in-up" id="p3">
+      <span class="qx-card__num">PRACTICE QUESTION 3 <span class="qx-card__origin">— predicted: forward-difference interpolation (2025 used backward)</span></span>
+      <div class="qx-card__question">
+        <p>A sensor logs temperature every hour: t = 0,1,2,3,4 → temp (°C) = 10.0, 12.7, 17.2, 24.1, 34.0.
+        Estimate the temperature at <strong>t = 0.6</strong> using <strong>Newton's forward-difference formula</strong>.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>With 5 data points there is exactly ONE degree-4 polynomial threading through all of them. Newton's
+        forward formula builds that SAME polynomial as a running correction: start with the crudest guess
+        (just y₀, a flat line), then add a slope correction, then a curvature correction, then finer and finer
+        corrections — each extra term is one more "zoom level" of accuracy. Anchoring at the point closest to
+        your target (here, x₀=0, right next to 0.6) means each correction term is small, so the series
+        converges fast and you don't need many terms.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>t=0.6 sits right at the START of the table (closest to t=0) — this is exactly when forward
+        difference is the RIGHT choice (mirror image of the exam's backward-difference case, where the
+        target was near the END). Build the difference table, compute r=(x−x₀)/h, apply the formula.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">STEP 1 — FORWARD-DIFFERENCE TABLE</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><td>y (order 0)</td><td>10.00</td><td>12.70</td><td>17.20</td><td>24.10</td><td>34.00</td></tr>
+                <tr><td>Δ¹</td><td class="hl">2.70</td><td>4.50</td><td>6.90</td><td>9.90</td><td></td></tr>
+                <tr><td>Δ²</td><td class="hl">1.80</td><td>2.40</td><td>3.00</td><td></td><td></td></tr>
+                <tr><td>Δ³</td><td class="hl">0.60</td><td>0.60</td><td></td><td></td><td></td></tr>
+                <tr><td>Δ⁴</td><td class="hl">0.00</td><td></td><td></td><td></td><td></td></tr>
+              </table>
+            </div>
+            <p>Top-row (anchored at x₀=0) values: y₀=10.00, Δy₀=2.70, Δ²y₀=1.80, Δ³y₀=0.60, Δ⁴y₀=0.00</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">STEP 2 — COMPUTE r AND APPLY THE FORMULA</span>
+            <p>r = (0.6 − 0)/1 = <strong>0.6</strong></p>
+            <p>p(0.6) = y₀ + rΔy₀ + [r(r−1)/2]Δ²y₀ + [r(r−1)(r−2)/6]Δ³y₀</p>
+            <p>= 10.00 + (0.6)(2.70) + [(0.6)(−0.4)/2](1.80) + [(0.6)(−0.4)(−1.4)/6](0.60)</p>
+            <p>= 10.00 + 1.62 − 0.216 + 0.0336 = <strong>11.4376</strong> (the Δ⁴ term contributes exactly 0,
+            since Δ⁴y₀=0.00 — a strong hint this data actually comes from a cubic function)</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER</span>
+            <p>Estimated temperature at t=0.6 ≈ <strong>11.44 °C</strong></p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>If the differences shrink to (near) zero at some order — like Δ⁴≈0 here — the data is (very close
+        to) a polynomial of that order minus one (cubic, in this case). That's a fast way to sanity-check
+        your difference table arithmetic: if the last column ISN'T settling toward something small, you likely
+        made a subtraction error upstream.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Forward-difference coefficients use <strong>(r−1), (r−2)…</strong> — MINUS signs. (Backward uses
+        PLUS signs: (r+1), (r+2)…) Best accuracy needs r between 0 and 1 — always anchor at the end of the
+        table nearest your target.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">PREDICTION 4 — CH.9 NUMERICAL DIFFERENTIATION</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- P4: Backward Difference Differentiation -->
+    <div class="qx-card glass-card anim-fade-in-up" id="p4">
+      <span class="qx-card__num">PRACTICE QUESTION 4 <span class="qx-card__origin">— predicted: backward-difference formulas (2025 used forward only)</span></span>
+      <div class="qx-card__question">
+        <p>A function f(x) = xeˣ is tabulated: x = 2.0, 2.1, 2.2, 2.3, 2.4 → f(x) = 14.778, 17.149, 19.855,
+        22.941, 26.456. Estimate <strong>f′(2.4)</strong> using h=0.1 with: <strong>(i)</strong> two-point
+        backward, <strong>(ii)</strong> three-point backward. Given the exact f′(x)=eˣ(x+1), compute the
+        absolute error for each.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>Exactly the same Taylor-series idea as forward difference, just looking in the OPPOSITE direction —
+        essential when your target point is the LAST one in a table and there IS no "next" value to look
+        forward to. Backward difference uses the point itself plus one or more PRECEDING points instead.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>x=2.4 is the last (rightmost) entry in the table — forward difference is IMPOSSIBLE here (there's no
+        f(2.5) to use), so backward is the only choice. Plug directly into the backward formulas, then compare
+        against the given exact derivative.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">(i) TWO-POINT BACKWARD</span>
+            <p>f′(2.4) ≈ [f(2.4) − f(2.3)] / h = [26.456 − 22.941] / 0.1 = <strong>35.150</strong></p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(ii) THREE-POINT BACKWARD</span>
+            <p>f′(2.4) ≈ [3f(2.4) − 4f(2.3) + f(2.2)] / (2h) = [79.368 − 91.764 + 19.855] / 0.2 = <strong>37.297</strong></p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">ERROR COMPARISON</span>
+            <p>Exact: f′(2.4) = e^2.4 (2.4+1) = 11.0232 × 3.4 = <strong>37.479</strong></p>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Method</th><th>Estimate</th><th>Exact</th><th>Absolute Error</th></tr>
+                <tr><td>2-point backward</td><td>35.150</td><td>37.479</td><td class="hl">2.329</td></tr>
+                <tr><td>3-point backward</td><td>37.297</td><td>37.479</td><td class="hl">0.182</td></tr>
+              </table>
+            </div>
+            <p>Error shrinks by roughly <strong>13×</strong> from 2-point (O(h)) to 3-point (O(h²)) — exactly
+            the accuracy jump you'd expect from one extra data point.</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER</span>
+            <p>f′(2.4) ≈ <strong>35.150</strong> (2-point) or <strong>37.297</strong> (3-point) —
+            errors <strong>2.329</strong> and <strong>0.182</strong> respectively</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>Backward-difference formulas are a MIRROR IMAGE of forward ones — same structure, but every h
+        becomes −h. The 3-point backward formula's coefficients (3, −4, 1) are the exact NEGATIVE-reverse of
+        the 3-point forward's (−3, 4, −1) read backwards — if you know one, you can reconstruct the other
+        under exam pressure.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Forward → use when your target is at the START of the data (no "previous" point exists). Backward →
+        use when your target is at the END (no "next" point exists). Central → use whenever BOTH neighbours
+        exist; it's always more accurate than either one-sided formula.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">PREDICTION 5 — CH.10 NUMERICAL INTEGRATION</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- P5: Simpson's 3/8 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="p5">
+      <span class="qx-card__num">PRACTICE QUESTION 5 <span class="qx-card__origin">— predicted: Simpson's 3/8 Rule (on formula sheet, never asked in 2025)</span></span>
+      <div class="qx-card__question">
+        <p>Approximate ∫₁⁴ (1/x) dx using <strong>Simpson's 3/8 rule</strong> with N=6.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>Simpson's 1/3 rule fits a parabola through every GROUP OF 3 points (2 subintervals) — which is why
+        it needs N even. Simpson's 3/8 rule instead fits a CUBIC curve through every GROUP OF 4 points (3
+        subintervals) — an even better-fitting shape for the same reason a parabola beats a straight line. It
+        exists specifically for when N is a multiple of 3 (or when you have an awkward number of subintervals
+        that don't divide evenly into pairs).</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>N=6 is divisible by 3 (two groups of 3 subintervals: x₀–x₃ and x₃–x₆) — perfect for the 3/8 rule.
+        Compute h and all 7 node values once, then apply the formula's 1,3,3,2,3,3,…,1 coefficient pattern.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">STEP 1 — NODES (h = (4−1)/6 = 0.5)</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>x</th><td>1.0</td><td>1.5</td><td>2.0</td><td>2.5</td><td>3.0</td><td>3.5</td><td>4.0</td></tr>
+                <tr><th>f(x)=1/x</th><td>1.0000</td><td>0.6667</td><td>0.5000</td><td>0.4000</td><td>0.3333</td><td>0.2857</td><td>0.2500</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">STEP 2 — APPLY THE 3/8 FORMULA</span>
+            <p>∫ ≈ (3h/8)[(f₀+f₆) + 3(f₁+f₂+f₄+f₅) + 2f₃]</p>
+            <p>= (3×0.5/8)[(1.0000+0.2500) + 3(0.6667+0.5000+0.3333+0.2857) + 2(0.4000)]</p>
+            <p>= 0.1875 × [1.2500 + 3(1.7857) + 0.8000] = 0.1875 × 7.4071 = <strong>1.3888</strong></p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">CHECK AGAINST SIMPSON'S 1/3 (same N, for comparison)</span>
+            <p>Simpson's 1/3 (N=6) on the same integral gives ≈ 1.3877. Exact = ln(4) ≈ 1.3863.</p>
+            <p>3/8 error ≈ 0.0025 &nbsp;·&nbsp; 1/3 error ≈ 0.0014 — both excellent, 1/3 marginally better here
+            (the 3/8 rule's real value is enabling EVEN groupings of 3 when 1/3 can't be used at all, not
+            necessarily beating 1/3 head-to-head).</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER</span>
+            <p>∫₁⁴ (1/x) dx ≈ <strong>1.3888</strong> using Simpson's 3/8 (N=6) — true value ln(4) ≈ 1.3863</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>The 3/8 coefficient pattern is <strong>1,3,3,2,3,3,2,…,3,3,1</strong> — endpoints get 1, EVERY OTHER
+        interior node (the ones ending each group of 3) gets 2, all the rest get 3. If N is a multiple of 3
+        but NOT of 2 (e.g. N=9), you literally cannot use Simpson's 1/3 at all — 3/8 becomes mandatory, not
+        just an option.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>1/3 rule needs N even (groups of 2 subintervals, coefficient 1-4-2-4…-1). 3/8 rule needs N divisible
+        by 3 (groups of 3 subintervals, coefficient 1-3-3-2-3-3…-1). They solve the same "N doesn't divide
+        nicely" problem in different ways.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">PREDICTION 6 — CROSS-CHAPTER DISCUSSION</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- P6: Compare Methods discussion -->
+    <div class="qx-card glass-card anim-fade-in-up" id="p6">
+      <span class="qx-card__num">PRACTICE QUESTION 6 <span class="qx-card__origin">— predicted: "compare and justify" discussion sub-question</span></span>
+      <div class="qx-card__question">
+        <p>Compare the Bisection method and the Newton-Raphson method in terms of convergence guarantee and
+        speed. You are asked to find a root of a function whose derivative is very expensive to compute —
+        which method would you recommend, and why? <em>(3–4 marks, written-answer style)</em></p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>This question isn't testing arithmetic — it's testing whether you understand the TRADE-OFF each
+        method makes. Every root-finding method trades some combination of speed, robustness, and the amount
+        of information it needs about f. Bisection uses the LEAST information (just signs) and is the
+        slowest but unbreakable; Newton uses the MOST information (exact slope) and is the fastest but can
+        fail. Recognising which trade-off fits a given real-world constraint is the actual skill being examined.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>Structure a written answer in 3 parts: (1) state the convergence guarantee difference, (2) state
+        the speed difference (with the right technical term — linear vs quadratic), (3) directly answer the
+        "which would you recommend" scenario with a reason tied back to the SPECIFIC constraint given
+        (expensive derivative).</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">MODEL ANSWER</span>
+            <p><strong>Convergence guarantee:</strong> Bisection is guaranteed to converge from ANY valid
+            sign-change bracket [a,b] — it can never fail once IVT is satisfied. Newton-Raphson has NO such
+            guarantee: a poor starting guess, a flat tangent (f′(xₙ)≈0), or a sharply curving region can make
+            it diverge entirely.</p>
+            <p><strong>Speed:</strong> Bisection converges linearly — the error is only guaranteed to halve
+            each iteration (a fixed, slow rate regardless of the function). Newton-Raphson converges
+            quadratically near the root — the number of correct digits roughly DOUBLES each iteration, making
+            it dramatically faster once it's in the right neighbourhood.</p>
+            <p><strong>Recommendation:</strong> if f′(x) is very expensive to compute, <strong>Bisection is the
+            better choice</strong> — Newton-Raphson requires evaluating f′ at EVERY single iteration, so its
+            speed advantage (fewer iterations) is wiped out if each iteration costs far more to compute. In
+            this situation, the Secant method is actually the best middle ground: it approximates the slope
+            using two recent f-values instead of a true derivative, avoiding the expensive f′ calculation
+            entirely while still converging faster than bisection (order ≈1.618 vs bisection's linear rate).</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ MODEL CONCLUSION</span>
+            <p>Recommend the <strong>Secant method</strong> as the practical answer — it sidesteps the
+            expensive-derivative problem that rules out Newton-Raphson, while still beating bisection's speed.
+            If only choosing between the two NAMED methods, <strong>Bisection</strong> wins here specifically
+            because it never needs f′ at all.</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>For "compare and recommend" questions, always tie your final recommendation back to the EXACT
+        constraint given in the question (here: "derivative is expensive") — a generic "Newton is fastest so
+        use Newton" answer misses the point of the question and loses marks, even if the general comparison
+        facts you stated were correct.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Speed ranking: Bisection (linear) &lt; Secant (order ≈1.618) &lt; Newton-Raphson (quadratic).
+        Robustness ranking (reverse): Bisection (guaranteed) &gt; Secant &gt; Newton-Raphson (least
+        guaranteed). No method wins on both — that trade-off IS the concept being tested.</p>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin: 36px 0 12px;">
+      <a href="math-final-2025-solutions.html" class="btn btn--primary">📝 2025 Final Exam Solutions</a>
+      <a href="mathcore-problem-solving.html" class="btn btn--ghost">📐 Problem-Solving Steps</a>
+      <a href="index.html" class="btn btn--ghost">Hub</a>
+    </div>
+
+  </main>
+
+  <script src="js/progress.js"></script>
+  <script src="js/gamification.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

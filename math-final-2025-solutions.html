@@ -76,6 +76,32 @@
     }
     .qx-card__question .mono { font-family: var(--font-display); }
 
+    /* Fundamental concept box — the deep "what are we actually solving" idea */
+    .concept-box {
+      background: rgba(255,107,53,0.05); border: 1px solid rgba(255,107,53,0.18);
+      border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 12px;
+    }
+    .concept-box__label {
+      font: 700 0.62rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-orange);
+      margin-bottom: 7px; display: block;
+    }
+    .concept-box p { font-size: 0.82rem; line-height: 1.65; color: var(--text-primary); margin: 0 0 6px; }
+    .concept-box p:last-child { margin-bottom: 0; }
+    .concept-box strong { color: var(--accent-orange); }
+
+    /* Key trick box — the exam shortcut / gotcha-avoider */
+    .trick-box {
+      background: rgba(255,51,102,0.05); border: 1px solid rgba(255,51,102,0.22);
+      border-radius: var(--radius-sm); padding: 11px 14px; margin-top: 10px;
+    }
+    .trick-box__label {
+      display: flex; align-items: center; gap: 6px;
+      font: 700 0.6rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-red);
+      margin-bottom: 6px;
+    }
+    .trick-box p { font-size: 0.79rem; line-height: 1.55; color: var(--text-primary); margin: 0; }
+    .trick-box strong { color: var(--accent-red); }
+
     .strategy-box {
       background: rgba(0,245,255,0.05); border: 1px solid rgba(0,245,255,0.15);
       border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 12px;
@@ -199,6 +225,7 @@
         <a href="math-chapter10.html" class="nav-link">Ch.10</a>
         <a href="mathcore-problem-solving.html" class="nav-link">Steps</a>
         <a href="math-final-2025-solutions.html" class="nav-link nav-link--active" aria-current="page">2025 Exam</a>
+        <a href="math-predicted-practice.html" class="nav-link">🔮 Practice</a>
         <a href="exam-mode.html?module=math" class="nav-link">Exam Mode</a>
       </nav>
 
@@ -266,6 +293,19 @@
         the Bisection method. Calculate to 3 decimal points.</p>
         <p><strong>c)</strong> Find the root to 2 decimal points for f(x) = cos(x) − x using the Secant method,
         where x₀ = 1 and x₁ = 1.5. Calculate to 4 decimal points.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p><strong>(a)</strong> is really asking: <em>how much do we lose when we round?</em> Every number a
+        computer or calculator stores is truncated somewhere — error analysis is just the honest bookkeeping
+        of that loss, split into a raw amount (absolute) and a size-adjusted amount (relative).</p>
+        <p><strong>(b, c)</strong> are both really the SAME problem — "where does this curve cross zero?" —
+        solved two different ways. Bisection treats it as a <em>search</em> problem: repeatedly ask "is the
+        root in the left half or the right half?" (this only works because a continuous function can't skip
+        over zero — the Intermediate Value Theorem). Secant treats it as a <em>local-slope</em> problem: draw
+        a straight line through your two best guesses and jump to where THAT line crosses zero, using the
+        slope between two points as a stand-in for the derivative.</p>
       </div>
 
       <div class="strategy-box">
@@ -352,6 +392,13 @@
         </div>
       </details>
 
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>For error questions: compute the EXACT value fully first, round LAST — never round mid-calculation.
+        For bisection: you can pre-compute how many iterations you'll need with n≥log₂((b−a)/ε) BEFORE you
+        start, so you know exactly when to stop. For secant: if it starts diverging, try swapping x₀ and x₁.</p>
+      </div>
+
       <div class="remember-box">
         <span class="remember-box__label">💡 REMEMBER</span>
         <p>Bisection always needs the IVT check first. Secant needs NO sign-change bracket — just two
@@ -374,6 +421,19 @@
         eigenvalue λ₃ and its eigenvector using the <strong>shifted power method</strong>, given the largest
         eigenvalue λ₁ = 5, starting v₀ = [0.5, −0.4, 0.5]ᵀ, iterate until ε = 0.05.
         <strong>(ii)</strong> find the intermediate eigenvalue λ₂.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>Most directions get twisted AND stretched when a matrix acts on them. An eigenvector is a special
+        direction that only gets <strong>stretched</strong> (never rotated) — the eigenvalue is simply how
+        much. The characteristic polynomial is the algebraic trick for finding these directions exactly: it
+        asks "for which λ does (A−λI) collapse a whole direction to zero?" (i.e. becomes singular).</p>
+        <p>The <strong>power method</strong> exploits a different idea entirely — repeated multiplication by A
+        stretches the DOMINANT eigenvector's direction exponentially faster than every other direction, so
+        ANY starting vector eventually "forgets" every direction except the dominant one. Shifting first
+        (subtracting λ₁I) temporarily makes a DIFFERENT eigenvalue the dominant one, letting the same trick
+        find the smallest instead of the largest.</p>
       </div>
 
       <div class="strategy-box">
@@ -448,6 +508,13 @@
         </div>
       </details>
 
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>For 2×2 matrices, NEVER expand the full determinant by hand — always jump straight to
+        λ²−(trace)λ+det=0. For ANY size matrix, sum of eigenvalues = trace and product of eigenvalues = det —
+        use these as free checks (or shortcuts) whenever you're missing just one eigenvalue.</p>
+      </div>
+
       <div class="remember-box">
         <span class="remember-box__label">💡 REMEMBER</span>
         <p>"Shifted power method for the smallest eigenvalue" = power method on <strong>(A − λ_largest·I)</strong>,
@@ -469,6 +536,19 @@
         <p><strong>a)</strong> Estimate the position at t = 4.4 using <strong>(i)</strong> the appropriate Newton
         method, and <strong>(ii)</strong> the Lagrange interpolating polynomial (L₀=−0.03, L₁=−0.19, L₂=−0.49 given).</p>
         <p><strong>b)</strong> Find p(x) = a₀ + a₁x using Least Squares Approximation. <em>(All calculations to 2 d.p.)</em></p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>Give a mathematician n+1 points, and there is exactly ONE polynomial of degree ≤n that threads
+        through all of them exactly — <strong>interpolation</strong> is the art of finding that one polynomial
+        without solving a huge system of equations directly. Newton's difference formulas and Lagrange's
+        formula are two completely different arithmetic ROUTES to the SAME destination (which is exactly why
+        they agreed at 16.66 above).</p>
+        <p><strong>Least squares</strong> is solving a DIFFERENT problem: when your data doesn't lie on a
+        clean polynomial at all (it's noisy/measured), don't force a curve through every point — instead find
+        the line that minimises the TOTAL squared vertical distance to all points. It's a best compromise, not
+        an exact fit.</p>
       </div>
 
       <div class="strategy-box">
@@ -547,6 +627,13 @@
         </div>
       </details>
 
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>If a question gives you two different methods for the SAME estimate (like Newton and Lagrange here),
+        do BOTH and check they agree — free error-checking. Memorise the least-squares slope formula
+        a₁=(nΣxy−ΣxΣy)/(nΣx²−(Σx)²) rather than re-deriving normal equations under time pressure.</p>
+      </div>
+
       <div class="remember-box">
         <span class="remember-box__label">💡 REMEMBER</span>
         <p>All Lagrange basis values at ANY x must sum to exactly <strong>1.0</strong> — use this to check your
@@ -570,6 +657,16 @@
         <p><strong>b)</strong> Given f′(x) = 2x/(x²+1) exactly, find the absolute error for each estimate in
         (a) and explain what more data points do to accuracy.</p>
         <p><strong>c)</strong> Estimate f″(1.1) using the five-point central difference formula, h=0.1.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>A derivative is technically a LIMIT as h→0 — but with only tabulated data, you can never actually
+        take h to zero. Numerical differentiation approximates that limit using a small but finite h, by
+        writing a Taylor series around the point and solving for f′(x) in terms of nearby f-values. Using MORE
+        nearby points lets you cancel out more of the leftover (truncation) terms, which is exactly why 2-point
+        → 3-point → 5-point gets progressively more accurate — you are literally cancelling more of the
+        Taylor-series error with each extra point.</p>
       </div>
 
       <div class="strategy-box">
@@ -636,6 +733,15 @@
         </div>
       </details>
 
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>When a question gives you both the table AND the analytical derivative, always compute BOTH and
+        compare — it's a free accuracy sanity check and usually IS the next sub-question. Higher-order formulas
+        have large coefficients (±25, ±48…) that amplify tiny data-rounding errors, so don't be alarmed if a
+        high-order estimate looks "too different" from a simple analytical check on imprecise data — the
+        method is still correct, the input data is just imperfect.</p>
+      </div>
+
       <div class="remember-box">
         <span class="remember-box__label">💡 REMEMBER</span>
         <p>Central difference is ALWAYS preferred when both neighbours exist — it's one order more accurate
@@ -655,6 +761,17 @@
       <div class="qx-card__question">
         <p>Approximate ∫₁⁴ [(x²−x+1)/x³] dx using: <strong>a)</strong> Trapezoidal, N=6. <strong>b)</strong>
         Simpson's 1/3, N=6. <strong>c)</strong> Romberg integration, calculate until R₃,₃.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>An integral is the exact area under a curve — but for most functions you cannot find that area with
+        a clean formula. So instead, replace the curve with simpler SHAPES whose area you CAN compute exactly,
+        and add those up. Trapezoidal replaces each slice with a straight-line (linear) top; Simpson's replaces
+        pairs of slices with a parabola (quadratic) — a better-fitting shape, hence more accuracy for free.
+        Romberg is cleverer still: it runs the crude trapezoidal rule at a few different step sizes, then
+        mathematically CANCELS OUT the leading error term between them (Richardson extrapolation) — squeezing
+        a much better estimate out of the same "unsophisticated" trapezoidal building block.</p>
       </div>
 
       <div class="strategy-box">
@@ -718,6 +835,14 @@
         </div>
       </details>
 
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>Simpson's needs N EVEN — if you're ever handed an odd N, split off the last panel and handle that
+        one with trapezoidal (or the last 3 panels with Simpson's 3/8), then apply 1/3 to the rest. When
+        building a Romberg table, use R_{i,2} to sanity-check against a direct Simpson's calculation at that
+        same step size before extrapolating further.</p>
+      </div>
+
       <div class="remember-box">
         <span class="remember-box__label">💡 REMEMBER</span>
         <p>Romberg's R_{i,2} column always equals Simpson's 1/3 at that same refinement level — a great
@@ -746,6 +871,7 @@
       <strong>Newton-Raphson</strong> — the third pillar of Chapter 6 and normally the fastest method. It's
       very likely to replace either Bisection or Secant next sitting, paired with an IVT-check sub-question.
       Practice: derive f′(x) cleanly and watch for f′(xₙ)=0 traps.</p>
+      <a href="math-predicted-practice.html#p1" class="btn btn--ghost btn--sm">▸ Try Practice Question 1</a>
     </div>
 
     <div class="predict-card glass-card anim-fade-in-up">
@@ -755,6 +881,7 @@
       smallest eigenvalue). The plain power method — finding the LARGEST eigenvalue directly, without any
       shift — is the more fundamental technique and a natural complement/alternative question next time,
       likely on a fresh 3×3 matrix with a clearly dominant eigenvalue.</p>
+      <a href="math-predicted-practice.html#p2" class="btn btn--ghost btn--sm">▸ Try Practice Question 2</a>
     </div>
 
     <div class="predict-card glass-card anim-fade-in-up">
@@ -765,6 +892,7 @@
       the target near the table's START — forcing you to demonstrate the FORWARD formula and its opposite-sign
       coefficient pattern (r−1) instead of (r+1). Also watch for a straight "estimate using forward-difference"
       question with no ambiguity about which to choose.</p>
+      <a href="math-predicted-practice.html#p3" class="btn btn--ghost btn--sm">▸ Try Practice Question 3</a>
     </div>
 
     <div class="predict-card glass-card anim-fade-in-up">
@@ -775,6 +903,7 @@
       rather than the start) are equally examinable and were skipped this year — a strong candidate for
       direct testing, or for a "which formula is appropriate here" judgment question like Q3(a) used for
       interpolation.</p>
+      <a href="math-predicted-practice.html#p4" class="btn btn--ghost btn--sm">▸ Try Practice Question 4</a>
     </div>
 
     <div class="predict-card glass-card anim-fade-in-up">
@@ -785,6 +914,7 @@
       not usable with the 1/3 rule pattern. It appeared on the formula sheet but was never actually asked —
       a strong sign it's "due" to appear, likely requiring N divisible by 3 (e.g. N=6 or N=9) to force the
       3/8 pattern instead of 1/3.</p>
+      <a href="math-predicted-practice.html#p5" class="btn btn--ghost btn--sm">▸ Try Practice Question 5</a>
     </div>
 
     <div class="predict-card glass-card anim-fade-in-up">
@@ -796,10 +926,12 @@
       you to explain a trade-off in words (e.g. bisection's guaranteed-but-slow convergence vs Newton's
       fast-but-conditional convergence) — these are easy marks if you know the concept, easy to lose if you
       only practised the arithmetic.</p>
+      <a href="math-predicted-practice.html#p6" class="btn btn--ghost btn--sm">▸ Try Practice Question 6</a>
     </div>
 
     <div style="text-align:center; margin: 36px 0 12px;">
-      <a href="mathcore-problem-solving.html" class="btn btn--primary">📐 Problem-Solving Steps</a>
+      <a href="math-predicted-practice.html" class="btn btn--primary">🔮 Practice All 6 Predicted Questions</a>
+      <a href="mathcore-problem-solving.html" class="btn btn--ghost">📐 Problem-Solving Steps</a>
       <a href="index.html" class="btn btn--ghost">Hub</a>
     </div>
 
