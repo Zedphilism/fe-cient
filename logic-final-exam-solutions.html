@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Final Exam Set 1 — Full Solutions — LogicCore Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/components.css" />
+
+  <style>
+    .cheat-hero { padding: 32px 24px 24px; text-align: center; }
+    .cheat-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 3.4vw, 2rem);
+      letter-spacing: 0.02em;
+      color: var(--text-primary);
+    }
+    .cheat-hero__title .accent { color: var(--accent-purple); }
+    .cheat-hero__sub {
+      color: var(--text-muted);
+      font-size: 0.86rem;
+      max-width: 740px;
+      margin: 10px auto 0;
+      line-height: 1.6;
+    }
+    .cheat-note {
+      max-width: 820px;
+      margin: 16px auto 0;
+      padding: 12px 16px;
+      border-left: 3px solid var(--accent-orange);
+      background: rgba(255,107,53,0.06);
+      border-radius: 4px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      text-align: left;
+    }
+    .cheat-note strong { color: var(--accent-orange); }
+    .cheat-note--purple { border-left-color: var(--accent-purple); background: rgba(191,95,255,0.06); }
+    .cheat-note--purple strong { color: var(--accent-purple); }
+
+    .cheat-toc {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+      margin: 22px auto 8px; max-width: 900px;
+    }
+    .cheat-toc a {
+      font: 600 0.72rem/1 var(--font-display);
+      color: var(--text-primary); text-decoration: none;
+      padding: 7px 13px; border: 1px solid var(--border-glass); border-radius: var(--radius-sm);
+      transition: border-color .2s, color .2s;
+    }
+    .cheat-toc a:hover { border-color: var(--accent-purple); color: var(--accent-purple); }
+
+    .section-divider { display: flex; align-items: center; gap: 14px; margin: 38px 0 8px; }
+    .section-divider__label { font: 700 0.72rem/1 var(--font-display); letter-spacing: 0.13em; color: var(--accent-purple); white-space: nowrap; }
+    .section-divider__line { flex: 1; height: 1px; background: var(--border-glass); }
+
+    /* ── Question card ─────────────────────────────────────────── */
+    .qx-card { margin: 22px 0; padding: 22px 26px; border-left: 3px solid var(--accent-purple); }
+    .qx-card__num {
+      display: inline-flex; align-items: center; gap: 8px;
+      font: 700 0.68rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-purple);
+      margin-bottom: 6px;
+    }
+    .qx-card__marks { font-size: 0.65rem; color: var(--text-muted); font-weight: 400; letter-spacing: 0.04em; }
+    .qx-card__question {
+      font-size: 0.92rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 14px;
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);
+      border-radius: var(--radius-sm); padding: 12px 16px;
+    }
+    .qx-card__question .mono { font-family: var(--font-display); }
+
+    .concept-box {
+      background: rgba(255,107,53,0.05); border: 1px solid rgba(255,107,53,0.18);
+      border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 12px;
+    }
+    .concept-box__label {
+      font: 700 0.62rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-orange);
+      margin-bottom: 7px; display: block;
+    }
+    .concept-box p { font-size: 0.82rem; line-height: 1.65; color: var(--text-primary); margin: 0 0 6px; }
+    .concept-box p:last-child { margin-bottom: 0; }
+    .concept-box strong { color: var(--accent-orange); }
+
+    .trick-box {
+      background: rgba(255,51,102,0.05); border: 1px solid rgba(255,51,102,0.22);
+      border-radius: var(--radius-sm); padding: 11px 14px; margin-top: 10px;
+    }
+    .trick-box__label {
+      display: flex; align-items: center; gap: 6px;
+      font: 700 0.6rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-red);
+      margin-bottom: 6px;
+    }
+    .trick-box p { font-size: 0.79rem; line-height: 1.55; color: var(--text-primary); margin: 0; }
+    .trick-box strong { color: var(--accent-red); }
+
+    .explain-box {
+      background: rgba(0,245,255,0.03); border: 1px dashed rgba(0,245,255,0.28);
+      border-radius: var(--radius-sm); padding: 10px 14px; margin: 8px 0 14px;
+    }
+    .explain-box__label {
+      font: 700 0.6rem/1 var(--font-display); letter-spacing: 0.08em; color: var(--accent-cyan);
+      margin-bottom: 6px; display: block;
+    }
+    .explain-box p { font-size: 0.8rem; line-height: 1.62; color: var(--text-primary); margin: 0 0 6px; }
+    .explain-box p:last-child { margin-bottom: 0; }
+    .explain-box strong { color: var(--accent-cyan); }
+    .explain-box .mono { font-family: var(--font-display); }
+
+    .strategy-box {
+      background: rgba(0,245,255,0.05); border: 1px solid rgba(0,245,255,0.15);
+      border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 12px;
+    }
+    .strategy-box__label {
+      font: 700 0.62rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-cyan);
+      margin-bottom: 7px; display: block;
+    }
+    .strategy-box p { font-size: 0.82rem; line-height: 1.6; color: var(--text-primary); margin: 0 0 6px; }
+    .strategy-box p:last-child { margin-bottom: 0; }
+    .strategy-box strong { color: var(--accent-cyan); }
+
+    .working-toggle { margin-top: 4px; }
+    .working-toggle summary {
+      cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 8px;
+      font: 700 0.72rem/1 var(--font-display); letter-spacing: 0.06em; color: var(--accent-purple);
+      background: rgba(191,95,255,0.08); border: 1px solid rgba(191,95,255,0.3);
+      border-radius: var(--radius-sm); padding: 9px 16px; transition: background .2s; user-select: none;
+    }
+    .working-toggle summary::-webkit-details-marker { display: none; }
+    .working-toggle summary:hover { background: rgba(191,95,255,0.16); }
+    .working-toggle summary::before { content: '▶'; font-size: 0.6rem; transition: transform .2s; }
+    .working-toggle[open] summary::before { transform: rotate(90deg); }
+    .working-toggle[open] summary { margin-bottom: 12px; }
+    .working-toggle summary .show-label { display: inline; }
+    .working-toggle summary .hide-label { display: none; }
+    .working-toggle[open] summary .show-label { display: none; }
+    .working-toggle[open] summary .hide-label { display: inline; }
+
+    .working-body { padding: 2px 2px 4px; }
+
+    .step-block { margin-bottom: 14px; }
+    .step-block__label {
+      font: 700 0.64rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-purple);
+      margin-bottom: 8px; display: block;
+    }
+    .step-block p { font-size: 0.83rem; line-height: 1.65; color: var(--text-primary); margin: 0 0 8px; }
+    .step-block p:last-child { margin-bottom: 0; }
+    .step-block strong { color: var(--accent-purple); }
+    .step-block .mono { font-family: var(--font-display); font-size: 0.8rem; }
+
+    .final-answer {
+      background: rgba(57,255,20,0.08); border: 1px solid rgba(57,255,20,0.3);
+      border-radius: var(--radius-sm); padding: 12px 16px; margin-top: 10px;
+    }
+    .final-answer__label {
+      font: 700 0.62rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-green);
+      margin-bottom: 6px; display: block;
+    }
+    .final-answer p { font-size: 0.86rem; color: var(--text-primary); margin: 0; font-weight: 600; }
+    .final-answer strong { color: var(--accent-green); }
+
+    .work-table {
+      width: 100%; border-collapse: collapse; margin: 10px 0;
+      font-size: 0.76rem; font-family: var(--font-display);
+    }
+    .work-table th, .work-table td { border: 1px solid rgba(255,255,255,0.09); padding: 5px 8px; text-align: center; }
+    .work-table th { background: rgba(255,255,255,0.03); color: var(--text-muted); font-size: 0.64rem; letter-spacing: 0.04em; }
+    .work-table td { color: var(--text-primary); }
+    .work-table .hl { color: var(--accent-purple); font-weight: 700; }
+    .work-table .hl-green { color: var(--accent-green); font-weight: 700; }
+    .table-wrap { overflow-x: auto; margin: 10px 0; }
+
+    .remember-box {
+      background: rgba(255,215,0,0.06); border: 1px solid rgba(255,215,0,0.28);
+      border-radius: var(--radius-sm); padding: 11px 14px; margin-top: 10px;
+    }
+    .remember-box__label {
+      display: flex; align-items: center; gap: 6px;
+      font: 700 0.6rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-gold, #ffd700);
+      margin-bottom: 6px;
+    }
+    .remember-box p { font-size: 0.78rem; line-height: 1.5; color: var(--text-primary); margin: 0; }
+    .remember-box strong { color: var(--accent-gold, #ffd700); }
+
+    .predict-card { margin: 16px 0; padding: 18px 22px; border-left: 3px solid var(--accent-cyan); }
+    .predict-card__title { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+    .predict-card__why { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
+    .predict-card__why strong { color: var(--accent-cyan); }
+    .predict-tag {
+      display: inline-block; font: 700 0.6rem/1 var(--font-display); letter-spacing: 0.08em;
+      color: var(--accent-cyan); background: rgba(0,245,255,0.1); border: 1px solid rgba(0,245,255,0.3);
+      padding: 3px 9px; border-radius: 20px; margin-bottom: 8px;
+    }
+
+    .state-seq { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 10px 0; font-family: var(--font-display); font-size: 0.85rem; }
+    .state-seq__node {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 1.5px solid var(--accent-purple); color: var(--accent-purple); font-weight: 700;
+    }
+    .state-seq__arrow { color: var(--text-muted); font-size: 0.7rem; }
+  </style>
+</head>
+
+<body data-page="cheatsheet">
+
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo" aria-label="Study hub home">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <circle cx="14" cy="14" r="13" stroke="var(--accent-purple)" stroke-width="1.5"/>
+          <text x="14" y="19" text-anchor="middle" fill="var(--accent-purple)" font-size="12" font-weight="bold">&#8853;</text>
+        </svg>
+        <span class="logo-text">LogicCore<span class="logo-accent" style="color:var(--accent-purple)">Academy</span></span>
+      </a>
+
+      <nav class="header-nav" aria-label="Chapter navigation">
+        <a href="index.html" class="nav-link">Hub</a>
+        <a href="logic-chapter5.html" class="nav-link">Ch.5</a>
+        <a href="logic-chapter6.html" class="nav-link">Ch.6</a>
+        <a href="logic-chapter7.html" class="nav-link">Ch.7</a>
+        <a href="logic-chapter8.html" class="nav-link">Ch.8</a>
+        <a href="logic-final-exam-solutions.html" class="nav-link nav-link--active" aria-current="page">Final Exam</a>
+        <a href="logic-predicted-practice.html" class="nav-link">🔮 Practice</a>
+        <a href="exam-mode.html?module=logic" class="nav-link">Exam Mode</a>
+      </nav>
+
+      <div class="header-right">
+        <div class="rank-badge" id="header-rank">
+          <span class="rank-level" id="header-level">Lv.1</span>
+          <span class="rank-title" id="header-rank-title"></span>
+        </div>
+        <div class="xp-bar-wrap" title="XP progress to next level">
+          <div class="xp-bar-track"><div class="xp-bar-fill" id="header-xp-fill" style="width:0%"></div></div>
+          <span class="xp-label" id="header-xp-label">0 XP</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-wrapper" id="main-content">
+
+    <div class="cheat-hero glass-card anim-fade-in-up">
+      <span class="section-label">SECR1013 — DIGITAL LOGIC FINAL EXAMINATION (SET 1)</span>
+      <h1 class="cheat-hero__title">Final Exam <span class="accent">Full Solutions</span></h1>
+      <p class="cheat-hero__sub">
+        Every question from a real SECR1013/SCSR1013 final exam paper, fully worked through — same
+        treatment as the MathCore exam page: a <strong>fundamental concept</strong> explained from zero
+        background first, then a "how to approach it" strategy, then a <strong>Show Full Working</strong>
+        toggle, then a key trick and a one-line memory hook.
+      </p>
+      <div class="cheat-note">
+        <strong>How I verified this:</strong> every truth table, waveform and equation on this page was
+        derived independently step-by-step from the stated circuit behaviour (JK/D flip-flop excitation
+        rules, MUX/adder logic, counter design rules) and cross-checked against known results (e.g. the
+        3-bit Johnson counter's 6-state cycle, the MOD-6 counter's reset-on-6 behaviour). This is <em>not</em>
+        an official answer key — if your lecturer's diagram wiring or labelling convention differs slightly,
+        trust your lecturer, but the reasoning method shown here is standard and transfers directly.
+      </div>
+      <div class="cheat-note cheat-note--purple">
+        <strong>Note on the circuit-diagram questions (Q2c &amp; Q5):</strong> this exam's original figures
+        are hand-drawn logic diagrams inside a scanned PDF, and a couple of the finer wire connections in
+        Figure 4 and Figure 7 are genuinely difficult to trace with 100% pixel-certainty. Where that happens,
+        this page follows the <em>standard textbook wiring</em> consistent with everything the question text
+        confirms (component types, table headers, given equations count) and says so explicitly — the
+        method for deriving equations from ANY gate-level diagram is identical regardless, and is exactly
+        what's demonstrated.
+      </div>
+    </div>
+
+    <div class="cheat-toc">
+      <a href="#q1">Q1 — MUX, Adder &amp; T/F</a>
+      <a href="#q2">Q2 — Latches &amp; Flip-Flops</a>
+      <a href="#q3">Q3 — MOD-6 Counter</a>
+      <a href="#q4">Q4 — Shift Register &amp; Johnson Counter</a>
+      <a href="#q5">Q5 — Synchronous Counter</a>
+      <a href="#q6">Q6 — T Flip-Flop Design</a>
+      <a href="#predictions">🔮 Predictions</a>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">QUESTION 1 — MULTIPLEXER, PARALLEL ADDER &amp; TRUE/FALSE</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- Q1 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="q1">
+      <span class="qx-card__num">QUESTION 1 <span class="qx-card__marks">[15 MARKS]</span></span>
+      <div class="qx-card__question">
+        <p><strong>a)</strong> Figure 1 shows a logic diagram for a 4-input multiplexer. <strong>(i)</strong>
+        Create the truth table. <strong>(ii)</strong> Draw the output waveform for the given timing diagram.</p>
+        <p><strong>b)</strong> Using a parallel adder, add binary 1011 and 0101. <strong>(i)</strong> Draw and
+        label the block diagram. <strong>(ii)</strong> Calculate the sum, carry-in and output carry.</p>
+        <p><strong>c)</strong> Identify each statement as TRUE or FALSE (5 statements on adders, XOR parity,
+        comparators and demultiplexers).</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT — start here if any of this is new to you</span>
+        <p><strong>What a multiplexer (MUX) actually does:</strong> imagine four people (D0, D1, D2, D3) all
+        want to talk into the same single microphone (Y), but only one can speak at a time. A MUX is the
+        "switchboard operator" — the SELECT lines (S0, S1) act like a 2-bit address that says "connect
+        input number ___ to the output right now", and everyone else is silenced. With 2 select lines you can
+        address 4 distinct inputs (2²=4), which is exactly why a 4-input MUX needs exactly 2 select lines.</p>
+        <p><strong>Why it's built from AND/OR gates:</strong> each data input Dᵢ is fed into its own AND gate,
+        together with the UNIQUE combination of S1/S1' and S0/S0' that is true only when the select lines spell
+        out that input's address (e.g. D2's AND gate uses S1·S0'). Since only ONE address can be "spelled out"
+        at any instant, only ONE AND gate can be open at a time — all the others output 0 automatically. The
+        final OR gate simply merges these four AND-gate outputs; since at most one is ever non-zero, the OR
+        gate effectively just "passes through" whichever single input was selected.</p>
+        <p><strong>What a parallel adder is (part b):</strong> adding two 4-bit numbers means adding 4 separate
+        columns of bits, just like adding by hand on paper — except each column's addition can generate a
+        "carry" into the NEXT column, exactly like carrying a 1 when you add 7+5 by hand. A parallel adder is
+        simply 4 <strong>full adders</strong> chained together, where each stage's carry-OUT feeds directly
+        into the next stage's carry-IN — the whole 4-bit sum is produced in one pass, with the carries rippling
+        through the chain.</p>
+        <p><strong>Why part (c) matters:</strong> these five statements test whether you actually understand
+        WHAT each circuit (adder, XOR-parity chain, comparator, demultiplexer) does, not just how to build it
+        — a fast, reliable way exam-setters check real understanding without demanding a full derivation.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p><strong>(a)(i)</strong> Read the AND-gate wiring directly off Figure 1: gate 1 uses S1'S0' (selects
+        D0), gate 2 uses S1'S0 (selects D1), gate 3 uses S1S0' (selects D2), gate 4 uses S1S0 (selects D3).
+        Y always just equals whichever D the current S1S0 pair addresses.</p>
+        <p><strong>(a)(ii)</strong> At every time-slice, read off the CURRENT values of S1 and S0, use them to
+        pick which Dᵢ is "connected", and copy THAT signal's current value onto Y for that slice.</p>
+        <p><strong>(b)</strong> Add bit by bit from the LSB, carrying into the next column exactly like
+        column addition on paper. Cin for bit 0 is 0 unless the question states otherwise.</p>
+        <p><strong>(c)</strong> Check each statement against the exact formal definition of that component —
+        watch for subtly wrong numbers ("two inputs" vs the real count) and swapped comparisons (A&lt;B vs
+        A&gt;B).</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">(a)(i) 4-INPUT MUX — TRUTH TABLE</span>
+            <p>Each data line is gated ON only when S1S0 matches its address:</p>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>S1</th><th>S0</th><th>Selected input</th><th>Y</th></tr>
+                <tr><td>0</td><td>0</td><td>D0</td><td class="hl">D0</td></tr>
+                <tr><td>0</td><td>1</td><td>D1</td><td class="hl">D1</td></tr>
+                <tr><td>1</td><td>0</td><td>D2</td><td class="hl">D2</td></tr>
+                <tr><td>1</td><td>1</td><td>D3</td><td class="hl">D3</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (a)(i)</span>
+            <p>Y = D0 when S1S0=00 · D1 when S1S0=01 · D2 when S1S0=10 · D3 when S1S0=11</p>
+          </div>
+
+          <div class="explain-box">
+            <span class="explain-box__label">🔍 (a)(ii) HOW TO TRACE THE WAVEFORM — method + worked snippet</span>
+            <p>Go time-slice by time-slice: read the CURRENT S1S0 pair from the given diagram, look it up in
+            the truth table above to find which Dᵢ is selected, then copy that Dᵢ's current level onto Y for
+            that same slice — nothing else matters for that instant, even if the other three D-lines are
+            wiggling up and down (they're disconnected from Y at that moment).</p>
+            <p>Worked snippet, using a clean example sequence of 4 time-slices: suppose S1S0 reads
+            00, 01, 10, 11 in slices 1–4, and at those same slices D0=1, D1=0, D2=1, D3=0. Then:</p>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Slice</th><th>S1S0</th><th>Selected</th><th>Its value</th><th>Y</th></tr>
+                <tr><td>1</td><td>00</td><td>D0</td><td>1</td><td class="hl">1</td></tr>
+                <tr><td>2</td><td>01</td><td>D1</td><td>0</td><td class="hl">0</td></tr>
+                <tr><td>3</td><td>10</td><td>D2</td><td>1</td><td class="hl">1</td></tr>
+                <tr><td>4</td><td>11</td><td>D3</td><td>0</td><td class="hl">0</td></tr>
+              </table>
+            </div>
+            <p>Apply this exact slice-by-slice lookup to your own exam's S0/S1/D0–D3 waveform and Y follows
+            automatically — there is no other rule.</p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">(b)(i) PARALLEL ADDER — BLOCK DIAGRAM LABELLING</span>
+            <p>Four full adders (FA0–FA3) in a chain. Each FA has 3 inputs (Aᵢ, Bᵢ, Cᵢₙ) and 2 outputs (Sᵢ,
+            Cₒᵤₜ). FA0's Cᵢₙ is tied to 0 (no carry before the first column). Each FA's Cₒᵤₜ wire connects
+            directly to the NEXT FA's Cᵢₙ — that rippling carry chain is what makes it a "parallel adder"
+            for multi-bit numbers built from single-bit full adders.</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(b)(ii) ADD 1011 + 0101, BIT BY BIT</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Bit</th><th>Aᵢ</th><th>Bᵢ</th><th>Cᵢₙ</th><th>Sᵢ</th><th>Cₒᵤₜ</th></tr>
+                <tr><td>0 (LSB)</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>2</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>3 (MSB)</td><td>1</td><td>0</td><td>1</td><td>0</td><td class="hl">1</td></tr>
+              </table>
+            </div>
+            <p>Reading the Sᵢ column bottom-to-top gives Sum=0000, with a final output carry Cₒᵤₜ=1 — combined,
+            the 5-bit result is 1 0000.</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (b)</span>
+            <p>1011 (11) + 0101 (5) = <strong>1 0000</strong> (16) — Sum nibble = 0000, output carry = 1</p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">(c) TRUE/FALSE — WITH REASONING</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>#</th><th>Statement (summary)</th><th>Answer</th><th>Why</th></tr>
+                <tr><td>i</td><td>Full adder has 2 inputs, 2 outputs</td><td class="hl">FALSE</td><td>A full adder has THREE inputs (A, B, Cᵢₙ) and 2 outputs (S, Cₒᵤₜ) — "2 inputs" describes a HALF adder</td></tr>
+                <tr><td>ii</td><td>4-bit modulo-2 sum needs 3 XOR gates</td><td class="hl">TRUE</td><td>Combining n bits with a binary gate always needs (n−1) gates chained; 4 bits → 3 XOR gates</td></tr>
+                <tr><td>iii</td><td>Parity output X is HIGH for even count, LOW for odd</td><td class="hl">FALSE</td><td>A plain XOR chain (as in part ii, no extra inverter) outputs HIGH exactly when the number of 1s is ODD — the reverse of this statement</td></tr>
+                <tr><td>iv</td><td>A=0110(6), B=0011(3): A&lt;B output is HIGH</td><td class="hl">FALSE</td><td>6 &gt; 3, so the A&gt;B output should be HIGH, not A&lt;B</td></tr>
+                <tr><td>v</td><td>Demultiplexer = data distributor</td><td class="hl">TRUE</td><td>A DEMUX routes ONE input to ONE of many outputs — literally a "distributor" by definition</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (c)</span>
+            <p>i = F &nbsp;·&nbsp; ii = T &nbsp;·&nbsp; iii = F &nbsp;·&nbsp; iv = F &nbsp;·&nbsp; v = T</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>For any MUX truth table, the select-line binary VALUE directly equals the SUBSCRIPT of the chosen
+        data line (S1S0=10 → picks D2, since binary 10 = decimal 2) — you never need to re-derive the AND-gate
+        wiring from scratch once you know this. For T/F questions on standard components, always check the
+        EXACT input/output count and the EXACT direction of every inequality before answering.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>A full adder = 3 in, 2 out. A half adder = 2 in, 2 out (no carry-in). A plain XOR-tree parity output
+        is HIGH-for-ODD by default — an extra inverter is needed to make it HIGH-for-EVEN.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">QUESTION 2 — LATCHES, FLIP-FLOPS &amp; ASYNCHRONOUS COUNTER</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- Q2 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="q2">
+      <span class="qx-card__num">QUESTION 2 <span class="qx-card__marks">[16 MARKS]</span></span>
+      <div class="qx-card__question">
+        <p><strong>a)</strong> Draw the output waveform for a gated D latch given D and EN timing diagrams.</p>
+        <p><strong>b)</strong> Table 1 gives 8 rows of PRE', CLR', J, K for a negative-edge JK flip-flop.
+        Determine output Q and its state for each row.</p>
+        <p><strong>c)</strong> A circuit has a JK flip-flop (FF1) and D flip-flop (FF2), both negative-edge,
+        plus an AND gate producing output Y (Figure 4, "Asynchronous counter"). <strong>(i)</strong> Write
+        equations for D and Y. <strong>(ii)</strong> Simulate Table 2's 8 rows for Q1, Q2 and Y.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT — start here if any of this is new to you</span>
+        <p><strong>What a latch/flip-flop fundamentally is:</strong> it's a tiny piece of MEMORY — one single
+        bit that can be SET to 1, CLEARED to 0, or HELD at its current value, and it keeps remembering that
+        value even after the signal that set it disappears (unlike a plain logic gate, whose output only
+        exists while its inputs are actively held). This "remembering" is what lets digital circuits have
+        history — a counter, a register, anything that needs to track "what happened before" needs
+        flip-flops, not just gates.</p>
+        <p><strong>Latch vs flip-flop — the key difference:</strong> a <strong>latch</strong> is "transparent"
+        — while its enable (EN) is HIGH, its output Q follows the D input immediately and continuously; the
+        instant EN drops LOW, Q freezes at whatever D was at that exact moment. A <strong>flip-flop</strong> is
+        stricter — it only looks at its input for one infinitesimal instant (the rising or falling EDGE of a
+        clock pulse), and ignores its input completely at every other moment. This is why part (a) draws a
+        continuous waveform (Q tracks D whenever EN=1) while part (b) only updates Q at discrete falling-edge
+        moments.</p>
+        <p><strong>What J and K actually control:</strong> a JK flip-flop is a "smarter" SR flip-flop that
+        fixes the one broken case (S=R=1) by making it mean "toggle" instead of "invalid". J=0,K=0 → hold
+        (remember). J=1,K=0 → Set (Q=1). J=0,K=1 → Reset (Q=0). J=1,K=1 → Toggle (flip whatever Q currently
+        is) — this toggle behaviour is exactly what makes JK flip-flops the natural building block for
+        counters (a bit that flips every clock tick is precisely what a binary counter bit does).</p>
+        <p><strong>Why PRE' and CLR' exist, and why they're called "asynchronous":</strong> sometimes you need
+        to force a flip-flop to a known value RIGHT NOW, without waiting for the next clock edge — e.g. to
+        reset a whole circuit to 0 at power-on. PRE' (active-LOW preset) and CLR' (active-LOW clear) are
+        override inputs that punch straight through to Q the INSTANT they go LOW, completely ignoring the
+        clock and J/K — that's what "asynchronous" means here: not tied to the clock's schedule at all. They
+        always take priority over the normal, clock-synchronised J/K behaviour.</p>
+        <p><strong>What makes Q2(c)'s circuit "asynchronous" as a whole:</strong> connecting a SECOND
+        flip-flop's clock input to the FIRST flip-flop's OUTPUT (instead of to the master clock directly)
+        creates a ripple effect — each stage only updates after it "feels" the previous stage change, one
+        stage triggering the next like dominoes, rather than everything updating at the exact same master-clock
+        instant. That domino-style, one-thing-triggers-the-next design is what "asynchronous" (ripple) counter
+        means, as opposed to a "synchronous" counter where every flip-flop shares literally the same clock
+        wire.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p><strong>(a)</strong> Whenever EN=1, redraw D exactly onto Q. The instant EN drops to 0, freeze Q at
+        whatever value D had at that exact instant, and hold it flat until EN rises again.</p>
+        <p><strong>(b)</strong> For every row, FIRST check PRE'/CLR' — if either is 0, that override wins
+        immediately, no need to even look at J/K. Only when PRE'=CLR'=1 do you apply the normal JK rule at
+        that row's falling clock edge.</p>
+        <p><strong>(c)(i)</strong> Since Table 2 only varies PRE'/CLR' (no J/K columns), FF1's J and K must be
+        fixed — tied HIGH — making FF1 a plain toggle stage. The natural, standard way to make a D flip-flop
+        also toggle is to wire its own D input to its own inverted output, D=Q2'; combined with an AND gate
+        reading both outputs, Y=Q1·Q2.</p>
+        <p><strong>(c)(ii)</strong> Apply PRE'/CLR' overrides first (they hit BOTH flip-flops at once here);
+        otherwise FF1 always toggles, and FF2 only toggles on rows where Q1 has just gone HIGH→LOW (that's
+        its ripple clock edge).</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="explain-box">
+            <span class="explain-box__label">🔍 (a) HOW TO TRACE A GATED D-LATCH WAVEFORM — method + worked snippet</span>
+            <p>Walk across the timeline moment by moment: whenever EN reads 1, Q is a mirror of D at that same
+            instant (transparent). The moment EN reads 0, Q locks — draw a flat line at whatever Q's value was
+            the instant EN dropped, no matter what D does afterwards, until EN goes back to 1.</p>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Time</th><th>D</th><th>EN</th><th>Q</th><th>Why</th></tr>
+                <tr><td>t1</td><td>1</td><td>1</td><td class="hl">1</td><td>EN=1 → Q follows D</td></tr>
+                <tr><td>t2</td><td>0</td><td>1</td><td class="hl">0</td><td>EN=1 → Q follows D</td></tr>
+                <tr><td>t3</td><td>1</td><td>0</td><td class="hl">0</td><td>EN just dropped — Q freezes at the LAST value it followed (0)</td></tr>
+                <tr><td>t4</td><td>0</td><td>0</td><td class="hl">0</td><td>Still latched — D changing is ignored while EN=0</td></tr>
+                <tr><td>t5</td><td>1</td><td>1</td><td class="hl">1</td><td>EN=1 again → Q resumes following D</td></tr>
+              </table>
+            </div>
+            <p>Apply this exact rule to your own D/EN diagram and Q is fully determined at every instant.</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(b) NEGATIVE-EDGE JK FLIP-FLOP — FULL TABLE</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Row</th><th>CLK</th><th>PRE'</th><th>CLR'</th><th>J</th><th>K</th><th>Q</th><th>State / action</th></tr>
+                <tr><td>1</td><td>↓</td><td>1</td><td>0</td><td>0</td><td>1</td><td class="hl">0</td><td>Async CLEAR (override)</td></tr>
+                <tr><td>2</td><td>↓</td><td>1</td><td>1</td><td>1</td><td>1</td><td class="hl">1</td><td>Toggle (sync, 0→1)</td></tr>
+                <tr><td>3</td><td>↓</td><td>0</td><td>1</td><td>1</td><td>0</td><td class="hl">1</td><td>Async SET (override)</td></tr>
+                <tr><td>4</td><td>↓</td><td>1</td><td>1</td><td>0</td><td>0</td><td class="hl">1</td><td>Hold (sync, stays 1)</td></tr>
+                <tr><td>5</td><td>↓</td><td>1</td><td>0</td><td>1</td><td>1</td><td class="hl">0</td><td>Async CLEAR (override)</td></tr>
+                <tr><td>6</td><td>↓</td><td>1</td><td>1</td><td>0</td><td>1</td><td class="hl">0</td><td>Reset (sync, stays 0)</td></tr>
+                <tr><td>7</td><td>↓</td><td>0</td><td>1</td><td>0</td><td>1</td><td class="hl">1</td><td>Async SET (override)</td></tr>
+                <tr><td>8</td><td>↓</td><td>1</td><td>1</td><td>1</td><td>0</td><td class="hl">1</td><td>Set (sync, stays 1)</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (b)</span>
+            <p>Q sequence across the 8 rows: <strong>0, 1, 1, 1, 0, 0, 1, 1</strong></p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">(c)(i) DERIVING THE EQUATIONS</span>
+            <p>Table 2 has no J/K columns at all — only CLK, PRE', CLR' vary — so FF1's J and K must be
+            permanently tied HIGH (J1=K1=1), making FF1 a pure toggle stage clocked by the master CLK.</p>
+            <p>FF2 (the D flip-flop) is wired as a self-toggling stage: its own D input is tied to its own
+            inverted output, and it is clocked by Q1 (ripple) rather than the master clock — so it flips every
+            time Q1 falls from HIGH to LOW.</p>
+            <p>The AND gate combines both final outputs.</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (c)(i)</span>
+            <p>D = Q2' &nbsp;(FF2 configured as a toggle) &nbsp;·&nbsp; Y = Q1 · Q2</p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">(c)(ii) SIMULATING TABLE 2</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Row</th><th>PRE'</th><th>CLR'</th><th>Q1</th><th>Q2</th><th>Y</th><th>Note</th></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td class="hl">1</td><td class="hl">1</td><td>1</td><td>Async SET (both FFs)</td></tr>
+                <tr><td>2</td><td>1</td><td>0</td><td class="hl">0</td><td class="hl">0</td><td>0</td><td>Async CLEAR (both FFs)</td></tr>
+                <tr><td>3</td><td>1</td><td>1</td><td class="hl">1</td><td class="hl">0</td><td>0</td><td>FF1 toggles 0→1 (rising — no ripple trigger for FF2)</td></tr>
+                <tr><td>4</td><td>1</td><td>1</td><td class="hl">0</td><td class="hl">1</td><td>0</td><td>FF1 toggles 1→0 (falling → ripples FF2: 0→1)</td></tr>
+                <tr><td>5</td><td>0</td><td>1</td><td class="hl">1</td><td class="hl">1</td><td>1</td><td>Async SET (both FFs)</td></tr>
+                <tr><td>6</td><td>1</td><td>1</td><td class="hl">0</td><td class="hl">0</td><td>0</td><td>FF1 toggles 1→0 (falling → ripples FF2: 1→0)</td></tr>
+                <tr><td>7</td><td>1</td><td>1</td><td class="hl">1</td><td class="hl">0</td><td>0</td><td>FF1 toggles 0→1 (rising — no ripple)</td></tr>
+                <tr><td>8</td><td>1</td><td>1</td><td class="hl">0</td><td class="hl">1</td><td>0</td><td>FF1 toggles 1→0 (falling → ripples FF2: 0→1)</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (c)(ii)</span>
+            <p>Y is HIGH only on rows 1 and 5 — both are the async-SET rows where Q1=Q2=1 simultaneously.</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>ALWAYS check PRE'/CLR' before touching J/K — async overrides win unconditionally, and it's the
+        #1 mark-losing mistake to apply the synchronous JK rule on a row where an override is active. If a
+        table gives you NO J/K columns for a stage, that's your signal its J/K are hard-wired constants
+        (usually both HIGH = toggle) — don't go hunting for values that were deliberately left out.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Latches are transparent (level-sensitive); flip-flops sample only at an edge. JK toggle (J=K=1) is
+        the building block of every counter. "D tied to its own Q-bar" is the standard trick to make a D
+        flip-flop behave exactly like a toggle flip-flop.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">QUESTION 3 — MOD-6 ASYNCHRONOUS COUNTER DESIGN</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- Q3 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="q3">
+      <span class="qx-card__num">QUESTION 3 <span class="qx-card__marks">[15 MARKS]</span></span>
+      <div class="qx-card__question">
+        <p><strong>a)</strong> Design and draw a logic circuit for a MOD-6 count-up asynchronous counter using
+        negative edge-triggered JK flip-flops with asynchronous inputs.</p>
+        <p><strong>b)</strong> Draw the waveform for the counter outputs for 10 clock cycles, given PRE' and
+        CLR' are HIGH throughout.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT — start here if any of this is new to you</span>
+        <p><strong>Why "MOD-6" needs 3 flip-flops:</strong> each flip-flop can represent 2 possible values (0
+        or 1), so n flip-flops together can represent 2ⁿ distinct combinations. To count 6 distinct values
+        (0 through 5), you need the smallest n where 2ⁿ ≥ 6 — that's n=3 (2³=8). You'll always have "spare"
+        unused combinations (here, 6 and 7) that the design must actively avoid landing on.</p>
+        <p><strong>Why a plain 3-bit binary ripple counter isn't enough on its own:</strong> left alone,
+        3 toggling flip-flops naturally count 0,1,2,3,4,5,6,7,0,... (all 8 combinations, a MOD-8 counter). To
+        force it to "wrap around" after 5 instead of 7, you need to actively DETECT the moment the count
+        reaches 6 and immediately snap it back to 0 — before the circuit has a chance to settle into that
+        unwanted state.</p>
+        <p><strong>How the detection-and-reset trick works:</strong> feed the two bits that are HIGH exactly
+        at count=6 (binary 110, i.e. Q2 and Q1) into a NAND gate, and wire that NAND gate's output into the
+        CLR' (active-low clear) pins of every flip-flop. The instant the count would become 110, the NAND
+        output drops LOW, asynchronously slamming every flip-flop back to 000 — faster than the circuit can
+        even finish "settling" into 110, so in practice you never actually observe state 6 on a waveform; you
+        just see 5 jump straight back to 0.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p><strong>(a)</strong> Use the standard "detect-and-clear" recipe: 3 negative-edge JK flip-flops, all
+        J=K=1 (toggle), ripple-connected (Q0 clocks FF1, Q1 clocks FF2), with a 2-input NAND gate reading Q2
+        and Q1 and feeding every flip-flop's CLR' pin.</p>
+        <p><strong>(b)</strong> Simulate the natural binary count 0→7 but snap back to 0 the instant you would
+        reach 6 — the waveform simply repeats 0,1,2,3,4,5 over and over.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">(a) CIRCUIT DESIGN</span>
+            <p>3 negative-edge JK flip-flops (FF0=Q0 LSB, FF1=Q1, FF2=Q2 MSB), every J and K tied HIGH (=1) so
+            each stage toggles on its own active clock edge. Ripple wiring: master CLK → FF0's clock; Q0 → FF1's
+            clock; Q1 → FF2's clock (each stage clocked by the PREVIOUS stage's output, the hallmark of an
+            asynchronous/ripple counter).</p>
+            <p>Reset logic: a 2-input NAND gate with inputs Q2 and Q1, output wired to ALL THREE flip-flops'
+            CLR' pins. NAND(Q2,Q1) is LOW only when Q2=Q1=1 — which first happens at count 110 (decimal 6) —
+            instantly clearing the count back to 000.</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(b) 10-CYCLE COUNT SEQUENCE</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Pulse</th><th>0 (start)</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr>
+                <tr><th>Q2 Q1 Q0</th><td>000</td><td>001</td><td>010</td><td>011</td><td>100</td><td>101</td><td class="hl">000</td><td>001</td><td>010</td><td>011</td><td>100</td></tr>
+                <tr><th>Decimal</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td class="hl">0</td><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+              </table>
+            </div>
+            <p>At pulse 6, the count would become 110 (6) — but the NAND-driven CLR' fires the instant Q2=Q1=1
+            and immediately forces 000 instead, so the visible waveform jumps straight from 101 (5) to 000 (0).</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER</span>
+            <p>Count repeats 0,1,2,3,4,5,0,1,2,3,4 across 10 pulses — state 6 and 7 are never actually
+            observed, confirming a true MOD-6 counter.</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>For any MOD-N asynchronous counter design question: (1) find the smallest n with 2ⁿ≥N, (2) write N
+        in binary, (3) feed EVERY bit that's a "1" in that binary pattern into a NAND gate, (4) wire that
+        NAND's output to every flip-flop's CLR'. This recipe works for ANY modulus — MOD-5 needs Q2,Q0 (101),
+        MOD-10 needs 4 flip-flops with Q3,Q1 (1010), and so on.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>The NAND-into-CLR' trick always detects the FIRST unwanted state (N itself, not N−1) and resets
+        before it can be observed — the counter's visible range is always 0 to N−1.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">QUESTION 4 — SHIFT REGISTER &amp; JOHNSON COUNTER</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- Q4 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="q4">
+      <span class="qx-card__num">QUESTION 4 <span class="qx-card__marks">[14 MARKS]</span></span>
+      <div class="qx-card__question">
+        <p><strong>a)</strong> Figure 5 shows a universal bidirectional shift register timing diagram (current
+        parallel input = decimal 3). <strong>(i)</strong> List the basic data transfers a shift register can
+        perform. <strong>(ii)</strong> Complete the timing diagram for the parallel outputs.</p>
+        <p><strong>b)</strong> Figure 6 shows a 3-bit Johnson counter. <strong>(i)</strong> Construct a
+        complete truth table for 8 clock cycles, starting at decimal 4. <strong>(ii)</strong> Draw the state
+        diagram.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT — start here if any of this is new to you</span>
+        <p><strong>What a shift register is:</strong> picture a row of lockers, each holding one bit, connected
+        in a line. Every clock pulse, every bit "steps sideways" into its neighbour's locker, and one NEW bit
+        enters at the end of the line. A "universal" shift register additionally supports loading all lockers
+        at once directly (parallel load) instead of shuffling one bit in at a time — giving it four
+        possible data-transfer modes depending on how you get data IN and how you read data OUT: <strong>SISO</strong>
+        (serial in, serial out), <strong>SIPO</strong> (serial in, parallel out), <strong>PISO</strong>
+        (parallel in, serial out), <strong>PIPO</strong> (parallel in, parallel out).</p>
+        <p><strong>What a Johnson counter is, and why it's "twisted":</strong> take a plain ring counter (a
+        shift register whose LAST output is wired straight back to its FIRST input, endlessly recirculating a
+        single 1) — a Johnson counter makes one small but powerful change: it feeds back the
+        <strong>INVERTED</strong> last output instead of the plain one. That single inversion means the pattern
+        doesn't just repeat after n steps like a ring counter — it takes 2n steps to return to its starting
+        value, because the circuit has to complete a full "all 1s" phase AND a full "all 0s" phase before
+        repeating. For 3 bits, that's 2×3=6 distinct states, compared to a plain ring counter's only 3.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p><strong>(a)(i)</strong> This is a definition-recall question — list all four transfer modes by
+        name and one-line meaning.</p>
+        <p><strong>(a)(ii)</strong> Watch for the SH/CLK' line dropping LOW — that's the signal to
+        parallel-load D0,D1,D2 straight into Q0,Q1,Q2 for that instant, overriding the normal serial shifting.</p>
+        <p><strong>(b)</strong> Apply the Johnson shift rule every clock: Q0_new = NOT(Q2_old), Q1_new =
+        Q0_old, Q2_new = Q1_old — then just repeat 8 times from the given starting value.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">(a)(i) BASIC DATA TRANSFERS</span>
+            <p><strong>SISO</strong> (Serial In, Serial Out) · <strong>SIPO</strong> (Serial In, Parallel Out) ·
+            <strong>PISO</strong> (Parallel In, Serial Out) · <strong>PIPO</strong> (Parallel In, Parallel Out)</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(a)(ii) PARALLEL LOAD EVENT</span>
+            <p>Per the given timing diagram, SH/CLK' dips LOW for one clock period while D0=1, D1=1, D2=0 are
+            held on the parallel data lines — that is a parallel-LOAD window. At that instant the register
+            loads directly: Q0 jumps to 1, Q1 jumps to 1, Q2 stays at 0 (since D2=0). For the clock edges
+            shown before and after that window, the register is in normal serial-shift mode using the J/K'
+            serial inputs.</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (a)(ii)</span>
+            <p>Q0 and Q1 both step from LOW to HIGH (and hold) at the parallel-load window; Q2 remains LOW
+            throughout the shown window, matching parallel data D0=1, D1=1, D2=0.</p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">(b)(i) JOHNSON COUNTER — 8-CYCLE TABLE (start = decimal 4 = Q2Q1Q0 100)</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Cycle</th><th>0 (start)</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr>
+                <tr><th>Q2 Q1 Q0</th><td>100</td><td>000</td><td>001</td><td>011</td><td>111</td><td>110</td><td class="hl">100</td><td>000</td><td>001</td></tr>
+                <tr><th>Decimal</th><td>4</td><td>0</td><td>1</td><td>3</td><td>7</td><td>6</td><td class="hl">4</td><td>0</td><td>1</td></tr>
+              </table>
+            </div>
+            <p>Rule applied each step: Q0new=NOT(Q2), Q1new=Q0(old), Q2new=Q1(old). Notice the sequence returns
+            to its starting value 4 after exactly 6 steps — confirming the 2n=6-state cycle length for n=3.</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">(b)(ii) STATE DIAGRAM (a single closed loop of 6 states)</span>
+            <div class="state-seq">
+              <span class="state-seq__node">4</span><span class="state-seq__arrow">→</span>
+              <span class="state-seq__node">0</span><span class="state-seq__arrow">→</span>
+              <span class="state-seq__node">1</span><span class="state-seq__arrow">→</span>
+              <span class="state-seq__node">3</span><span class="state-seq__arrow">→</span>
+              <span class="state-seq__node">7</span><span class="state-seq__arrow">→</span>
+              <span class="state-seq__node">6</span><span class="state-seq__arrow">→</span>
+              <span class="state-seq__node">4</span>
+            </div>
+            <p>All 6 states form ONE closed loop with no branches (every state has exactly one successor) —
+            decimal values 2 and 5 are never visited, which is expected: a 3-bit Johnson counter only ever
+            reaches 6 of its 8 possible binary patterns.</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (b)</span>
+            <p>Cycle: 4 → 0 → 1 → 3 → 7 → 6 → 4 → … (repeats every 6 clock pulses)</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>For ANY Johnson counter, list the states by simply prepending the COMPLEMENT of the current MSB to
+        the front of the previous state's bit pattern and dropping the last bit — the pattern always looks
+        like it "grows" a run of 1s, then "grows" a run of 0s, alternating. The state count is always 2n for
+        n flip-flops, regardless of starting point.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Ring counter: n valid states, feeds back Q UN-inverted. Johnson counter: 2n valid states, feeds
+        back Q INVERTED — that single inversion is the entire difference between the two circuits.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">QUESTION 5 — SYNCHRONOUS COUNTER FROM A GATE-LEVEL CIRCUIT</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- Q5 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="q5">
+      <span class="qx-card__num">QUESTION 5 <span class="qx-card__marks">[20 MARKS]</span></span>
+      <div class="qx-card__question">
+        <p>Refer to the circuit in Figure 7 (a synchronous counter built from two positive-edge JK flip-flops
+        plus combinational gates, with input X and output Y). <strong>i.</strong> Derive Boolean expressions
+        for J1, K1, J0, K0 and Y. <strong>ii.</strong> Produce the next-state and flip-flop transition table.
+        <strong>iii.</strong> Draw the complete state diagram.</p>
+      </div>
+
+      <div class="cheat-note cheat-note--purple" style="margin: 0 0 12px;">
+        <strong>Transparency note:</strong> Figure 7's exact gate-level wiring (several crossing AND/OR gates
+        feeding J1, K1, J0, K0) is too fine-grained to trace with full pixel-certainty from the scanned
+        original. Rather than guess at connections we can't verify, this page demonstrates the complete,
+        correct REVERSE-ENGINEERING METHOD — the exact same steps you'd apply to your own copy of Figure 7 —
+        on a clean, fully-specified equivalent circuit: a standard 2-bit synchronous JK counter with an
+        enable input X (count up when X=1, hold when X=0). Trace your own figure's wires into each J/K pin
+        the same way and the method transfers directly.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT — start here if any of this is new to you</span>
+        <p><strong>Synchronous vs asynchronous, revisited:</strong> in Q2/Q3 the flip-flops were clocked one
+        after another (ripple). Here, EVERY flip-flop shares the exact same clock wire — they all sample their
+        J/K inputs and update Q at the SAME instant. Because there's no rippling delay, synchronous counters
+        can run much faster, but the trade-off is that the combinational logic feeding each J/K input must be
+        cleverly designed in advance so that the RIGHT thing happens simultaneously in every stage.</p>
+        <p><strong>What "deriving the equations" really means:</strong> J1, K1, J0, K0 aren't free choices —
+        they're the OUTPUTS of ordinary logic gates (AND/OR/NOT) whose INPUTS are the counter's own current
+        state (Q1, Q0) and the external enable X. To "derive" them just means: trace which wires feed into
+        each flip-flop's J and K pins, and write down the Boolean expression those gates compute.</p>
+        <p><strong>Why an "enable" input matters:</strong> a bare counter always counts every clock tick with
+        no way to pause it — almost useless in a real system where you sometimes need to freeze the count
+        (e.g. while reading its value). Adding an enable input X into every J/K expression (as a multiplying
+        factor) means "only allow toggling when X=1"; when X=0, every J and K collapses to 0, which is exactly
+        the JK "hold" condition — so the whole counter freezes in place.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>Trace each labelled wire in the diagram back to the gate(s) that produce it, write the Boolean
+        expression each gate computes, then build a standard present-state/next-state table by applying the
+        JK truth table (00=hold,01=reset,10=set,11=toggle) to each derived J/K pair. Read the state diagram
+        directly off the completed table — every present-state row becomes one arrow to its next-state.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">i. DERIVING THE EQUATIONS (clean equivalent circuit)</span>
+            <p>Standard synchronous "count up when enabled" wiring: the LSB (Q0) should toggle every enabled
+            clock, so its J/K just equals the enable: <strong>J0 = K0 = X</strong>. The MSB (Q1) should only
+            toggle when the LSB is about to roll over from 1→0 (the "carry" condition) AND the counter is
+            enabled: <strong>J1 = K1 = X·Q0</strong>. A simple terminal-count output is HIGH exactly when
+            enabled and the count is at its maximum (11): <strong>Y = X·Q1·Q0</strong>.</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER i.</span>
+            <p>J0 = K0 = X &nbsp;·&nbsp; J1 = K1 = X·Q0 &nbsp;·&nbsp; Y = X·Q1·Q0</p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">ii. NEXT-STATE AND FLIP-FLOP TRANSITION TABLE</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>X</th><th>Q1</th><th>Q0</th><th>Q1(+)</th><th>Q0(+)</th><th>J1</th><th>K1</th><th>J0</th><th>K0</th><th>Y</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td class="hl-green">1</td></tr>
+              </table>
+            </div>
+            <p>When X=0, every row holds (Q1(+)Q0(+) = Q1Q0 unchanged) since J=K=0 everywhere. When X=1, the
+            state steps 00→01→10→11→00, a standard 2-bit up-counter, with Y pulsing HIGH for one clock exactly
+            at 11.</p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">iii. STATE DIAGRAM (X=1 path; X=0 self-loops on every state, omitted for clarity)</span>
+            <div class="state-seq">
+              <span class="state-seq__node">00</span><span class="state-seq__arrow">→</span>
+              <span class="state-seq__node">01</span><span class="state-seq__arrow">→</span>
+              <span class="state-seq__node">10</span><span class="state-seq__arrow">→</span>
+              <span class="state-seq__node">11</span><span class="state-seq__arrow">→</span>
+              <span class="state-seq__node">00</span>
+            </div>
+            <p>Every state additionally has a self-loop back to itself labelled X=0/Y=0 (hold), omitted above
+            purely for visual clarity — a complete state diagram must always show both the X=0 and X=1 arrow
+            out of every state.</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER iii.</span>
+            <p>4-state loop 00→01→10→11→00 when X=1; every state self-loops when X=0. Y=1 only on the 11→00
+            transition.</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>For any synchronous binary up-counter, the pattern always generalises: bit-i's J and K both equal
+        "enable AND every lower bit is currently 1" — bit 0 needs just the enable, bit 1 needs enable·Q0,
+        bit 2 needs enable·Q1·Q0, and so on (the classic ripple-carry pattern, but computed synchronously in
+        parallel instead of rippling).</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>To derive J/K equations from ANY gate-level counter diagram: trace each J and K pin back to its
+        feeding gate(s) and write the Boolean expression — then build the table by applying the ordinary JK
+        rule (00 hold / 01 reset / 10 set / 11 toggle) row by row.</p>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-divider__label">QUESTION 6 — DESIGNING A COUNTER FROM A STATE DIAGRAM (T FLIP-FLOPS)</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <!-- Q6 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="q6">
+      <span class="qx-card__num">QUESTION 6 <span class="qx-card__marks">[20 MARKS]</span></span>
+      <div class="qx-card__question">
+        <p>Refer to the state diagram in Figure 8 (states 7↔2↔3↔6 forming a loop, arcs labelled X/Z). Design a
+        synchronous counter using T flip-flops with input X and output Z. <strong>a)</strong> Construct a
+        complete next-state and T flip-flop transition table. <strong>b)</strong> Draw K-maps to get the
+        minimum SOP Boolean expression. <strong>c)</strong> Draw the complete circuit diagram.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT — start here if any of this is new to you</span>
+        <p><strong>What a T flip-flop is:</strong> the simplest possible flip-flop behaviour — just ONE input,
+        T. T=0 means hold (do nothing), T=1 means toggle (flip Q). It's literally the JK flip-flop with J and
+        K permanently tied together (so they're always equal, collapsing the 4 JK cases down to just these
+        two useful ones) — the natural choice whenever a bit's ENTIRE job is "sometimes flip, otherwise stay
+        put", which is exactly what every bit inside a counter needs to do.</p>
+        <p><strong>What "designing FROM a state diagram" means, step by step:</strong> a state diagram is the
+        SPEC — it tells you every state, and for every possible input, exactly which state comes next and
+        what output to produce. Turning that spec into a real circuit is mechanical: (1) assign binary codes
+        to every state, (2) for every state+input combination read off the required next state, (3) for each
+        bit, ask "did this bit need to change (T=1) or stay the same (T=0)?" between present and next state,
+        (4) once you have T as a function of the present state and input for every flip-flop, simplify that
+        function with a K-map, (5) build the AND/OR/NOT gates that compute the simplified expression and wire
+        them into each flip-flop's T pin.</p>
+        <p><strong>What a K-map actually does:</strong> a truth table lists every input combination in a
+        straight line, which hides which ROWS are "close relatives" of each other (differing in only 1 bit).
+        A Karnaugh map instead arranges the same rows in a grid where every physically ADJACENT cell differs
+        by exactly one variable — so any block of adjacent 1s you can visually circle represents a
+        simplification (one variable is irrelevant across that whole block and can be dropped from the
+        expression). It's simplification-by-eye instead of algebra-by-hand.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>Read every arc directly off Figure 8: "0/1" means X=0 produces output Z=1 and moves forward around
+        the loop (7→2→3→6→7); "1/0" means X=1 produces Z=0 and moves backward (7→6→3→2→7). Convert every
+        state to its 3-bit binary code, then for every row work out T2,T1,T0 by comparing present vs next
+        state bit-by-bit (T=1 exactly where the bit flips). Only 4 of the 8 possible 3-bit codes are ever
+        used — the other 4 are "don't cares" you can exploit freely when simplifying.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">a) NEXT-STATE AND T FLIP-FLOP TRANSITION TABLE</span>
+            <p>States as Q2Q1Q0: 7=111, 2=010, 3=011, 6=110. T = 1 exactly where a bit differs between
+            present and next state.</p>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>X</th><th>Q2 Q1 Q0</th><th>Q2+ Q1+ Q0+</th><th>T2</th><th>T1</th><th>T0</th><th>Z</th></tr>
+                <tr><td>0</td><td>111 (7)</td><td>010 (2)</td><td class="hl">1</td><td>0</td><td class="hl">1</td><td>1</td></tr>
+                <tr><td>1</td><td>111 (7)</td><td>110 (6)</td><td>0</td><td>0</td><td class="hl">1</td><td>0</td></tr>
+                <tr><td>0</td><td>010 (2)</td><td>011 (3)</td><td>0</td><td>0</td><td class="hl">1</td><td>1</td></tr>
+                <tr><td>1</td><td>010 (2)</td><td>111 (7)</td><td class="hl">1</td><td>0</td><td class="hl">1</td><td>0</td></tr>
+                <tr><td>0</td><td>011 (3)</td><td>110 (6)</td><td class="hl">1</td><td>0</td><td class="hl">1</td><td>1</td></tr>
+                <tr><td>1</td><td>011 (3)</td><td>010 (2)</td><td>0</td><td>0</td><td class="hl">1</td><td>0</td></tr>
+                <tr><td>0</td><td>110 (6)</td><td>111 (7)</td><td>0</td><td>0</td><td class="hl">1</td><td>1</td></tr>
+                <tr><td>1</td><td>110 (6)</td><td>011 (3)</td><td class="hl">1</td><td>0</td><td class="hl">1</td><td>0</td></tr>
+              </table>
+            </div>
+            <p>Two patterns jump out immediately: T1 is 0 in every single row (Q1=1 in all four used states,
+            so it never needs to change), and T0 is 1 in every single row (the LSB flips on every transition
+            around this particular loop).</p>
+          </div>
+
+          <div class="explain-box">
+            <span class="explain-box__label">🔍 WHY T2 SIMPLIFIES TO A CLEAN XOR</span>
+            <p>Grouping the T2=1 rows: (Q0=1, X=0) and (Q0=0, X=1) — this is exactly the pattern of an
+            XOR gate! T2=1 whenever X and Q0 DISAGREE. Grouping the T2=0 rows confirms it: (Q0=1,X=1) and
+            (Q0=0,X=0) — X and Q0 AGREE. So T2 = X'Q0 + XQ0' = X⊕Q0, and remarkably Q2 itself never appears
+            in the simplified expression — a genuine simplification the K-map below makes visually obvious.</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">b) K-MAPS (SOP)</span>
+            <p><strong>T0 K-map:</strong> T0=1 in all 4 used minterms, 0 elsewhere → but since the other 4
+            combinations (Q1=0) are never visited, they're don't-cares: T0 simplifies all the way down to a
+            constant.</p>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>T0</th><th>X=0</th><th>X=1</th></tr>
+                <tr><th>Q2Q1Q0=used states →</th><td class="hl">1</td><td class="hl">1</td></tr>
+              </table>
+            </div>
+            <p><strong>T2 K-map</strong> (over Q0, X — Q2,Q1 are don't-cares given the used states always have
+            Q1=1):</p>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>T2</th><th>Q0=0</th><th>Q0=1</th></tr>
+                <tr><th>X=0</th><td>0</td><td class="hl">1</td></tr>
+                <tr><th>X=1</th><td class="hl">1</td><td>0</td></tr>
+              </table>
+            </div>
+            <p>The two "1" cells are diagonal, not adjacent — the classic visual signature of an XOR pattern,
+            which cannot be simplified into a single AND term (it genuinely needs two product terms in SOP
+            form).</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (a, b)</span>
+            <p>T2 = X'Q0 + XQ0' &nbsp;·&nbsp; T1 = 0 &nbsp;·&nbsp; T0 = 1 &nbsp;·&nbsp; Z = X'</p>
+          </div>
+
+          <div class="step-block" style="margin-top:16px;">
+            <span class="step-block__label">c) CIRCUIT DIAGRAM DESIGN</span>
+            <p>T2 input: one XOR gate, inputs X and Q0, output feeds T2 directly. T1 input: tied permanently to
+            logic 0 (ground) — this flip-flop's T pin never needs external logic. T0 input: tied permanently
+            to logic 1 (Vcc) — this flip-flop toggles every single clock, unconditionally. Z output: a single
+            NOT gate on X.</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER (c)</span>
+            <p>3 T flip-flops, ripple-free (all share the same clock). T2=XOR(X,Q0), T1=GND, T0=Vcc, Z=NOT(X).</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>Whenever a state diagram uses only SOME of the 2ⁿ possible codes, immediately mark the unused
+        combinations as don't-cares in every K-map — they're free simplification fuel, and this exact
+        question only becomes clean (T1=0, T0=1 constants) BECAUSE the 4 unused codes were exploited. Always
+        scan your finished T/J/K table for an all-0 or all-1 column first — it means that flip-flop needs NO
+        gate at all, just a wire to ground or Vcc.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>T flip-flop = JK with J tied to K. Designing from a state diagram is always the same 5-step
+        recipe: assign codes → build the transition table → extract T (or J/K) per bit → K-map simplify →
+        wire the gates.</p>
+      </div>
+    </div>
+
+    <div class="section-divider" id="predictions">
+      <span class="section-divider__label">🔮 PREDICTED UPCOMING QUESTIONS</span>
+      <span class="section-divider__line"></span>
+    </div>
+
+    <div class="cheat-note cheat-note--purple" style="margin: 8px auto 20px;">
+      <strong>How these predictions were built:</strong> a second real past paper for this exact subject
+      (SECR1013/SCSR1013) tests several standard topics that this Set-1 paper did NOT cover — parity
+      checkers, magnitude comparators, T-flip-flop-from-JK conversion, MOD-5 counter design, cascaded counter
+      frequency division, and ring-vs-Johnson counter comparison. Since both papers draw from the same fixed
+      syllabus, these untested-here topics are strong candidates to appear on your own sitting.
+    </div>
+
+    <div class="predict-card glass-card anim-fade-in-up">
+      <span class="predict-tag">CH.6 — COMBINATIONAL FUNCTIONS</span>
+      <div class="predict-card__title">Parity checker using an XOR-gate chain (untested this set)</div>
+      <p class="predict-card__why"><strong>Why:</strong> Set 1's Q1(c) only tested parity CONCEPTUALLY
+      (true/false statement). A second real paper for this subject asks students to actually BUILD and label
+      an XOR-chain parity circuit for a specific byte of data — a very likely direct-computation variant.</p>
+      <a href="logic-predicted-practice.html#p1" class="btn btn--ghost btn--sm">▸ Try Practice Question 1</a>
+    </div>
+
+    <div class="predict-card glass-card anim-fade-in-up">
+      <span class="predict-tag">CH.6 — COMBINATIONAL FUNCTIONS</span>
+      <div class="predict-card__title">4-bit magnitude comparator (untested this set)</div>
+      <p class="predict-card__why"><strong>Why:</strong> comparators are a standard Chapter 6 topic alongside
+      adders and parity — a natural candidate to pair with Q1's adder question next sitting, testing the
+      MSB-first "stop at the first differing bit" comparison logic.</p>
+      <a href="logic-predicted-practice.html#p2" class="btn btn--ghost btn--sm">▸ Try Practice Question 2</a>
+    </div>
+
+    <div class="predict-card glass-card anim-fade-in-up">
+      <span class="predict-tag">CH.7 — LATCHES &amp; FLIP-FLOPS</span>
+      <div class="predict-card__title">Building a T flip-flop FROM a JK flip-flop (untested this set)</div>
+      <p class="predict-card__why"><strong>Why:</strong> Set 1 used T-flip-flop BEHAVIOUR only inside Q6's
+      design. A very common alternate question asks you to derive the T-from-JK conversion (tie J=K=T) and
+      complete its truth table directly, including the PRE'/CLR' async override rows.</p>
+      <a href="logic-predicted-practice.html#p3" class="btn btn--ghost btn--sm">▸ Try Practice Question 3</a>
+    </div>
+
+    <div class="predict-card glass-card anim-fade-in-up">
+      <span class="predict-tag">CH.8 — COUNTERS</span>
+      <div class="predict-card__title">MOD-5 asynchronous counter (Set 1 tested MOD-6 only)</div>
+      <p class="predict-card__why"><strong>Why:</strong> the exact same "detect-and-clear" recipe used for
+      MOD-6 in Q3 generalises directly to any modulus — MOD-5 (needing a NAND on Q2,Q0 instead of Q2,Q1) is
+      an equally standard, equally likely variant.</p>
+      <a href="logic-predicted-practice.html#p4" class="btn btn--ghost btn--sm">▸ Try Practice Question 4</a>
+    </div>
+
+    <div class="predict-card glass-card anim-fade-in-up">
+      <span class="predict-tag">CH.8 — COUNTERS</span>
+      <div class="predict-card__title">Cascaded counters and frequency division (untested this set)</div>
+      <p class="predict-card__why"><strong>Why:</strong> a MOD-N counter is also a frequency divider (its
+      output toggles N times slower than its clock). Cascading two counters multiplies their division
+      factors — a clean, fast-marks calculation question that pairs naturally with any counter-design
+      question.</p>
+      <a href="logic-predicted-practice.html#p5" class="btn btn--ghost btn--sm">▸ Try Practice Question 5</a>
+    </div>
+
+    <div class="predict-card glass-card anim-fade-in-up">
+      <span class="predict-tag">CROSS-CHAPTER PATTERN</span>
+      <div class="predict-card__title">"Compare the two circuits" discussion (ring vs Johnson counter)</div>
+      <p class="predict-card__why"><strong>Why:</strong> Set 1's Q4(b) tested a Johnson counter in isolation.
+      A natural follow-up/comparison question asks you to also build a RING counter side-by-side and explain
+      why one produces 2n valid states while the other only produces n — an easy discussion mark if you know
+      the underlying reason (inverted vs non-inverted feedback).</p>
+      <a href="logic-predicted-practice.html#p6" class="btn btn--ghost btn--sm">▸ Try Practice Question 6</a>
+    </div>
+
+    <div style="text-align:center; margin: 36px 0 12px;">
+      <a href="logic-predicted-practice.html" class="btn btn--primary">🔮 Practice All 6 Predicted Questions</a>
+      <a href="index.html" class="btn btn--ghost">Hub</a>
+    </div>
+
+  </main>
+
+  <script src="js/progress.js"></script>
+  <script src="js/gamification.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

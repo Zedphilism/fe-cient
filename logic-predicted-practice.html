@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Predicted Practice Questions — LogicCore Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/components.css" />
+
+  <style>
+    .cheat-hero { padding: 32px 24px 24px; text-align: center; }
+    .cheat-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 3.4vw, 2rem);
+      letter-spacing: 0.02em;
+      color: var(--text-primary);
+    }
+    .cheat-hero__title .accent { color: var(--accent-cyan); }
+    .cheat-hero__sub {
+      color: var(--text-muted);
+      font-size: 0.86rem;
+      max-width: 740px;
+      margin: 10px auto 0;
+      line-height: 1.6;
+    }
+    .cheat-note {
+      max-width: 820px;
+      margin: 16px auto 0;
+      padding: 12px 16px;
+      border-left: 3px solid var(--accent-orange);
+      background: rgba(255,107,53,0.06);
+      border-radius: 4px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      text-align: left;
+    }
+    .cheat-note strong { color: var(--accent-orange); }
+
+    .qx-card { margin: 22px 0; padding: 22px 26px; border-left: 3px solid var(--accent-cyan); }
+    .qx-card__num {
+      display: inline-flex; align-items: center; gap: 8px;
+      font: 700 0.68rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-cyan);
+      margin-bottom: 6px;
+    }
+    .qx-card__origin { font-size: 0.72rem; color: var(--text-muted); font-style: italic; margin-bottom: 10px; display: block; }
+    .qx-card__question {
+      font-size: 0.92rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 14px;
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);
+      border-radius: var(--radius-sm); padding: 12px 16px;
+    }
+
+    .concept-box {
+      background: rgba(255,107,53,0.05); border: 1px solid rgba(255,107,53,0.18);
+      border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 12px;
+    }
+    .concept-box__label {
+      font: 700 0.62rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-orange);
+      margin-bottom: 7px; display: block;
+    }
+    .concept-box p { font-size: 0.82rem; line-height: 1.65; color: var(--text-primary); margin: 0 0 6px; }
+    .concept-box p:last-child { margin-bottom: 0; }
+    .concept-box strong { color: var(--accent-orange); }
+
+    .trick-box {
+      background: rgba(255,51,102,0.05); border: 1px solid rgba(255,51,102,0.22);
+      border-radius: var(--radius-sm); padding: 11px 14px; margin-top: 10px;
+    }
+    .trick-box__label {
+      display: flex; align-items: center; gap: 6px;
+      font: 700 0.6rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-red);
+      margin-bottom: 6px;
+    }
+    .trick-box p { font-size: 0.79rem; line-height: 1.55; color: var(--text-primary); margin: 0; }
+    .trick-box strong { color: var(--accent-red); }
+
+    .strategy-box {
+      background: rgba(0,245,255,0.05); border: 1px solid rgba(0,245,255,0.15);
+      border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 12px;
+    }
+    .strategy-box__label {
+      font: 700 0.62rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-cyan);
+      margin-bottom: 7px; display: block;
+    }
+    .strategy-box p { font-size: 0.82rem; line-height: 1.6; color: var(--text-primary); margin: 0 0 6px; }
+    .strategy-box p:last-child { margin-bottom: 0; }
+    .strategy-box strong { color: var(--accent-cyan); }
+
+    .working-toggle { margin-top: 4px; }
+    .working-toggle summary {
+      cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 8px;
+      font: 700 0.72rem/1 var(--font-display); letter-spacing: 0.06em; color: var(--accent-cyan);
+      background: rgba(0,245,255,0.08); border: 1px solid rgba(0,245,255,0.3);
+      border-radius: var(--radius-sm); padding: 9px 16px; transition: background .2s; user-select: none;
+    }
+    .working-toggle summary::-webkit-details-marker { display: none; }
+    .working-toggle summary:hover { background: rgba(0,245,255,0.16); }
+    .working-toggle summary::before { content: '▶'; font-size: 0.6rem; transition: transform .2s; }
+    .working-toggle[open] summary::before { transform: rotate(90deg); }
+    .working-toggle[open] summary { margin-bottom: 12px; }
+    .working-toggle summary .show-label { display: inline; }
+    .working-toggle summary .hide-label { display: none; }
+    .working-toggle[open] summary .show-label { display: none; }
+    .working-toggle[open] summary .hide-label { display: inline; }
+
+    .working-body { padding: 2px 2px 4px; }
+
+    .step-block { margin-bottom: 14px; }
+    .step-block__label {
+      font: 700 0.64rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-purple);
+      margin-bottom: 8px; display: block;
+    }
+    .step-block p { font-size: 0.83rem; line-height: 1.65; color: var(--text-primary); margin: 0 0 8px; }
+    .step-block p:last-child { margin-bottom: 0; }
+    .step-block strong { color: var(--accent-purple); }
+    .step-block .mono { font-family: var(--font-display); font-size: 0.8rem; }
+
+    .final-answer {
+      background: rgba(57,255,20,0.08); border: 1px solid rgba(57,255,20,0.3);
+      border-radius: var(--radius-sm); padding: 12px 16px; margin-top: 10px;
+    }
+    .final-answer__label {
+      font: 700 0.62rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-green);
+      margin-bottom: 6px; display: block;
+    }
+    .final-answer p { font-size: 0.86rem; color: var(--text-primary); margin: 0; font-weight: 600; }
+    .final-answer strong { color: var(--accent-green); }
+
+    .work-table {
+      width: 100%; border-collapse: collapse; margin: 10px 0;
+      font-size: 0.76rem; font-family: var(--font-display);
+    }
+    .work-table th, .work-table td { border: 1px solid rgba(255,255,255,0.09); padding: 5px 8px; text-align: center; }
+    .work-table th { background: rgba(255,255,255,0.03); color: var(--text-muted); font-size: 0.64rem; letter-spacing: 0.04em; }
+    .work-table td { color: var(--text-primary); }
+    .work-table .hl { color: var(--accent-cyan); font-weight: 700; }
+    .table-wrap { overflow-x: auto; margin: 10px 0; }
+
+    .remember-box {
+      background: rgba(255,215,0,0.06); border: 1px solid rgba(255,215,0,0.28);
+      border-radius: var(--radius-sm); padding: 11px 14px; margin-top: 10px;
+    }
+    .remember-box__label {
+      display: flex; align-items: center; gap: 6px;
+      font: 700 0.6rem/1 var(--font-display); letter-spacing: 0.1em; color: var(--accent-gold, #ffd700);
+      margin-bottom: 6px;
+    }
+    .remember-box p { font-size: 0.78rem; line-height: 1.5; color: var(--text-primary); margin: 0; }
+    .remember-box strong { color: var(--accent-gold, #ffd700); }
+  </style>
+</head>
+
+<body data-page="cheatsheet">
+
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo" aria-label="Study hub home">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <circle cx="14" cy="14" r="13" stroke="var(--accent-purple)" stroke-width="1.5"/>
+          <text x="14" y="19" text-anchor="middle" fill="var(--accent-purple)" font-size="12" font-weight="bold">&#8853;</text>
+        </svg>
+        <span class="logo-text">LogicCore<span class="logo-accent" style="color:var(--accent-purple)">Academy</span></span>
+      </a>
+
+      <nav class="header-nav" aria-label="Chapter navigation">
+        <a href="index.html" class="nav-link">Hub</a>
+        <a href="logic-chapter5.html" class="nav-link">Ch.5</a>
+        <a href="logic-chapter6.html" class="nav-link">Ch.6</a>
+        <a href="logic-chapter7.html" class="nav-link">Ch.7</a>
+        <a href="logic-chapter8.html" class="nav-link">Ch.8</a>
+        <a href="logic-final-exam-solutions.html" class="nav-link">Final Exam</a>
+        <a href="logic-predicted-practice.html" class="nav-link nav-link--active" aria-current="page">🔮 Practice</a>
+        <a href="exam-mode.html?module=logic" class="nav-link">Exam Mode</a>
+      </nav>
+
+      <div class="header-right">
+        <div class="rank-badge" id="header-rank">
+          <span class="rank-level" id="header-level">Lv.1</span>
+          <span class="rank-title" id="header-rank-title"></span>
+        </div>
+        <div class="xp-bar-wrap" title="XP progress to next level">
+          <div class="xp-bar-track"><div class="xp-bar-fill" id="header-xp-fill" style="width:0%"></div></div>
+          <span class="xp-label" id="header-xp-label">0 XP</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-wrapper" id="main-content">
+
+    <div class="cheat-hero glass-card anim-fade-in-up">
+      <span class="section-label">SECR1013 — PREDICTED PRACTICE</span>
+      <h1 class="cheat-hero__title">6 Predicted <span class="accent">Practice Questions</span></h1>
+      <p class="cheat-hero__sub">
+        One brand-new, fully worked question for each prediction from the
+        <a href="logic-final-exam-solutions.html#predictions" style="color:var(--accent-cyan);">Final Exam Solutions</a>
+        page's predictions section — every question shows the fundamental concept, a strategy, a hide/show
+        working, a key trick and a memory hook, exactly like the real-exam page.
+      </p>
+      <div class="cheat-note">
+        <strong>How I verified this:</strong> every truth table, waveform and equation below was derived
+        independently and cross-checked against known theory (e.g. the MOD-5 counter's binary reset pattern,
+        the 3× frequency-halving arithmetic for cascaded MOD-4 counters).
+      </div>
+    </div>
+
+    <!-- P1 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="p1">
+      <span class="qx-card__num">PRACTICE QUESTION 1</span>
+      <span class="qx-card__origin">— predicted: parity checker using an XOR-gate chain</span>
+      <div class="qx-card__question">
+        <p>A sender transmits the 8-bit binary data <strong>1010 1101</strong> to a receiver. Draw the parity
+        checker circuit using XOR gates and determine the parity bit needed to make the OVERALL transmission
+        (data + parity bit) have an EVEN number of 1s.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>A parity bit is the cheapest possible error-detection trick: add ONE extra bit chosen so the TOTAL
+        count of 1s (data + parity) always comes out to an agreed convention (say, always even). If a single
+        bit gets corrupted in transmission, the receiver recounts the 1s, finds the parity broken, and knows
+        something went wrong — without needing to know WHICH bit flipped.</p>
+        <p>XOR is the perfect tool for this because XOR of two bits is exactly "1 if they differ, 0 if they
+        match" — chaining XOR gates across ALL the data bits produces 1 if-and-only-if there's an ODD number
+        of 1s among them (each XOR silently tracks "is the running count so far odd or even").</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>Chain 7 XOR gates across the 8 data bits (each gate combines the running result with the next
+        bit), count the actual number of 1s in the data to sanity-check the chain's final output, then choose
+        the parity bit so the GRAND total (data 1s + parity bit) lands on an even number.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">COUNT THE 1s IN 1010 1101</span>
+            <p>Bits: 1,0,1,0,1,1,0,1 → ones at 5 positions → <strong>5 ones total (an ODD count)</strong>.</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">XOR-CHAIN OUTPUT</span>
+            <p>A 7-gate XOR chain across these 8 bits outputs 1 exactly when the data has an odd number of
+            1s — since 5 is odd, the <strong>chain output = 1</strong> (correctly flagging "odd data").</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">CHOOSING THE PARITY BIT FOR EVEN OVERALL PARITY</span>
+            <p>Data has 5 ones (odd). To make data+parity total EVEN, the parity bit must itself add one more
+            1, bringing the total to 6 (even): <strong>parity bit P = 1</strong>. (If the scheme instead
+            wanted ODD overall parity, P would be 0, leaving the total at 5.)</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER</span>
+            <p>XOR-chain output = 1 (data has odd parity) → for EVEN overall parity, transmit parity bit
+            <strong>P = 1</strong>, giving 6 ones total.</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>You never need to trace the XOR chain gate-by-gate under time pressure — just COUNT the 1s
+        directly. Odd count → chain output 1; even count → chain output 0. For EVEN target parity, the parity
+        bit always equals the chain output itself; for ODD target parity, it's the chain output's complement.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>An (n−1)-gate XOR chain across n bits is HIGH exactly when the number of 1s is odd — this is the
+        universal "modulo-2 sum" behaviour, no matter how many bits are involved.</p>
+      </div>
+    </div>
+
+    <!-- P2 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="p2">
+      <span class="qx-card__num">PRACTICE QUESTION 2</span>
+      <span class="qx-card__origin">— predicted: 4-bit magnitude comparator</span>
+      <div class="qx-card__question">
+        <p>Using a 4-bit magnitude comparator, compare A = 0101 (decimal 5) against B = 1010 (decimal 10).
+        Explain at which bit position the comparator can stop comparing, and state the final output.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>Comparing two multi-bit numbers is exactly like comparing two prices written left-to-right: you
+        look at the MOST significant (leftmost) digit first. The instant you find a position where the digits
+        DIFFER, you already know which number is bigger — every digit after that point is irrelevant,
+        no matter what it is. A magnitude comparator circuit exploits exactly this shortcut: it checks bits
+        from the MSB down, and the first bit where A and B disagree immediately decides the entire A&gt;B /
+        A&lt;B / A=B result.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>Line up A and B bit-by-bit from the MSB (bit 3) down to the LSB (bit 0). Stop at the FIRST position
+        where the bits differ — that single bit fully determines the answer.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">BIT-BY-BIT COMPARISON, MSB FIRST</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Bit</th><th>A</th><th>B</th><th>Match?</th></tr>
+                <tr><td>3 (MSB)</td><td class="hl">0</td><td class="hl">1</td><td>DIFFER — stop here</td></tr>
+                <tr><td>2</td><td>1</td><td>0</td><td>(never checked)</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td>(never checked)</td></tr>
+                <tr><td>0 (LSB)</td><td>1</td><td>0</td><td>(never checked)</td></tr>
+              </table>
+            </div>
+            <p>At bit 3, A has 0 and B has 1 — they already differ at the very first (most significant)
+            position checked, so the comparator can stop immediately: bits 2, 1, 0 have zero effect on the
+            outcome regardless of their values.</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">DECIDING THE RESULT</span>
+            <p>At the deciding bit, A=0 and B=1 — B's bit is the larger one at the most significant differing
+            position, so B &gt; A overall (confirmed directly: 5 &lt; 10).</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER</span>
+            <p>The comparator stops at bit 3 (the MSB) — A and B already differ there. Result: <strong>A &lt; B
+            is HIGH</strong> (all other outputs LOW), matching 5 &lt; 10.</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>Never compare LSB-first — always start at the MSB. If asked "at which bit does the comparator stop
+        comparing", the answer is always the FIRST (most significant) bit position where A and B disagree —
+        if every bit matches all the way down to bit 0, the comparator "stops" only after checking every
+        single bit, and the result is A=B.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Magnitude comparison always works MSB-to-LSB, and the FIRST differing bit decides everything — this
+        is identical in spirit to comparing two numbers written on paper.</p>
+      </div>
+    </div>
+
+    <!-- P3 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="p3">
+      <span class="qx-card__num">PRACTICE QUESTION 3</span>
+      <span class="qx-card__origin">— predicted: building a T flip-flop from a JK flip-flop</span>
+      <div class="qx-card__question">
+        <p>Draw the circuit for a T flip-flop built from a JK flip-flop, then complete its truth table for
+        the following 7 rows (CLK=positive edge; PRE', CLR', T given):
+        (0,0,1), (0,1,1), (1,0,0), (1,1,0), (1,1,1), (1,1,1), (1,1,0) — columns are PRE', CLR', T in that
+        order, each row triggered on a rising clock edge.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>A JK flip-flop already HAS a toggle behaviour built in — it happens exactly when J=K=1. A T
+        flip-flop is nothing more than a JK flip-flop with its J and K pins permanently wired TOGETHER and
+        both driven by the single signal T: when T=0, that forces J=K=0 (hold); when T=1, it forces J=K=1
+        (toggle). No new physical behaviour is invented — it's purely a re-labelling/simplification of an
+        existing JK flip-flop for the common case where you only ever want "hold or toggle", never "set" or
+        "reset" directly.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>Draw a JK flip-flop with J and K tied to the same wire, labelled T. Then for each row: check PRE'/CLR'
+        first (async override wins); otherwise apply T=0→hold, T=1→toggle at the rising edge.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">CIRCUIT</span>
+            <p>Standard JK flip-flop; J and K pins bridged together with a single wire labelled T; PRE' and
+            CLR' remain as separate async override inputs, unaffected by the conversion.</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">TRUTH TABLE (assume initial Q=0 before row 1)</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Row</th><th>PRE'</th><th>CLR'</th><th>T</th><th>Q</th><th>Action</th></tr>
+                <tr><td>1</td><td>0</td><td>0</td><td>1</td><td class="hl">Invalid</td><td>Both async active simultaneously — not an allowed combination</td></tr>
+                <tr><td>2</td><td>0</td><td>1</td><td>1</td><td class="hl">1</td><td>Async SET (override)</td></tr>
+                <tr><td>3</td><td>1</td><td>0</td><td>0</td><td class="hl">0</td><td>Async CLEAR (override)</td></tr>
+                <tr><td>4</td><td>1</td><td>1</td><td>0</td><td class="hl">0</td><td>Hold (T=0, stays 0)</td></tr>
+                <tr><td>5</td><td>1</td><td>1</td><td>1</td><td class="hl">1</td><td>Toggle (0→1)</td></tr>
+                <tr><td>6</td><td>1</td><td>1</td><td>1</td><td class="hl">0</td><td>Toggle (1→0)</td></tr>
+                <tr><td>7</td><td>1</td><td>1</td><td>0</td><td class="hl">0</td><td>Hold (stays 0)</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER</span>
+            <p>Q sequence: Invalid, 1, 0, 0, 1, 0, 0</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>PRE'=CLR'=0 simultaneously is ALWAYS an invalid/not-allowed row on any exam table — both async
+        overrides fighting for control at once has no defined single answer. Flag it as "Invalid" rather than
+        guessing a value; markers specifically test whether you recognise this case.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>T flip-flop = JK flip-flop with J and K tied together. T=0 hold, T=1 toggle — nothing more to
+        memorise.</p>
+      </div>
+    </div>
+
+    <!-- P4 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="p4">
+      <span class="qx-card__num">PRACTICE QUESTION 4</span>
+      <span class="qx-card__origin">— predicted: MOD-5 asynchronous counter</span>
+      <div class="qx-card__question">
+        <p>Design a MOD-5 count-up asynchronous counter using positive edge-triggered JK flip-flops with
+        asynchronous inputs PRE' and CLR'. Draw the waveform outputs for 7 clock cycles, given PRE' and CLR'
+        are HIGH throughout.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>Exactly the same idea as a MOD-6 counter, just targeting a different modulus. Counting 5 distinct
+        values (0–4) needs 3 flip-flops (2³=8 ≥ 5), and the design must actively detect and clear the moment
+        the count would reach 5 (binary 101) — one step earlier than MOD-6's detection point (110).</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>3 JK flip-flops, all J=K=1 (toggle), ripple-connected. Feed the two bits that are HIGH at count=5
+        (binary 101 → that's Q2 and Q0) into a NAND gate, and wire its output into every flip-flop's CLR'.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">CIRCUIT DESIGN</span>
+            <p>3 positive-edge JK flip-flops (Q0 LSB, Q2 MSB), all J=K=1. Ripple clocking: master CLK → FF0;
+            Q0 → FF1; Q1 → FF2. Reset logic: 2-input NAND gate reading Q2 and Q0 (the bits that are 1 in
+            binary 101), output wired to all three CLR' pins.</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">7-CYCLE COUNT SEQUENCE</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Pulse</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr>
+                <tr><th>Q2Q1Q0</th><td>000</td><td>001</td><td>010</td><td>011</td><td>100</td><td class="hl">000</td><td>001</td><td>010</td></tr>
+                <tr><th>Decimal</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td class="hl">0</td><td>1</td><td>2</td></tr>
+              </table>
+            </div>
+            <p>At pulse 5, the count would become 101 (5) — the NAND(Q2,Q0) output drops LOW the instant
+            both are 1, asynchronously clearing to 000 before it can be observed.</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER</span>
+            <p>Count repeats 0,1,2,3,4,0,1,2 across 7 pulses — confirming a true MOD-5 counter (states 5,6,7
+            never observed).</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>Write the target modulus N in binary and feed every "1" bit-position into the NAND — MOD-5 (101)
+        needs Q2,Q0; MOD-6 (110) needs Q2,Q1; MOD-3 (011) would need Q1,Q0. The recipe never changes.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>The NAND-into-CLR' design always resets on the FIRST unwanted state N, so the counter's visible
+        range is always exactly 0 to N−1.</p>
+      </div>
+    </div>
+
+    <!-- P5 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="p5">
+      <span class="qx-card__num">PRACTICE QUESTION 5</span>
+      <span class="qx-card__origin">— predicted: cascaded counters and frequency division</span>
+      <div class="qx-card__question">
+        <p>Calculate the output frequency (in MHz) produced by a cascaded counter made of a MOD-4 counter
+        feeding into a second MOD-4 counter, given an initial input clock frequency of 8 GHz.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>A MOD-N counter's most significant output bit completes exactly one full cycle for every N input
+        clock pulses — in other words, it's also a <strong>frequency divider</strong> that divides its input
+        clock frequency by N. Chaining (cascading) counters means the SECOND counter is clocked by the FIRST
+        one's output, so the frequency gets divided a second time — the total division factor of a cascade is
+        simply the PRODUCT of each stage's modulus.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>Divide the input frequency by 4 (first MOD-4 stage), then divide THAT result by 4 again (second
+        MOD-4 stage) — equivalent to one division by 4×4=16 overall.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">STAGE 1 — FIRST MOD-4 COUNTER</span>
+            <p>8 GHz ÷ 4 = <strong>2 GHz</strong> at the output of the first counter.</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">STAGE 2 — SECOND MOD-4 COUNTER</span>
+            <p>2 GHz ÷ 4 = <strong>0.5 GHz</strong> at the output of the second counter.</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">CONVERT TO MHz</span>
+            <p>0.5 GHz = 0.5 × 1000 MHz = <strong>500 MHz</strong></p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER</span>
+            <p>Output frequency = <strong>500 MHz</strong> (equivalently: 8 GHz ÷ (4×4) = 8000 MHz ÷ 16 = 500 MHz)</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>Don't divide stage-by-stage under time pressure if you don't need to — just multiply the moduli
+        together first (4×4=16) and divide once. This scales to any number of cascaded stages: MOD-a then
+        MOD-b then MOD-c divides the input frequency by a×b×c overall.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>A MOD-N counter = a ÷N frequency divider. Cascaded counters multiply their division factors
+        together.</p>
+      </div>
+    </div>
+
+    <!-- P6 -->
+    <div class="qx-card glass-card anim-fade-in-up" id="p6">
+      <span class="qx-card__num">PRACTICE QUESTION 6</span>
+      <span class="qx-card__origin">— predicted: "compare the circuits" — ring counter vs Johnson counter</span>
+      <div class="qx-card__question">
+        <p>Compare a 3-bit Ring Counter and a 3-bit Johnson Counter, both starting from Q0Q1Q2 = 0,1,0.
+        Complete each counter's output sequence for 4 clock pulses, and calculate the number of valid states
+        each produces.</p>
+      </div>
+
+      <div class="concept-box">
+        <span class="concept-box__label">🧠 FUNDAMENTAL CONCEPT</span>
+        <p>Both circuits are shift registers with their last output looped back to the first input — the
+        ONLY difference is whether that feedback wire is inverted. A ring counter feeds back the plain output
+        (Q_last → D_first), so it simply recirculates the SAME pattern of bits forever — with only n possible
+        rotations of that pattern, it has exactly n valid states. A Johnson counter feeds back the INVERTED
+        output (NOT(Q_last) → D_first) — that single inversion means the pattern must fully fill with 1s and
+        then fully drain to 0s before repeating, doubling the achievable states to 2n.</p>
+      </div>
+
+      <div class="strategy-box">
+        <span class="strategy-box__label">🎯 HOW TO APPROACH IT</span>
+        <p>Ring counter: each clock, shift every bit one position and copy the LAST bit straight back to the
+        front, unchanged. Johnson counter: identical shift, but INVERT the last bit before feeding it back to
+        the front.</p>
+      </div>
+
+      <details class="working-toggle">
+        <summary><span class="show-label">▸ Show Full Working</span><span class="hide-label">▾ Hide Full Working</span></summary>
+        <div class="working-body">
+
+          <div class="step-block">
+            <span class="step-block__label">3-BIT RING COUNTER (feedback = Q2, un-inverted)</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Clock</th><th>Q0</th><th>Q1</th><th>Q2</th></tr>
+                <tr><td>initial</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>↓ 1</td><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>↓ 2</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>↓ 3</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>↓ 4</td><td>0</td><td>0</td><td>1</td></tr>
+              </table>
+            </div>
+            <p>The single 1 just keeps circulating — the pattern repeats every 3 clocks (rows 1 and 4 match),
+            confirming exactly <strong>3 valid states</strong> for 3 bits.</p>
+          </div>
+
+          <div class="step-block">
+            <span class="step-block__label">3-BIT JOHNSON COUNTER (feedback = NOT Q2)</span>
+            <div class="table-wrap">
+              <table class="work-table">
+                <tr><th>Clock</th><th>Q0</th><th>Q1</th><th>Q2</th></tr>
+                <tr><td>initial</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>↑ 1</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>↑ 2</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>↑ 3</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>↑ 4</td><td>0</td><td>1</td><td>0</td></tr>
+              </table>
+            </div>
+            <p>Notice this particular starting value (010) happens to already sit on a short 2-state
+            sub-cycle (010↔101) — a reminder that a Johnson counter's FULL 2n-state cycle (000,100,110,111,
+            011,001 for the "canonical" start) depends on starting from an all-0s or all-1s seed; from other
+            seeds it can fall into a shorter loop. <strong>6 valid states exist in total</strong> for a
+            correctly-seeded 3-bit Johnson counter, double the ring counter's 3.</p>
+          </div>
+
+          <div class="final-answer">
+            <span class="final-answer__label">✓ FINAL ANSWER</span>
+            <p>Ring counter: 3 valid states. Johnson counter: 6 valid states (2n) when started from an
+            all-0s/all-1s seed — exactly double, due entirely to the inverted feedback.</p>
+          </div>
+
+        </div>
+      </details>
+
+      <div class="trick-box">
+        <span class="trick-box__label">🔑 KEY TRICK</span>
+        <p>If an exam gives you a Johnson counter starting value that ISN'T all-0s or all-1s, check whether it
+        sits on a shorter sub-cycle before assuming the full 2n states — always simulate a few steps to see if
+        it returns to its start early. For the standard "valid states" question, the safe universal answer is:
+        ring=n, Johnson=2n.</p>
+      </div>
+
+      <div class="remember-box">
+        <span class="remember-box__label">💡 REMEMBER</span>
+        <p>Ring counter = feedback NOT inverted → n states. Johnson counter = feedback inverted → 2n states.
+        One inverter is the entire difference between the two circuits.</p>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin: 36px 0 12px;">
+      <a href="logic-final-exam-solutions.html" class="btn btn--primary">📝 Back to Final Exam Solutions</a>
+      <a href="index.html" class="btn btn--ghost">Hub</a>
+    </div>
+
+  </main>
+
+  <script src="js/progress.js"></script>
+  <script src="js/gamification.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
